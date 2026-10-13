@@ -1,36 +1,54 @@
+import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
-import { logout } from "./actions";
 
-export const metadata = { title: "JobBoard", description: "Publiez vos offres d'emploi" };
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  display: "swap",
+  variable: "--font-inter",
+});
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const { data: { user } } = await createClient().auth.getUser();
+export const metadata: Metadata = {
+  title: {
+    default: "SmartApply Tunisia",
+    template: "%s | SmartApply Tunisia",
+  },
+  description:
+    "La plateforme de l'emploi IT pour les étudiants et jeunes diplômés tunisiens.",
+  keywords: ["emploi", "stage", "PFE", "IT", "Tunisie", "informatique"],
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "SmartApply",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  themeColor: "#2563EB",
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="fr">
-      <body className="bg-gray-50 text-gray-900">
-        <nav className="bg-white border-b">
-          <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
-            <Link href="/" className="font-bold text-lg text-blue-700">JobBoard</Link>
-            <div className="flex items-center gap-4 text-sm">
-              {user ? (
-                <>
-                  <Link href="/dashboard">Mon espace</Link>
-                  <Link href="/dashboard/jobs/new" className="bg-blue-600 text-white px-3 py-1.5 rounded">Publier une offre</Link>
-                  <form action={logout}><button className="text-gray-500">Déconnexion</button></form>
-                </>
-              ) : (
-                <>
-                  <Link href="/login">Connexion</Link>
-                  <Link href="/register" className="bg-blue-600 text-white px-3 py-1.5 rounded">Espace entreprise</Link>
-                </>
-              )}
-            </div>
-          </div>
-        </nav>
-        <main className="max-w-4xl mx-auto px-4 py-8">{children}</main>
-      </body>
+    <html lang="fr" className={`h-full ${inter.variable}`}>
+      <head>
+        <link rel="apple-touch-icon" href="/icon-192.png" />
+        {/* PWA service worker */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js'))}`,
+          }}
+        />
+      </head>
+      <body className="h-full font-sans antialiased">{children}</body>
     </html>
   );
 }

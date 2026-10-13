@@ -1,8 +1,22 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+const AUTH_ROUTES = ["/login", "/register"];
+const DASHBOARD_PREFIX = "/dashboard";
+
+function redirectByRole(role: string | null, baseUrl: string) {
+  const url = new URL(baseUrl);
+  if (role === "admin") url.pathname = "/dashboard/admin";
+  else if (role === "entreprise") url.pathname = "/dashboard/company";
+  else url.pathname = "/dashboard/candidate";
+  return NextResponse.redirect(url);
+}
+
 export async function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
+
   let res = NextResponse.next({ request: req });
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -12,15 +26,80 @@ export async function middleware(req: NextRequest) {
         setAll: (list) => {
           list.forEach(({ name, value }) => req.cookies.set(name, value));
           res = NextResponse.next({ request: req });
-          list.forEach(({ name, value, options }) => res.cookies.set(name, value, options));
+          list.forEach(({ name, value, options }) =>
+            res.cookies.set(name, value, options)
+          );
         },
       },
     }
   );
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user && req.nextUrl.pathname.startsWith("/dashboard"))
-    return NextResponse.redirect(new URL("/login", req.url));
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const role = user?.user_metadata?.role as string | undefined;
+  const emailConfirmed = !!user?.email_confirmed_at;
+
+  // ── Redirect logged-in users away from auth pages ─────────────
+  if (user && AUTH_ROUTES.includes(pathname)) {
+    if (!emailConfirmed) {
+      return NextResponse.redirect(new URL("/verify-email", req.url));
+    }
+    return redirectByRole(role ?? "candidat", req.url);
+  }
+
+  // ── Email verification gate ────────────────────────────────────
+  if (
+    user &&
+    !emailConfirmed &&
+    !pathname.startsWith("/verify-email") &&
+    !pathname.startsWith("/auth/callback")
+  ) {
+    return NextResponse.redirect(new URL("/verify-email", req.url));
+  }
+
+  // ── Protect dashboard routes ───────────────────────────────────
+  if (pathname.startsWith(DASHBOARD_PREFIX)) {
+    if (!user) {
+      const url = new URL("/login", req.url);
+      url.searchParams.set("from", pathname);
+      return NextResponse.redirect(url);
+    }
+
+    // /dashboard root → role-specific redirect
+    if (pathname === "/dashboard") {
+      return redirectByRole(role ?? "candidat", req.url);
+    }
+
+    // Role-based access control
+    if (
+      pathname.startsWith("/dashboard/candidate") &&
+      role !== "candidat" &&
+      role !== "admin"
+    ) {
+      return NextResponse.redirect(new URL("/access-denied", req.url));
+    }
+    if (
+      pathname.startsWith("/dashboard/company") &&
+      role !== "entreprise" &&
+      role !== "admin"
+    ) {
+      return NextResponse.redirect(new URL("/access-denied", req.url));
+    }
+    if (
+      pathname.startsWith("/dashboard/admin") &&
+      role !== "admin"
+    ) {
+      return NextResponse.redirect(new URL("/access-denied", req.url));
+    }
+  }
+
   return res;
 }
 
-export const config = { matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"] };
+export const config = {
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|icon-|sw.js|manifest.json|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
+  ],
+};
