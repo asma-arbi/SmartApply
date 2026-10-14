@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate PWA Icons</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        canvas { display: none; }
+        .download-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #1d4ed8;
+        }
+        .preview {
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+        }
+        .preview img {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>SmartApply PWA Icon Generator</h1>
+    <p>Click the buttons below to download the required PWA icons.</p>
+    
+    <div class="download-section">
+        <h2>Required Icons</h2>
+        <button onclick="generateIcon(192)">Download 192x192 Icon</button>
+        <button onclick="generateIcon(512)">Download 512x512 Icon</button>
+        <button onclick="generateIcon(180)">Download 180x180 Apple Icon</button>
+        <button onclick="generateAllIcons()">Download All Icons</button>
+    </div>
+
+    <div class="download-section">
+        <h2>Preview</h2>
+        <div id="previews"></div>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <script>
+        function drawIcon(canvas, size) {
+            const ctx = canvas.getContext('2d');
+            canvas.width = size;
+            canvas.height = size;
+
+            // Background with rounded corners
+            ctx.fillStyle = '#2563eb';
+            const radius = size / 4;
+            ctx.beginPath();
+            ctx.moveTo(radius, 0);
+            ctx.lineTo(size - radius, 0);
+            ctx.quadraticCurveTo(size, 0, size, radius);
+            ctx.lineTo(size, size - radius);
+            ctx.quadraticCurveTo(size, size, size - radius, size);
+            ctx.lineTo(radius, size);
+            ctx.quadraticCurveTo(0, size, 0, size - radius);
+            ctx.lineTo(0, radius);
+            ctx.quadraticCurveTo(0, 0, radius, 0);
+            ctx.closePath();
+            ctx.fill();
+
+            // Briefcase icon
+            ctx.fillStyle = 'white';
+            const scale = size / 512;
+            
+            // Draw briefcase
+            ctx.save();
+            ctx.translate(size * 0.25, size * 0.25);
+            ctx.scale(scale, scale);
+            
+            // Top handle
+            ctx.beginPath();
+            ctx.arc(128, 96, 64, Math.PI, 0, false);
+            ctx.lineWidth = 24;
+            ctx.strokeStyle = 'white';
+            ctx.stroke();
+            
+            // Main body
+            ctx.fillStyle = 'white';
+            ctx.fillRect(32, 128, 192, 128);
+            
+            // Lock detail
+            ctx.fillStyle = '#2563eb';
+            ctx.beginPath();
+            ctx.arc(128, 192, 16, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillRect(120, 192, 16, 32);
+            
+            ctx.restore();
+
+            // Text "SA"
+            ctx.fillStyle = 'white';
+            ctx.font = `bold ${size * 0.16}px Arial, sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('SA', size / 2, size * 0.86);
+        }
+
+        function generateIcon(size) {
+            const canvas = document.getElementById('canvas');
+            drawIcon(canvas, size);
+            
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                
+                if (size === 180) {
+                    a.download = 'apple-touch-icon.png';
+                } else {
+                    a.download = `icon-${size}.png`;
+                }
+                
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+        }
+
+        function generateAllIcons() {
+            [192, 512, 180].forEach((size, index) => {
+                setTimeout(() => generateIcon(size), index * 500);
+            });
+        }
+
+        // Generate previews
+        window.onload = function() {
+            const previewsDiv = document.getElementById('previews');
+            [192, 512, 180].forEach(size => {
+                const canvas = document.createElement('canvas');
+                drawIcon(canvas, size);
+                
+                const preview = document.createElement('div');
+                preview.className = 'preview';
+                
+                const img = document.createElement('img');
+                img.src = canvas.toDataURL();
+                img.width = Math.min(size, 200);
+                img.alt = `${size}x${size} icon`;
+                
+                const label = document.createElement('div');
+                label.textContent = `${size}x${size}`;
+                label.style.marginTop = '5px';
+                label.style.fontSize = '12px';
+                label.style.color = '#666';
+                
+                preview.appendChild(img);
+                preview.appendChild(label);
+                previewsDiv.appendChild(preview);
+            });
+        };
+    </script>
+</body>
+</html>
