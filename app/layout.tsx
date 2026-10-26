@@ -32,6 +32,8 @@ export const viewport: Viewport = {
   themeColor: "#2563EB",
 };
 
+import OfflineIndicator from "@/app/components/OfflineIndicator";
+
 export default function RootLayout({
   children,
 }: {
@@ -48,7 +50,10 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="h-full font-sans antialiased">{children}</body>
+      <body className="h-full font-sans antialiased">
+        <OfflineIndicator />
+        {children}
+      </body>
     </html>
   );
 }
