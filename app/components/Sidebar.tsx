@@ -48,7 +48,9 @@ export default function Sidebar({ role, userName, userEmail }: SidebarProps) {
   const items = navConfig[role] ?? navConfig.candidat;
 
   useEffect(() => {
-    const handler = () => { if (window.innerWidth >= 1024) setOpen(false); };
+    const handler = () => {
+      if (window.innerWidth >= 1024) setOpen(false);
+    };
     window.addEventListener("resize", handler);
     return () => window.removeEventListener("resize", handler);
   }, []);
@@ -58,18 +60,12 @@ export default function Sidebar({ role, userName, userEmail }: SidebarProps) {
     return pathname.startsWith(item.href) && item.href !== "/";
   };
 
-  const roleLabel: Record<string, string> = {
-    candidat: "Candidat",
-    entreprise: "Entreprise",
-    admin: "Administrateur",
-  };
-
   return (
     <>
-      {/* Backdrop */}
+      {/* Backdrop for mobile */}
       {open && (
         <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 lg:hidden transition-opacity"
           onClick={() => setOpen(false)}
           aria-hidden="true"
         />
@@ -79,27 +75,27 @@ export default function Sidebar({ role, userName, userEmail }: SidebarProps) {
       <aside
         className={[
           "fixed top-0 left-0 z-50 h-screen w-64 flex-shrink-0",
-          "bg-slate-900 flex flex-col",
+          "bg-white border-r border-slate-100 flex flex-col",
           "transition-transform duration-300 ease-in-out",
           "lg:relative lg:translate-x-0 lg:z-auto",
-          open ? "translate-x-0" : "-translate-x-full",
+          open ? "translate-x-0 shadow-2xl" : "-translate-x-full",
         ].join(" ")}
-        aria-label="Navigation"
+        aria-label="Navigation principale"
       >
-        {/* Logo */}
-        <div className="flex items-center justify-between px-5 py-5 border-b border-slate-800">
-          <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-9 h-9 flex-shrink-0 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/25">
-              <span className="text-white font-black text-base leading-none">S</span>
+        {/* Logo Section */}
+        <div className="flex items-center justify-between px-5 h-16 border-b border-slate-100">
+          <Link href="/" className="flex items-center gap-2.5 min-w-0 group">
+            <div className="w-8 h-8 flex-shrink-0 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center shadow-sm shadow-blue-500/20 group-hover:scale-105 transition-transform">
+              <span className="text-white font-black text-sm leading-none">S</span>
             </div>
             <div className="min-w-0">
-              <p className="text-white font-bold text-sm leading-tight">SmartApply</p>
-              <p className="text-blue-400 text-[11px] leading-tight">Tunisia</p>
+              <span className="text-slate-900 font-bold text-sm tracking-tight">SmartApply</span>{" "}
+              <span className="text-blue-600 text-xs font-semibold">Tunisia</span>
             </div>
-          </div>
+          </Link>
           <button
             onClick={() => setOpen(false)}
-            className="lg:hidden text-slate-500 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors"
+            className="lg:hidden text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-50 transition-colors"
             aria-label="Fermer le menu"
           >
             <XIcon />
@@ -107,14 +103,25 @@ export default function Sidebar({ role, userName, userEmail }: SidebarProps) {
         </div>
 
         {/* Role badge */}
-        <div className="px-5 pt-3 pb-1">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-blue-500/80">
-            {roleLabel[role] ?? role}
-          </span>
+        <div className="px-5 pt-3.5 pb-2">
+          {role === "admin" ? (
+            <span className="inline-flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-800 text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+              🛡️ Super Admin
+            </span>
+          ) : role === "entreprise" ? (
+            <span className="bg-indigo-50 text-indigo-700 text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full inline-block">
+              Entreprise
+            </span>
+          ) : (
+            <span className="bg-blue-50 text-blue-700 text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full inline-block">
+              Candidat
+            </span>
+          )}
         </div>
 
         {/* Nav items */}
-        <nav className="flex-1 overflow-y-auto px-3 py-2 space-y-0.5" role="navigation">
+        <nav className="flex-1 overflow-y-auto px-3 py-1 space-y-1" role="navigation">
           {items.map((item) => {
             const active = isActive(item);
             return (
@@ -124,43 +131,51 @@ export default function Sidebar({ role, userName, userEmail }: SidebarProps) {
                 onClick={() => setOpen(false)}
                 aria-current={active ? "page" : undefined}
                 className={[
-                  "nav-item group",
-                  active ? "nav-item-active" : "nav-item-inactive",
+                  "flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all duration-150 group",
+                  active
+                    ? "bg-blue-50 text-blue-700 font-medium"
+                    : "text-slate-500 hover:bg-slate-50 hover:text-slate-700",
                 ].join(" ")}
               >
                 <span
                   className={[
                     "w-4 h-4 flex-shrink-0 transition-colors",
                     active
-                      ? "text-blue-400"
-                      : "text-slate-500 group-hover:text-slate-300",
+                      ? "text-blue-600"
+                      : "text-slate-400 group-hover:text-slate-600",
                   ].join(" ")}
                 >
                   {item.icon}
                 </span>
-                <span>{item.label}</span>
+                <span className="truncate">{item.label}</span>
               </Link>
             );
           })}
         </nav>
 
-        {/* User + logout */}
-        <div className="border-t border-slate-800 p-4 space-y-3">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="w-9 h-9 flex-shrink-0 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center shadow-md">
-              <span className="text-white text-sm font-semibold">
+        {/* User section at bottom */}
+        <div className="border-t border-slate-100 p-4 space-y-2">
+          <div className="flex items-center gap-3 min-w-0 px-1 py-1">
+            <div className="w-8 h-8 flex-shrink-0 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center shadow-sm">
+              <span className="text-white text-xs font-semibold">
                 {(userName?.charAt(0) ?? "U").toUpperCase()}
               </span>
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-white text-sm font-medium truncate">{userName || "Utilisateur"}</p>
-              <p className="text-slate-500 text-xs truncate">{userEmail}</p>
+              <p className="text-slate-900 text-sm font-medium truncate leading-tight">
+                {userName || "Utilisateur"}
+              </p>
+              <p className="text-slate-500 text-xs truncate leading-tight mt-0.5">
+                {userEmail}
+              </p>
             </div>
           </div>
+
+          {/* Logout button */}
           <form action={logout}>
             <button
               type="submit"
-              className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all duration-150"
+              className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-150 font-medium"
             >
               <LogoutIcon />
               <span>Déconnexion</span>
@@ -171,7 +186,7 @@ export default function Sidebar({ role, userName, userEmail }: SidebarProps) {
 
       {/* Mobile FAB to open sidebar */}
       <button
-        className="fixed bottom-5 left-4 z-30 lg:hidden w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-xl shadow-blue-600/30 flex items-center justify-center transition-all active:scale-95"
+        className="fixed bottom-5 left-4 z-30 lg:hidden w-11 h-11 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg shadow-blue-600/30 flex items-center justify-center transition-all active:scale-95"
         onClick={() => setOpen(true)}
         aria-label="Ouvrir le menu"
         aria-expanded={open}
@@ -191,20 +206,25 @@ function HomeIcon() {
     </svg>
   );
 }
+
 function BriefcaseIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-      <rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+      <rect x="2" y="7" width="20" height="14" rx="2" />
+      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
     </svg>
   );
 }
+
 function BuildingIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-      <rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" />
+      <rect x="3" y="3" width="18" height="18" rx="2" />
+      <path d="M3 9h18M9 21V9" />
     </svg>
   );
 }
+
 function ClipboardIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
@@ -213,6 +233,7 @@ function ClipboardIcon() {
     </svg>
   );
 }
+
 function BookmarkIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
@@ -220,6 +241,7 @@ function BookmarkIcon() {
     </svg>
   );
 }
+
 function SettingsIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
@@ -228,55 +250,73 @@ function SettingsIcon() {
     </svg>
   );
 }
+
 function PlusCircleIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-      <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="16" /><line x1="8" y1="12" x2="16" y2="12" />
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="8" x2="12" y2="16" />
+      <line x1="8" y1="12" x2="16" y2="12" />
     </svg>
   );
 }
+
 function ChartIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-      <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" />
-      <rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" />
+      <rect x="3" y="3" width="7" height="7" />
+      <rect x="14" y="3" width="7" height="7" />
+      <rect x="14" y="14" width="7" height="7" />
+      <rect x="3" y="14" width="7" height="7" />
     </svg>
   );
 }
+
 function ChartBarIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-      <line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" />
+      <line x1="18" y1="20" x2="18" y2="10" />
+      <line x1="12" y1="20" x2="12" y2="4" />
+      <line x1="6" y1="20" x2="6" y2="14" />
     </svg>
   );
 }
+
 function UsersIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
-      <path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
     </svg>
   );
 }
+
 function LogoutIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-      <polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" />
+      <polyline points="16 17 21 12 16 7" />
+      <line x1="21" y1="12" x2="9" y2="12" />
     </svg>
   );
 }
+
 function MenuIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="w-5 h-5">
-      <line x1="3" y1="8" x2="21" y2="8" /><line x1="3" y1="16" x2="21" y2="16" />
+      <line x1="3" y1="8" x2="21" y2="8" />
+      <line x1="3" y1="16" x2="21" y2="16" />
     </svg>
   );
 }
+
 function XIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="w-5 h-5">
-      <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
     </svg>
   );
 }

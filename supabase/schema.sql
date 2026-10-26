@@ -7,7 +7,13 @@
 create table if not exists public.companies (
   id          uuid primary key references auth.users(id) on delete cascade,
   name        text not null,
+  sector      text,
+  size        text check (size in ('1-10','11-50','51-200','201-500','500+')),
+  city        text,
+  logo_url    text,
   website     text,
+  linkedin_url text,
+  phone       text,
   description text,
   status      text not null default 'pending'
               check (status in ('pending', 'verified', 'rejected')),
@@ -102,6 +108,15 @@ create policy "companies modifiables par proprietaire" on public.companies
 drop policy if exists "companies inserable a l inscription" on public.companies;
 create policy "companies inserable a l inscription" on public.companies
   for insert with check (auth.uid() = id);
+
+drop policy if exists "companies modifiables par admin" on public.companies;
+create policy "companies modifiables par admin" on public.companies
+  for update using (
+    exists (
+      select 1 from public.profiles
+      where profiles.id = auth.uid() and profiles.role = 'admin'
+    )
+  );
 
 -- Policies: jobs
 drop policy if exists "offres publiees visibles" on public.jobs;

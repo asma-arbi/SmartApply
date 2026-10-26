@@ -19,7 +19,7 @@ export async function middleware(req: NextRequest) {
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
     {
       cookies: {
         getAll: () => req.cookies.getAll(),
@@ -38,28 +38,26 @@ export async function middleware(req: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const role = user?.user_metadata?.role as string | undefined;
-  const emailConfirmed = !!user?.email_confirmed_at;
+  let role = user?.user_metadata?.role as string | undefined;
 
-  // ── Redirect logged-in users away from auth pages ─────────────
+  // Si le rôle n'est pas dans user_metadata, vérification de secours dans profiles
+  if (user && (!role || role === "candidat")) {
+    try {
+      const { data: prof } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .maybeSingle();
+      if (prof?.role) role = prof.role;
+    } catch {}
+  }
+
+  // ── Rediriger les utilisateurs connectés hors des pages d'authentification ──
   if (user && AUTH_ROUTES.includes(pathname)) {
-    if (!emailConfirmed) {
-      return NextResponse.redirect(new URL("/verify-email", req.url));
-    }
     return redirectByRole(role ?? "candidat", req.url);
   }
 
-  // ── Email verification gate ────────────────────────────────────
-  if (
-    user &&
-    !emailConfirmed &&
-    !pathname.startsWith("/verify-email") &&
-    !pathname.startsWith("/auth/callback")
-  ) {
-    return NextResponse.redirect(new URL("/verify-email", req.url));
-  }
-
-  // ── Protect dashboard routes ───────────────────────────────────
+  // ── Protection des routes dashboard ───────────────────────────
   if (pathname.startsWith(DASHBOARD_PREFIX)) {
     if (!user) {
       const url = new URL("/login", req.url);
@@ -67,23 +65,26 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(url);
     }
 
-    // /dashboard root → role-specific redirect
+    // /dashboard root → redirection selon le rôle
     if (pathname === "/dashboard") {
       return redirectByRole(role ?? "candidat", req.url);
     }
 
-    // Role-based access control
+    // L'administrateur a un accès complet à tous les espaces
+    if (role === "admin") {
+      return res;
+    }
+
+    // Contrôle d'accès par rôle
     if (
       pathname.startsWith("/dashboard/candidate") &&
-      role !== "candidat" &&
-      role !== "admin"
+      role !== "candidat"
     ) {
       return NextResponse.redirect(new URL("/access-denied", req.url));
     }
     if (
       pathname.startsWith("/dashboard/company") &&
-      role !== "entreprise" &&
-      role !== "admin"
+      role !== "entreprise"
     ) {
       return NextResponse.redirect(new URL("/access-denied", req.url));
     }

@@ -7,20 +7,37 @@ export const dynamic = "force-dynamic";
 export default async function PublicPage({
   searchParams,
 }: {
-  searchParams: { q?: string };
+  searchParams: { q?: string; company?: string };
 }) {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   const role = user?.user_metadata?.role as string | undefined;
 
-  const q = (searchParams.q ?? "").replace(/[,()%]/g, "");
+  const q = (searchParams.q ?? "").replace(/[,()%]/g, "").trim();
+  const companyId = searchParams.company;
+
   let query = supabase
     .from("jobs")
     .select("*, companies(name)")
     .eq("status", "published")
     .order("created_at", { ascending: false });
 
-  if (q) query = query.or(`title.ilike.%${q}%,location.ilike.%${q}%`);
+  if (companyId) {
+    query = query.eq("company_id", companyId);
+  } else if (q) {
+    const { data: matchingCompanies } = await supabase
+      .from("companies")
+      .select("id")
+      .ilike("name", `%${q}%`);
+    const matchedIds = matchingCompanies?.map((c) => c.id) ?? [];
+    if (matchedIds.length > 0) {
+      query = query.or(
+        `title.ilike.%${q}%,location.ilike.%${q}%,company_id.in.(${matchedIds.join(",")})`
+      );
+    } else {
+      query = query.or(`title.ilike.%${q}%,location.ilike.%${q}%`);
+    }
+  }
   const { data: jobs } = await query;
 
   const jobTypeColor: Record<string, string> = {
@@ -111,64 +128,53 @@ export default async function PublicPage({
       </nav>
 
       {/* ── Hero ────────────────────────────────────────── */}
-      {!q && (
-        <section
-          className="py-16 px-4 text-center relative overflow-hidden"
-          style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #1e1b4b 100%)" }}
-        >
-          {/* Grid overlay */}
-          <div className="absolute inset-0 opacity-[0.04]"
-               style={{
-                 backgroundImage: "linear-gradient(white 1px,transparent 1px),linear-gradient(90deg,white 1px,transparent 1px)",
-                 backgroundSize: "40px 40px",
-               }} />
-          <div className="relative z-10 max-w-2xl mx-auto">
-            <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 rounded-full px-4 py-1.5 mb-6">
-              <span className="text-blue-400 text-sm">🇹🇳</span>
-              <span className="text-blue-300 text-xs font-medium">Made for Tunisia</span>
+      {!q && !companyId && (
+        <section className="py-14 px-4 text-center border-b border-slate-100 bg-white">
+          <div className="max-w-3xl mx-auto animate-fade-in">
+            <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 rounded-full px-3.5 py-1 mb-5">
+              <span className="text-sm">🇹🇳</span>
+              <span className="text-blue-700 text-xs font-semibold">Plateforme de recrutement IT en Tunisie</span>
             </div>
-            <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4 leading-tight">
+            <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight leading-tight">
               Trouvez votre{" "}
-              <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
-                emploi IT
-              </span>{" "}
+              <span className="text-blue-600">opportunité IT</span>{" "}
               en Tunisie
             </h1>
-            <p className="text-slate-400 text-lg mb-8">
-              Offres d&apos;emploi, stages et PFE pour les jeunes diplômés IT tunisiens.
+            <p className="text-slate-500 text-base sm:text-lg mb-8 max-w-xl mx-auto">
+              Offres d&apos;emploi, stages PFE et alternances sélectionnés auprès des meilleures entreprises tech tunisiennes.
             </p>
 
             {/* Hero search */}
-            <form method="GET" action="/" className="flex gap-2 max-w-lg mx-auto">
+            <form method="GET" action="/" className="flex flex-col sm:flex-row gap-2 max-w-xl mx-auto">
               <div className="relative flex-1">
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
                   <SearchIcon />
                 </div>
                 <input
                   id="hero-search"
                   name="q"
-                  placeholder="Rechercher un poste, une entreprise…"
-                  className="w-full bg-white/10 backdrop-blur border border-white/20 rounded-xl pl-9 pr-4 py-3 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
+                  placeholder="Poste, technologie, entreprise ou ville…"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white focus:border-transparent transition-all"
                 />
               </div>
               <button
                 type="submit"
-                className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl text-sm font-semibold transition-all active:scale-95"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all shadow-sm shadow-blue-500/20 active:scale-[0.98]"
               >
                 Rechercher
               </button>
             </form>
 
             {/* Stats */}
-            <div className="flex justify-center gap-8 mt-10">
+            <div className="grid grid-cols-3 gap-4 max-w-lg mx-auto mt-10 pt-8 border-t border-slate-100">
               {[
-                { value: `${jobs?.length ?? 0}`, label: "offres actives" },
-                { value: "500+", label: "entreprises IT" },
-                { value: "12k+", label: "candidats" },
+                { value: `${jobs?.length ?? 0}`, label: "Offres actives" },
+                { value: "500+", label: "Entreprises tech" },
+                { value: "12k+", label: "Candidats qualifiés" },
               ].map((s) => (
                 <div key={s.label} className="text-center">
-                  <p className="text-2xl font-bold text-white">{s.value}</p>
-                  <p className="text-slate-400 text-xs">{s.label}</p>
+                  <p className="text-2xl font-bold text-slate-900">{s.value}</p>
+                  <p className="text-slate-400 text-xs mt-0.5 font-medium">{s.label}</p>
                 </div>
               ))}
             </div>
@@ -178,10 +184,11 @@ export default async function PublicPage({
 
       {/* ── Jobs listing ─────────────────────────────── */}
       <main className="max-w-6xl mx-auto px-4 py-10">
-        {q && (
+        {(q || companyId) && (
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-semibold text-slate-900">
-              {jobs?.length ?? 0} résultat{(jobs?.length ?? 0) > 1 ? "s" : ""} pour &quot;{q}&quot;
+              {jobs?.length ?? 0} résultat{(jobs?.length ?? 0) > 1 ? "s" : ""}{" "}
+              {q ? `pour "${q}"` : "pour cette entreprise"}
             </h2>
             <Link href="/" className="text-sm text-blue-600 hover:text-blue-700">
               ✕ Effacer
@@ -189,7 +196,7 @@ export default async function PublicPage({
           </div>
         )}
 
-        {!q && (
+        {!q && !companyId && (
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-semibold text-slate-900">Offres récentes</h2>
             <span className="badge-gray">{jobs?.length ?? 0} offres</span>
@@ -263,6 +270,9 @@ export default async function PublicPage({
               </Link>
               <Link href="/register?role=entreprise" className="text-sm text-slate-500 hover:text-blue-600 transition-colors">
                 Espace entreprise
+              </Link>
+              <Link href="/register?role=admin" className="text-sm text-amber-600 hover:text-amber-700 font-semibold transition-colors">
+                Espace admin
               </Link>
               <Link href="/login" className="text-sm text-slate-500 hover:text-blue-600 transition-colors">
                 Connexion
