@@ -143,16 +143,13 @@ function VerifyEmailContent() {
           </Link>
 
           {/* Dev assist box */}
-          <div className="mt-4 p-3.5 bg-amber-50/70 border border-amber-200/60 rounded-xl text-left text-xs text-amber-900">
-            <p className="font-semibold flex items-center gap-1.5 text-amber-950">
-              <span>💡 Mode Démonstration Supabase :</span>
+          <div className="mt-4 p-3.5 bg-blue-50/70 border border-blue-200/60 rounded-xl text-left text-xs text-blue-900">
+            <p className="font-semibold flex items-center gap-1.5 text-blue-950">
+              <span>💡 Mode Démonstration MongoDB :</span>
             </p>
-            <p className="mt-1 text-amber-800 leading-relaxed text-[11px]">
-              Si aucun serveur SMTP n&apos;est connecté à Supabase, activez votre compte en 1 seconde via le SQL Editor :
+            <p className="mt-1 text-blue-800 leading-relaxed text-[11px]">
+              L&apos;application est configurée pour vous connecter directement sans bloquer vos tests avec des e-mails virtuels.
             </p>
-            <code className="block mt-1.5 p-2 bg-white/90 rounded-lg text-[10px] font-mono text-slate-800 border border-amber-200 select-all overflow-x-auto">
-              update auth.users set email_confirmed_at = now() where email_confirmed_at is null;
-            </code>
           </div>
 
           <div className="pt-6 mt-6 border-t border-slate-100">

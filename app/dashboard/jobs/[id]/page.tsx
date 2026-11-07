@@ -1,11 +1,19 @@
-import { createClient } from "@/lib/supabase/server";
+import { getDb } from "@/lib/mongodb";
+import { Job } from "@/lib/models/types";
 import { saveJob } from "@/app/actions";
 
 // /dashboard/jobs/new = création ; /dashboard/jobs/<uuid> = modification
 export default async function JobForm({ params }: { params: { id: string } }) {
   const isNew = params.id === "new";
-  const job = isNew ? null : (await createClient().from("jobs").select("*").eq("id", params.id).single()).data;
+  let job: Job | null = null;
+
+  if (!isNew) {
+    const db = await getDb();
+    job = await db.collection<Job>("jobs").findOne({ id: params.id });
+  }
+
   const input = "w-full border rounded px-3 py-2";
+
   return (
     <form action={saveJob} className="bg-white border rounded p-6 space-y-3 max-w-xl">
       <h1 className="text-xl font-bold">{isNew ? "Publier une offre" : "Modifier l'offre"}</h1>

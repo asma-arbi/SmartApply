@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getSessionUser } from "@/lib/auth/session";
+import { getDb } from "@/lib/mongodb";
+import { Company, Job } from "@/lib/models/types";
 import { deleteJob } from "@/app/actions";
 
 export const dynamic = "force-dynamic";
@@ -26,24 +28,21 @@ const SIZE_LABEL: Record<string, string> = {
 };
 
 export default async function CompanyDashboard() {
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const sessionData = await getSessionUser();
 
-  if (!user) redirect("/login");
+  if (!sessionData) redirect("/login");
 
-  const { data: company } = await supabase
-    .from("companies")
-    .select("*")
-    .eq("id", user.id)
-    .single();
+  const db = await getDb();
 
-  const { data: jobs } = await supabase
-    .from("jobs")
-    .select("*")
-    .eq("company_id", user.id)
-    .order("created_at", { ascending: false });
+  const company = await db
+    .collection<Company>("companies")
+    .findOne({ id: sessionData.user.id });
+
+  const jobs = await db
+    .collection<Job>("jobs")
+    .find({ company_id: sessionData.user.id })
+    .sort({ created_at: -1 })
+    .toArray();
 
   const stats = {
     total: jobs?.length ?? 0,

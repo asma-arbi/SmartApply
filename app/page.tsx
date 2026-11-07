@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { getSessionUser } from "@/lib/auth/session";
+import { getDb } from "@/lib/mongodb";
 import { logout } from "@/app/actions";
 
 export const dynamic = "force-dynamic";
@@ -9,36 +10,51 @@ export default async function PublicPage({
 }: {
   searchParams: { q?: string; company?: string };
 }) {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  const role = user?.user_metadata?.role as string | undefined;
+  const sessionData = await getSessionUser();
+  const user = sessionData?.user;
+  const role = user?.role;
 
-  const q = (searchParams.q ?? "").replace(/[,()%]/g, "").trim();
+  const q = (searchParams.q ?? "").trim();
   const companyId = searchParams.company;
 
-  let query = supabase
-    .from("jobs")
-    .select("*, companies(name)")
-    .eq("status", "published")
-    .order("created_at", { ascending: false });
+  const db = await getDb();
+
+  const pipeline: any[] = [
+    { $match: { status: "published" } },
+    { $sort: { created_at: -1 } },
+    {
+      $lookup: {
+        from: "companies",
+        localField: "company_id",
+        foreignField: "id",
+        as: "companies",
+      },
+    },
+    {
+      $unwind: {
+        path: "$companies",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+  ];
 
   if (companyId) {
-    query = query.eq("company_id", companyId);
+    pipeline.unshift({ $match: { company_id: companyId } });
   } else if (q) {
-    const { data: matchingCompanies } = await supabase
-      .from("companies")
-      .select("id")
-      .ilike("name", `%${q}%`);
-    const matchedIds = matchingCompanies?.map((c) => c.id) ?? [];
-    if (matchedIds.length > 0) {
-      query = query.or(
-        `title.ilike.%${q}%,location.ilike.%${q}%,company_id.in.(${matchedIds.join(",")})`
-      );
-    } else {
-      query = query.or(`title.ilike.%${q}%,location.ilike.%${q}%`);
-    }
+    const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp(escaped, "i");
+    pipeline.push({
+      $match: {
+        $or: [
+          { title: regex },
+          { location: regex },
+          { "companies.name": regex },
+        ],
+      },
+    });
   }
-  const { data: jobs } = await query;
+
+  const jobs = await db.collection("jobs").aggregate(pipeline).toArray();
 
   const jobTypeColor: Record<string, string> = {
     Stage: "badge-blue",

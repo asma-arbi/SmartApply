@@ -1,15 +1,12 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getSessionUser } from "@/lib/auth/session";
 
 export default async function DashboardPage() {
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const sessionData = await getSessionUser();
 
-  if (!user) redirect("/login");
+  if (!sessionData) redirect("/login");
 
-  const role = user.user_metadata?.role ?? "candidat";
+  const role = sessionData.user.role;
 
   if (role === "admin") redirect("/dashboard/admin");
   if (role === "entreprise") redirect("/dashboard/company");

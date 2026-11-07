@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { getDb } from "@/lib/mongodb";
+import { Company } from "@/lib/models/types";
 import { adminDeleteJob, adminUpdateJobStatus } from "@/app/actions";
 
 export const dynamic = "force-dynamic";
@@ -24,7 +25,7 @@ export default async function AdminJobsPage({
 }: {
   searchParams?: { page?: string; status?: string; company?: string; type?: string; q?: string };
 }) {
-  const supabase = createClient();
+  const db = await getDb();
 
   const currentPage = Math.max(1, parseInt(searchParams?.page ?? "1") || 1);
   const selectedStatus = searchParams?.status ?? "all";
@@ -32,45 +33,68 @@ export default async function AdminJobsPage({
   const selectedType = searchParams?.type ?? "all";
   const searchQ = (searchParams?.q ?? "").trim();
 
-  let query = supabase.from("jobs").select("*, companies(id, name)", { count: "exact" });
+  const filter: any = {};
 
   if (selectedStatus && selectedStatus !== "all") {
-    query = query.eq("status", selectedStatus);
+    filter.status = selectedStatus;
   }
 
   if (selectedCompany && selectedCompany !== "all") {
-    query = query.eq("company_id", selectedCompany);
+    filter.company_id = selectedCompany;
   }
 
   if (selectedType && selectedType !== "all") {
-    query = query.eq("type", selectedType);
+    filter.type = selectedType;
   }
 
   if (searchQ) {
-    query = query.or(`title.ilike.%${searchQ}%,location.ilike.%${searchQ}%`);
+    const regex = new RegExp(searchQ.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+    filter.$or = [
+      { title: regex },
+      { location: regex },
+    ];
   }
 
   const from = (currentPage - 1) * PAGE_SIZE;
-  const to = from + PAGE_SIZE - 1;
-
-  query = query
-    .order("created_at", { ascending: false })
-    .range(from, to);
 
   const [
-    { data: jobs, count: filteredCount },
-    { count: totalCount },
-    { count: publishedCount },
-    { count: draftCount },
-    { count: closedCount },
-    { data: companiesList },
+    jobs,
+    filteredCount,
+    totalCount,
+    publishedCount,
+    draftCount,
+    closedCount,
+    companiesList,
   ] = await Promise.all([
-    query,
-    supabase.from("jobs").select("*", { count: "exact", head: true }),
-    supabase.from("jobs").select("*", { count: "exact", head: true }).eq("status", "published"),
-    supabase.from("jobs").select("*", { count: "exact", head: true }).eq("status", "draft"),
-    supabase.from("jobs").select("*", { count: "exact", head: true }).eq("status", "closed"),
-    supabase.from("companies").select("id, name").order("name"),
+    db
+      .collection("jobs")
+      .aggregate([
+        { $match: filter },
+        { $sort: { created_at: -1 } },
+        { $skip: from },
+        { $limit: PAGE_SIZE },
+        {
+          $lookup: {
+            from: "companies",
+            localField: "company_id",
+            foreignField: "id",
+            as: "companies",
+          },
+        },
+        {
+          $unwind: {
+            path: "$companies",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+      ])
+      .toArray(),
+    db.collection("jobs").countDocuments(filter),
+    db.collection("jobs").countDocuments(),
+    db.collection("jobs").countDocuments({ status: "published" }),
+    db.collection("jobs").countDocuments({ status: "draft" }),
+    db.collection("jobs").countDocuments({ status: "closed" }),
+    db.collection<Company>("companies").find({}, { projection: { id: 1, name: 1 } }).sort({ name: 1 }).toArray(),
   ]);
 
   const totalPages = Math.ceil((filteredCount ?? 0) / PAGE_SIZE) || 1;

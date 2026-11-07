@@ -3,15 +3,18 @@
 import { useState, useTransition, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { register, loginWithGoogle } from "@/app/actions";
+import { register } from "@/app/actions";
+import { executeRecaptcha } from "@/lib/recaptcha-client";
+import ReCaptchaWidget from "@/app/components/ReCaptchaWidget";
 
 type Role = "candidat" | "entreprise";
 
 const ERROR_MAP: Record<string, string> = {
   password_too_short: "Le mot de passe doit contenir au moins 8 caractères.",
   tos_required: "Vous devez accepter les conditions d'utilisation.",
-  rate_limit: "Limite d'envoi d'emails Supabase atteinte. Pour tester librement sans confirmation, désactivez 'Confirm email' dans Supabase (Authentication > Providers > Email).",
-  invalid_email: "Format d'adresse email non accepté par Supabase.",
+  recaptcha_failed: "Échec de vérification reCAPTCHA. Veuillez rafraîchir la page et réessayer.",
+  rate_limit: "Trop de requêtes détectées. Veuillez patienter un instant.",
+  invalid_email: "Format d'adresse email invalide.",
   generic: "Une erreur est survenue lors de l'inscription. Veuillez vérifier vos données.",
 };
 
@@ -24,26 +27,49 @@ function RegisterForm() {
   const [showPwd, setShowPwd] = useState(false);
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [recaptchaVerified, setRecaptchaVerified] = useState(false);
+  const [recaptchaError, setRecaptchaError] = useState(false);
   const [isPending, startTrans] = useTransition();
 
   const errorMsg = errorParam ? (ERROR_MAP[errorParam] ?? ERROR_MAP.generic) : null;
   const pwdMismatch = confirm.length > 0 && password !== confirm;
   const pwdTooShort = password.length > 0 && password.length < 8;
 
+  function generateStrongPassword() {
+    const chars = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$%&*";
+    let pwd = "";
+    pwd += "ABCDEFGHJKLMNPQRSTUVWXYZ"[Math.floor(Math.random() * 24)];
+    pwd += "abcdefghjkmnpqrstuvwxyz"[Math.floor(Math.random() * 24)];
+    pwd += "23456789"[Math.floor(Math.random() * 8)];
+    pwd += "!@#$%&*"[Math.floor(Math.random() * 7)];
+    for (let i = 4; i < 14; i++) {
+      pwd += chars[Math.floor(Math.random() * chars.length)];
+    }
+    const shuffled = pwd.split("").sort(() => 0.5 - Math.random()).join("");
+    setPassword(shuffled);
+    setConfirm(shuffled);
+    setShowPwd(true);
+  }
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!recaptchaVerified) {
+      setRecaptchaError(true);
+      return;
+    }
     if (pwdMismatch || pwdTooShort) return;
-    const fd = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const fd = new FormData(form);
     fd.set("role", role);
-    startTrans(() => {
+    startTrans(async () => {
+      const token = await executeRecaptcha("register");
+      fd.set("recaptcha_token", token);
       register(fd);
     });
   }
 
   function handleGoogle() {
-    startTrans(() => {
-      loginWithGoogle();
-    });
+    window.location.href = `/auth/google?role=${role}`;
   }
 
   // Password strength calculation
@@ -130,32 +156,28 @@ function RegisterForm() {
             </div>
           )}
 
-          {/* Google signup (candidat only) */}
-          {role === "candidat" && (
-            <>
-              <button
-                id="btn-google-register"
-                type="button"
-                onClick={handleGoogle}
-                disabled={isPending}
-                className="w-full flex items-center justify-center gap-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl py-2.5 px-4 text-sm font-medium transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-200 disabled:opacity-50 mb-5"
-              >
-                <GoogleIcon />
-                <span>Continuer avec Google</span>
-              </button>
+          {/* Google signup (Candidat & Entreprise) */}
+          <button
+            id="btn-google-register"
+            type="button"
+            onClick={handleGoogle}
+            disabled={isPending}
+            className="w-full flex items-center justify-center gap-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl py-2.5 px-4 text-sm font-medium transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-200 disabled:opacity-50 mb-5"
+          >
+            <GoogleIcon />
+            <span>Continuer avec Google</span>
+          </button>
 
-              <div className="relative mb-5">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-slate-100" />
-                </div>
-                <div className="relative flex justify-center">
-                  <span className="bg-white px-3 text-xs text-slate-400 font-medium">
-                    ou avec votre email
-                  </span>
-                </div>
-              </div>
-            </>
-          )}
+          <div className="relative mb-5">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-100" />
+            </div>
+            <div className="relative flex justify-center">
+              <span className="bg-white px-3 text-xs text-slate-400 font-medium">
+                ou avec votre email
+              </span>
+            </div>
+          </div>
 
           {/* Registration Form */}
           <form onSubmit={handleSubmit} id="register-form" className="space-y-4">
@@ -227,9 +249,19 @@ function RegisterForm() {
 
             {/* Password */}
             <div>
-              <label htmlFor="reg-password" className="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">
-                Mot de passe
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label htmlFor="reg-password" className="block text-xs font-semibold uppercase tracking-wider text-slate-600">
+                  Mot de passe
+                </label>
+                <button
+                  type="button"
+                  onClick={generateStrongPassword}
+                  className="text-xs text-blue-600 hover:text-blue-700 font-medium inline-flex items-center gap-1 transition-colors"
+                  title="Générer automatiquement un mot de passe robuste"
+                >
+                  <span>✨</span> Suggérer un mot de passe fort
+                </button>
+              </div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                   <LockIcon className="w-4 h-4" />
@@ -362,12 +394,21 @@ function RegisterForm() {
               )}
             </div>
 
+            {/* reCAPTCHA vérification obligatoire */}
+            <ReCaptchaWidget
+              onVerify={(v) => {
+                setRecaptchaVerified(v);
+                if (v) setRecaptchaError(false);
+              }}
+              requiredError={recaptchaError}
+            />
+
             {/* Submit */}
             <button
               id="btn-register-submit"
               type="submit"
-              disabled={isPending || !!pwdMismatch || !!pwdTooShort}
-              className="btn-primary w-full mt-2"
+              disabled={isPending || !recaptchaVerified || !!pwdMismatch || !!pwdTooShort}
+              className="btn-primary w-full mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isPending ? (
                 <span className="flex items-center justify-center gap-2">

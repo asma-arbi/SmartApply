@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { getDb } from "@/lib/mongodb";
+import { Company, Job } from "@/lib/models/types";
 
 export const dynamic = "force-dynamic";
 
@@ -16,30 +17,28 @@ export default async function CandidateCompaniesPage({
 }: {
   searchParams?: { q?: string; sector?: string };
 }) {
-  const supabase = createClient();
+  const db = await getDb();
   const q = (searchParams?.q ?? "").trim();
   const selectedSector = (searchParams?.sector ?? "").trim();
 
-  let query = supabase
-    .from("companies")
-    .select("id, name, sector, size, city, logo_url, website, linkedin_url, description, created_at")
-    .eq("status", "verified")
-    .order("name", { ascending: true });
+  const filter: any = { status: "verified" };
 
   if (q) {
-    const cleanQ = q.replace(/[,()%]/g, "");
-    query = query.or(
-      `name.ilike.%${cleanQ}%,city.ilike.%${cleanQ}%,sector.ilike.%${cleanQ}%`
-    );
+    const regex = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+    filter.$or = [
+      { name: regex },
+      { city: regex },
+      { sector: regex },
+    ];
   }
 
   if (selectedSector && selectedSector !== "all") {
-    query = query.eq("sector", selectedSector);
+    filter.sector = selectedSector;
   }
 
-  const [{ data: companies }, { data: allJobs }] = await Promise.all([
-    query,
-    supabase.from("jobs").select("id, company_id").eq("status", "published"),
+  const [companies, allJobs] = await Promise.all([
+    db.collection<Company>("companies").find(filter).sort({ name: 1 }).toArray(),
+    db.collection<Job>("jobs").find({ status: "published" }, { projection: { id: 1, company_id: 1 } }).toArray(),
   ]);
 
   // Aggregate published jobs per company

@@ -1,35 +1,35 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { getDb } from "@/lib/mongodb";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminReportsPage() {
-  const supabase = createClient();
+  const db = await getDb();
 
   const [
-    { count: totalUsers },
-    { count: candidateCount },
-    { count: companyCount },
-    { count: adminCount },
-    { count: totalJobs },
-    { count: publishedJobs },
-    { count: draftJobs },
-    { count: verifiedCompanies },
-    { count: pendingCompanies },
-    { count: rejectedCompanies },
-    { data: jobsList },
+    totalUsers,
+    candidateCount,
+    companyCount,
+    adminCount,
+    totalJobs,
+    publishedJobs,
+    draftJobs,
+    verifiedCompanies,
+    pendingCompanies,
+    rejectedCompanies,
+    jobsList,
   ] = await Promise.all([
-    supabase.from("profiles").select("*", { count: "exact", head: true }),
-    supabase.from("profiles").select("*", { count: "exact", head: true }).eq("role", "candidat"),
-    supabase.from("profiles").select("*", { count: "exact", head: true }).eq("role", "entreprise"),
-    supabase.from("profiles").select("*", { count: "exact", head: true }).eq("role", "admin"),
-    supabase.from("jobs").select("*", { count: "exact", head: true }),
-    supabase.from("jobs").select("*", { count: "exact", head: true }).eq("status", "published"),
-    supabase.from("jobs").select("*", { count: "exact", head: true }).eq("status", "draft"),
-    supabase.from("companies").select("*", { count: "exact", head: true }).eq("status", "verified"),
-    supabase.from("companies").select("*", { count: "exact", head: true }).eq("status", "pending"),
-    supabase.from("companies").select("*", { count: "exact", head: true }).eq("status", "rejected"),
-    supabase.from("jobs").select("type, location"),
+    db.collection("users").countDocuments(),
+    db.collection("users").countDocuments({ role: "candidat" }),
+    db.collection("users").countDocuments({ role: "entreprise" }),
+    db.collection("users").countDocuments({ role: "admin" }),
+    db.collection("jobs").countDocuments(),
+    db.collection("jobs").countDocuments({ status: "published" }),
+    db.collection("jobs").countDocuments({ status: "draft" }),
+    db.collection("companies").countDocuments({ status: "verified" }),
+    db.collection("companies").countDocuments({ status: "pending" }),
+    db.collection("companies").countDocuments({ status: "rejected" }),
+    db.collection("jobs").find({}, { projection: { type: 1, location: 1 } }).toArray(),
   ]);
 
   // Calculs statistiques
@@ -174,7 +174,7 @@ export default async function AdminReportsPage() {
           </div>
 
           <div className="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-            <span>Base de données : Supabase Cloud (PostgreSQL 15)</span>
+            <span>Base de données : MongoDB (Collections NoSQL & Sessions sécurisées)</span>
             <span className="text-emerald-600 font-semibold">● Synchronisé</span>
           </div>
         </div>

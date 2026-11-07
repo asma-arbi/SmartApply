@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getSessionUser } from "@/lib/auth/session";
 import Sidebar from "@/app/components/Sidebar";
 import TopBar from "@/app/components/TopBar";
 
@@ -8,28 +8,15 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const sessionData = await getSessionUser();
 
-  if (!user) redirect("/login");
-
-  let role = (user.user_metadata?.role as string) ?? "";
-  if (!role || role === "candidat") {
-    try {
-      const { data: prof } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", user.id)
-        .maybeSingle();
-      if (prof?.role) role = prof.role;
-    } catch {}
+  if (!sessionData) {
+    redirect("/login?revoked=1");
   }
-  if (!role) role = "candidat";
 
-  const name = (user.user_metadata?.name as string) ?? user.email?.split("@")[0] ?? "Utilisateur";
-  const email = user.email ?? "";
+  const role = sessionData.user.role || "candidat";
+  const name = sessionData.user.name || sessionData.user.email?.split("@")[0] || "Utilisateur";
+  const email = sessionData.user.email || "";
 
   return (
     <div className="flex h-screen overflow-hidden bg-slate-50">

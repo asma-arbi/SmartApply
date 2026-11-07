@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getSessionUser } from "@/lib/auth/session";
+import { getDb } from "@/lib/mongodb";
+import { Company } from "@/lib/models/types";
 import { updateCompany } from "@/app/actions";
 
 export const dynamic = "force-dynamic";
@@ -10,18 +12,14 @@ export default async function CompanyEditPage({
 }: {
   searchParams: { error?: string };
 }) {
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const sessionData = await getSessionUser();
 
-  if (!user) redirect("/login");
+  if (!sessionData) redirect("/login");
 
-  const { data: company } = await supabase
-    .from("companies")
-    .select("*")
-    .eq("id", user.id)
-    .single();
+  const db = await getDb();
+  const company = await db
+    .collection<Company>("companies")
+    .findOne({ id: sessionData.user.id });
 
   const sectors = [
     "IT",

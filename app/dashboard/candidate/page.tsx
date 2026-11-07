@@ -1,39 +1,53 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { getSessionUser } from "@/lib/auth/session";
+import { getDb } from "@/lib/mongodb";
+import { Company } from "@/lib/models/types";
 
 export const dynamic = "force-dynamic";
 
 export default async function CandidateDashboard() {
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const sessionData = await getSessionUser();
 
   const userName =
-    (user?.user_metadata?.name as string) ||
-    (user?.email ? user.email.split("@")[0] : "Candidat");
+    (sessionData?.user?.name as string) ||
+    (sessionData?.user?.email ? sessionData.user.email.split("@")[0] : "Candidat");
 
-  const [
-    { data: jobs },
-    { data: companies, count: verifiedCount },
-    { data: allPublishedJobs },
-  ] = await Promise.all([
-    supabase
-      .from("jobs")
-      .select("*, companies(name, sector, city)")
-      .eq("status", "published")
-      .order("created_at", { ascending: false })
-      .limit(6),
-    supabase
-      .from("companies")
-      .select("id, name, sector, city, size, description, logo_url", { count: "exact" })
-      .eq("status", "verified")
-      .order("created_at", { ascending: false })
-      .limit(6),
-    supabase
-      .from("jobs")
-      .select("id, company_id")
-      .eq("status", "published"),
+  const db = await getDb();
+
+  const [jobs, companies, verifiedCount, allPublishedJobs] = await Promise.all([
+    db
+      .collection("jobs")
+      .aggregate([
+        { $match: { status: "published" } },
+        { $sort: { created_at: -1 } },
+        { $limit: 6 },
+        {
+          $lookup: {
+            from: "companies",
+            localField: "company_id",
+            foreignField: "id",
+            as: "companies",
+          },
+        },
+        {
+          $unwind: {
+            path: "$companies",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+      ])
+      .toArray(),
+    db
+      .collection<Company>("companies")
+      .find({ status: "verified" })
+      .sort({ created_at: -1 })
+      .limit(6)
+      .toArray(),
+    db.collection("companies").countDocuments({ status: "verified" }),
+    db
+      .collection("jobs")
+      .find({ status: "published" }, { projection: { id: 1, company_id: 1 } })
+      .toArray(),
   ]);
 
   // Map job counts by company
@@ -95,13 +109,21 @@ export default async function CandidateDashboard() {
             Explorez les meilleures opportunités IT et les entreprises vérifiées en Tunisie.
           </p>
         </div>
-        <Link
-          href="/"
-          className="btn-primary flex-shrink-0 text-xs sm:text-sm py-2.5 px-4"
-        >
-          <SearchIcon />
-          Explorer toutes les offres
-        </Link>
+        <div className="flex items-center gap-2.5 flex-wrap">
+          <Link
+            href="/dashboard/candidate/settings"
+            className="px-3.5 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs sm:text-sm font-semibold rounded-xl transition-colors inline-flex items-center gap-1.5 shadow-sm"
+          >
+            <span>✏️ Modifier mon profil</span>
+          </Link>
+          <Link
+            href="/"
+            className="btn-primary flex-shrink-0 text-xs sm:text-sm py-2.5 px-4"
+          >
+            <SearchIcon />
+            Explorer toutes les offres
+          </Link>
+        </div>
       </div>
 
       {/* ── Stats Row ─────────────────────────────────────────────── */}

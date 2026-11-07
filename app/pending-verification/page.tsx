@@ -1,15 +1,18 @@
-import { createClient } from "@/lib/supabase/server";
+import { getSessionUser } from "@/lib/auth/session";
+import { getDb } from "@/lib/mongodb";
+import { Company } from "@/lib/models/types";
 import { logout } from "@/app/actions";
 
 export const dynamic = "force-dynamic";
 
 export default async function PendingVerificationPage() {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const sessionData = await getSessionUser();
+  let company: Company | null = null;
 
-  const { data: company } = user
-    ? await supabase.from("companies").select("name, status, rejection_reason").eq("id", user.id).single()
-    : { data: null };
+  if (sessionData) {
+    const db = await getDb();
+    company = await db.collection<Company>("companies").findOne({ id: sessionData.user.id });
+  }
 
   const status = company?.status ?? "pending";
 

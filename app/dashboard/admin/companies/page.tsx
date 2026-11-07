@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { getDb } from "@/lib/mongodb";
 import { verifyCompany, rejectCompany, adminDeleteCompany } from "@/app/actions";
 
 export const dynamic = "force-dynamic";
@@ -17,41 +17,62 @@ export default async function AdminCompaniesPage({
 }: {
   searchParams?: { page?: string; status?: string; q?: string };
 }) {
-  const supabase = createClient();
+  const db = await getDb();
 
   const currentPage = Math.max(1, parseInt(searchParams?.page ?? "1") || 1);
   const selectedStatus = searchParams?.status ?? "all";
   const searchQ = (searchParams?.q ?? "").trim();
 
-  let query = supabase.from("companies").select("*, jobs(count)", { count: "exact" });
-
+  const filter: any = {};
   if (selectedStatus && selectedStatus !== "all") {
-    query = query.eq("status", selectedStatus);
+    filter.status = selectedStatus;
   }
-
   if (searchQ) {
-    query = query.or(`name.ilike.%${searchQ}%,city.ilike.%${searchQ}%,sector.ilike.%${searchQ}%`);
+    const regex = new RegExp(searchQ.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+    filter.$or = [
+      { name: regex },
+      { city: regex },
+      { sector: regex },
+    ];
   }
 
   const from = (currentPage - 1) * PAGE_SIZE;
-  const to = from + PAGE_SIZE - 1;
-
-  query = query
-    .order("created_at", { ascending: false })
-    .range(from, to);
 
   const [
-    { data: companies, count: filteredCount },
-    { count: totalCount },
-    { count: verifiedCount },
-    { count: pendingCount },
-    { count: rejectedCount },
+    companies,
+    filteredCount,
+    totalCount,
+    verifiedCount,
+    pendingCount,
+    rejectedCount,
   ] = await Promise.all([
-    query,
-    supabase.from("companies").select("*", { count: "exact", head: true }),
-    supabase.from("companies").select("*", { count: "exact", head: true }).eq("status", "verified"),
-    supabase.from("companies").select("*", { count: "exact", head: true }).eq("status", "pending"),
-    supabase.from("companies").select("*", { count: "exact", head: true }).eq("status", "rejected"),
+    db
+      .collection("companies")
+      .aggregate([
+        { $match: filter },
+        { $sort: { created_at: -1 } },
+        { $skip: from },
+        { $limit: PAGE_SIZE },
+        {
+          $lookup: {
+            from: "jobs",
+            localField: "id",
+            foreignField: "company_id",
+            as: "jobs_list",
+          },
+        },
+        {
+          $addFields: {
+            jobs: [{ count: { $size: "$jobs_list" } }],
+          },
+        },
+      ])
+      .toArray(),
+    db.collection("companies").countDocuments(filter),
+    db.collection("companies").countDocuments(),
+    db.collection("companies").countDocuments({ status: "verified" }),
+    db.collection("companies").countDocuments({ status: "pending" }),
+    db.collection("companies").countDocuments({ status: "rejected" }),
   ]);
 
   const totalPages = Math.ceil((filteredCount ?? 0) / PAGE_SIZE) || 1;

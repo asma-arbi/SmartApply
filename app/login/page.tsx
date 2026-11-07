@@ -3,7 +3,9 @@
 import { useState, useTransition, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { login, loginWithGoogle } from "@/app/actions";
+import { login } from "@/app/actions";
+import { executeRecaptcha } from "@/lib/recaptcha-client";
+import ReCaptchaWidget from "@/app/components/ReCaptchaWidget";
 
 function LoginForm() {
   const searchParams = useSearchParams();
@@ -11,17 +13,28 @@ function LoginForm() {
   const msgParam = searchParams.get("msg");
   const registeredParam = searchParams.get("registered");
   const emailParam = searchParams.get("email");
+  const revokedParam = searchParams.get("revoked");
 
   const [showPwd, setShowPwd] = useState(false);
   const [isPending, startTrans] = useTransition();
 
+  const infoMsg = revokedParam
+    ? "Votre session a été déconnectée ou a expiré. Veuillez vous reconnecter."
+    : null;
+
   const errorMsg =
     errorParam === "locked"
       ? "Compte temporairement bloqué après plusieurs tentatives. Réessayez dans quelques minutes."
-      : errorParam === "email_unconfirmed"
-      ? "Email non confirmé dans Supabase. Veuillez désactiver 'Confirm email' dans Supabase (Auth > Providers > Email) ou exécuter le script SQL d'auto-confirmation."
+      : errorParam === "recaptcha_failed"
+      ? "Vérification de sécurité reCAPTCHA échouée. Veuillez rafraîchir la page."
+      : errorParam === "use_google"
+      ? "Ce compte a été créé avec Google. Veuillez cliquer sur le bouton 'Continuer avec Google' juste au-dessus pour vous connecter."
+      : errorParam === "user_not_found"
+      ? `Aucun compte n'a été trouvé avec l'adresse "${emailParam || ""}". Veuillez vérifier l'adresse ou créer un compte.`
+      : errorParam === "wrong_password"
+      ? "Mot de passe incorrect pour cette adresse. Vous pouvez cliquer sur 'Mot de passe oublié ?' ci-dessous pour le réinitialiser."
       : errorParam
-      ? "Identifiants invalides. Veuillez réessayer."
+      ? "Identifiants invalides. Veuillez vérifier votre adresse email et votre mot de passe."
       : null;
 
   const successMsg =
@@ -30,21 +43,29 @@ function LoginForm() {
       : msgParam === "password_reset"
       ? "Mot de passe modifié avec succès. Vous pouvez vous connecter."
       : msgParam === "confirm"
-      ? "Compte créé ! Vérifiez votre boîte mail avant de vous connecter."
+      ? "Compte créé ! Vous pouvez vous connecter."
       : null;
+
+  const [recaptchaVerified, setRecaptchaVerified] = useState(false);
+  const [recaptchaError, setRecaptchaError] = useState(false);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const fd = new FormData(e.currentTarget);
-    startTrans(() => {
+    if (!recaptchaVerified) {
+      setRecaptchaError(true);
+      return;
+    }
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+    startTrans(async () => {
+      const token = await executeRecaptcha("login");
+      fd.set("recaptcha_token", token);
       login(fd);
     });
   }
 
   function handleGoogle() {
-    startTrans(() => {
-      loginWithGoogle();
-    });
+    window.location.href = "/auth/google";
   }
 
   return (
@@ -72,6 +93,16 @@ function LoginForm() {
           </div>
 
           {/* Feedback Alerts */}
+          {infoMsg && (
+            <div
+              role="status"
+              className="mb-5 flex items-start gap-3 p-3.5 bg-blue-50 border border-blue-200 rounded-xl text-blue-800 text-sm animate-fade-in"
+            >
+              <span className="text-base">ℹ️</span>
+              <span>{infoMsg}</span>
+            </div>
+          )}
+
           {errorMsg && (
             <div
               role="alert"
@@ -177,12 +208,21 @@ function LoginForm() {
               </div>
             </div>
 
+            {/* reCAPTCHA vérification obligatoire */}
+            <ReCaptchaWidget
+              onVerify={(v) => {
+                setRecaptchaVerified(v);
+                if (v) setRecaptchaError(false);
+              }}
+              requiredError={recaptchaError}
+            />
+
             {/* Submit Button */}
             <button
               id="btn-login-submit"
               type="submit"
-              disabled={isPending}
-              className="btn-primary w-full mt-2"
+              disabled={isPending || !recaptchaVerified}
+              className="btn-primary w-full mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isPending ? (
                 <span className="flex items-center justify-center gap-2">

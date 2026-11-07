@@ -1,13 +1,34 @@
-import Link from "next/link";
-import { forgotPassword } from "@/app/actions";
-import SubmitButton from "@/app/components/SubmitButton";
+"use client";
 
-export default function ForgotPasswordPage({
-  searchParams,
-}: {
-  searchParams: { sent?: string };
-}) {
-  const sent = searchParams.sent === "1";
+import { useState, useTransition } from "react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { forgotPassword } from "@/app/actions";
+import { executeRecaptcha } from "@/lib/recaptcha-client";
+import ReCaptchaWidget from "@/app/components/ReCaptchaWidget";
+
+export default function ForgotPasswordPage() {
+  const searchParams = useSearchParams();
+  const sent = searchParams.get("sent") === "1";
+  const error = searchParams.get("error");
+  const [recaptchaVerified, setRecaptchaVerified] = useState(false);
+  const [recaptchaError, setRecaptchaError] = useState(false);
+  const [isPending, startTrans] = useTransition();
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!recaptchaVerified) {
+      setRecaptchaError(true);
+      return;
+    }
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+    startTrans(async () => {
+      const token = await executeRecaptcha("forgot_password");
+      fd.set("recaptcha_token", token);
+      forgotPassword(fd);
+    });
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4 py-12">
@@ -55,7 +76,15 @@ export default function ForgotPasswordPage({
                 Saisissez votre adresse email et nous vous enverrons un lien de réinitialisation sécurisé.
               </p>
 
-              <form action={forgotPassword} className="space-y-4" id="forgot-password-form">
+              {error && (
+                <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-xl text-red-600 text-xs font-medium">
+                  {error === "recaptcha_failed"
+                    ? "Échec de vérification reCAPTCHA. Veuillez réessayer."
+                    : "Une erreur est survenue."}
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-4" id="forgot-password-form">
                 <div>
                   <label htmlFor="forgot-email" className="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">
                     Adresse email
@@ -76,13 +105,23 @@ export default function ForgotPasswordPage({
                   </div>
                 </div>
 
-                <SubmitButton
+                {/* reCAPTCHA vérification obligatoire */}
+                <ReCaptchaWidget
+                  onVerify={(v) => {
+                    setRecaptchaVerified(v);
+                    if (v) setRecaptchaError(false);
+                  }}
+                  requiredError={recaptchaError}
+                />
+
+                <button
                   id="btn-forgot-submit"
-                  loadingText="Envoi en cours…"
-                  className="btn-primary w-full mt-2"
+                  type="submit"
+                  disabled={isPending || !recaptchaVerified}
+                  className="btn-primary w-full mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Envoyer le lien de réinitialisation
-                </SubmitButton>
+                  {isPending ? "Vérification et envoi…" : "Envoyer le lien de réinitialisation"}
+                </button>
               </form>
             </>
           )}
@@ -118,7 +157,7 @@ function MailIcon() {
 
 function KeyIcon() {
   return (
-    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <circle cx="7.5" cy="15.5" r="5.5" />
       <path d="m21 2-9.6 9.6" />
       <path d="m15.5 7.5 3 3L22 7l-3-3" />
@@ -128,7 +167,7 @@ function KeyIcon() {
 
 function CheckIcon() {
   return (
-    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <polyline points="20 6 9 17 4 12" />
     </svg>
   );

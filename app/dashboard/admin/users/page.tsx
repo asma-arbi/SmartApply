@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { getDb } from "@/lib/mongodb";
+import { User } from "@/lib/models/types";
 import { adminDeleteUser, adminUpdateUserRole } from "@/app/actions";
 
 export const dynamic = "force-dynamic";
@@ -17,7 +18,7 @@ export default async function AdminUsersPage({
 }: {
   searchParams?: { page?: string; role?: string; q?: string };
 }) {
-  const supabase = createClient();
+  const db = await getDb();
 
   const currentPage = Math.max(1, parseInt(searchParams?.page ?? "1") || 1);
   const selectedRole = searchParams?.role ?? "all";
@@ -26,39 +27,39 @@ export default async function AdminUsersPage({
   const from = (currentPage - 1) * PAGE_SIZE;
   const to = from + PAGE_SIZE - 1;
 
-  // Requête principale paginée avec colonnes minimales
-  let query = supabase
-    .from("profiles")
-    .select("id, role, full_name, email, created_at, visible_to_companies", { count: "exact" });
-
+  const filter: any = {};
   if (selectedRole && selectedRole !== "all") {
-    query = query.eq("role", selectedRole);
+    filter.role = selectedRole;
   }
   if (searchQ) {
-    query = query.or(`full_name.ilike.%${searchQ}%,email.ilike.%${searchQ}%,role.ilike.%${searchQ}%`);
+    const regex = new RegExp(searchQ.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+    filter.$or = [
+      { name: regex },
+      { email: regex },
+      { role: regex },
+    ];
   }
 
-  query = query.order("created_at", { ascending: false }).range(from, to);
-
-  // Requête de totaux en une seule passe via group (simulé via 2 requêtes légères head-only)
   const [
-    { data: users, count: filteredCount },
-    { count: totalCount },
+    users,
+    filteredCount,
+    totalCount,
+    candidateCount,
+    companyCount,
+    adminCount,
   ] = await Promise.all([
-    query,
-    supabase.from("profiles").select("id", { count: "exact", head: true }),
-  ]);
-
-  // Comptes par rôle calculés côté client depuis le résultat total (plus rapide que 3 requêtes supplémentaires)
-  // On fait un seul appel supplémentaire léger uniquement si on est sur la page "all"
-  const [
-    { count: candidateCount },
-    { count: companyCount },
-    { count: adminCount },
-  ] = await Promise.all([
-    supabase.from("profiles").select("id", { count: "exact", head: true }).eq("role", "candidat"),
-    supabase.from("profiles").select("id", { count: "exact", head: true }).eq("role", "entreprise"),
-    supabase.from("profiles").select("id", { count: "exact", head: true }).eq("role", "admin"),
+    db
+      .collection<User>("users")
+      .find(filter)
+      .sort({ created_at: -1 })
+      .skip(from)
+      .limit(PAGE_SIZE)
+      .toArray(),
+    db.collection("users").countDocuments(filter),
+    db.collection("users").countDocuments(),
+    db.collection("users").countDocuments({ role: "candidat" }),
+    db.collection("users").countDocuments({ role: "entreprise" }),
+    db.collection("users").countDocuments({ role: "admin" }),
   ]);
 
   const totalPages = Math.ceil((filteredCount ?? 0) / PAGE_SIZE) || 1;
@@ -169,11 +170,11 @@ export default async function AdminUsersPage({
                         <td className="py-4 px-6">
                           <div className="flex items-center gap-3">
                             <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-bold text-xs flex items-center justify-center shadow-sm flex-shrink-0">
-                              {u.role === "admin" ? "★" : u.role === "entreprise" ? "🏢" : (u.full_name?.[0]?.toUpperCase() || "C")}
+                              {u.role === "admin" ? "★" : u.role === "entreprise" ? "🏢" : ((u.name || (u as any).full_name)?.[0]?.toUpperCase() || "C")}
                             </div>
                             <div className="min-w-0">
                               <p className="font-semibold text-slate-900 text-xs truncate">
-                                {u.full_name || u.email || "Utilisateur"}
+                                {u.name || (u as any).full_name || u.email || "Utilisateur"}
                               </p>
                               {u.email && (
                                 <p className="text-[11px] text-slate-500 truncate">
@@ -181,7 +182,7 @@ export default async function AdminUsersPage({
                                 </p>
                               )}
                               <span className="text-[10px] text-slate-400 font-mono">
-                                ID: {u.id.slice(0, 8)}… {u.visible_to_companies ? "• Visible" : ""}
+                                ID: {u.id.slice(0, 8)}… {(u as any).visible_to_companies ? "• Visible" : ""}
                               </span>
                             </div>
                           </div>

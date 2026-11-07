@@ -1,42 +1,41 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { getDb } from "@/lib/mongodb";
+import { User, Company } from "@/lib/models/types";
 import { verifyCompany, rejectCompany, promoteSelfToAdmin } from "@/app/actions";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
-  const supabase = createClient();
+  const db = await getDb();
 
-  // Requêtes optimisées — le moins de round-trips possible vers Supabase
   const [
-    { count: usersCount },
-    { count: companiesCount },
-    { count: jobsCount },
-    { count: pendingCount },
-    { data: pendingCompanies },
-    { data: recentUsers },
-    { data: recentJobs },
+    usersCount,
+    companiesCount,
+    jobsCount,
+    pendingCount,
+    pendingCompanies,
+    recentUsers,
+    recentJobs,
   ] = await Promise.all([
-    supabase.from("profiles").select("id", { count: "exact", head: true }),
-    supabase.from("companies").select("id", { count: "exact", head: true }),
-    supabase.from("jobs").select("id", { count: "exact", head: true }).eq("status", "published"),
-    supabase.from("companies").select("id", { count: "exact", head: true }).eq("status", "pending"),
-    supabase
-      .from("companies")
-      .select("id, name, sector, city, website, status, created_at")
-      .eq("status", "pending")
-      .order("created_at", { ascending: false })
-      .limit(5),
-    supabase
-      .from("profiles")
-      .select("id, role, full_name, email, created_at")
-      .order("created_at", { ascending: false })
-      .limit(8),
-    supabase
-      .from("jobs")
-      .select("id, title, status, created_at, companies(name)")
-      .order("created_at", { ascending: false })
-      .limit(5),
+    db.collection("users").countDocuments(),
+    db.collection("companies").countDocuments(),
+    db.collection("jobs").countDocuments({ status: "published" }),
+    db.collection("companies").countDocuments({ status: "pending" }),
+    db.collection<Company>("companies").find({ status: "pending" }).sort({ created_at: -1 }).limit(5).toArray(),
+    db.collection<User>("users").find().sort({ created_at: -1 }).limit(8).toArray(),
+    db.collection("jobs").aggregate([
+      { $sort: { created_at: -1 } },
+      { $limit: 5 },
+      {
+        $lookup: {
+          from: "companies",
+          localField: "company_id",
+          foreignField: "id",
+          as: "companies",
+        },
+      },
+      { $unwind: { path: "$companies", preserveNullAndEmptyArrays: true } },
+    ]).toArray(),
   ]);
 
   const stats = [
@@ -313,9 +312,10 @@ export default async function AdminDashboard() {
 
           <div className="divide-y divide-slate-100">
             {recentUsers && recentUsers.length > 0 ? (
-              recentUsers.map((u) => {
-                const initials = u.full_name
-                  ? u.full_name.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2)
+              recentUsers.map((u: any) => {
+                const displayName = u.name || u.full_name || u.email || `Utilisateur ${u.id?.slice(0, 8)}`;
+                const initials = displayName
+                  ? displayName.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2)
                   : u.email
                   ? u.email[0].toUpperCase()
                   : u.role === "admin" ? "★" : u.role === "entreprise" ? "E" : "C";
@@ -332,9 +332,9 @@ export default async function AdminDashboard() {
                       </div>
                       <div className="min-w-0">
                         <p className="text-xs font-semibold text-slate-800 truncate">
-                          {u.full_name || u.email || `Utilisateur ${u.id.slice(0, 8)}`}
+                          {displayName}
                         </p>
-                        {u.email && u.full_name && (
+                        {u.email && displayName !== u.email && (
                           <p className="text-[11px] text-slate-400 truncate">{u.email}</p>
                         )}
                         <p className="text-[10px] text-slate-300">
