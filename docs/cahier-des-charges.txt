@@ -1,0 +1,555 @@
+SmartApply Tunisia : Cahier des Charges
+Plateforme tunisienne de candidature spontanée intelligente (PWA)
+Table des matières
+1. Présentation du projet
+      1.1 Contexte
+      1.2 Vision du projet
+2. Problématique
+      2.1 Limites des solutions existantes
+3. Objectifs du projet
+      3.1 Objectifs fonctionnels
+      3.2 Objectifs techniques
+4. Public cible
+5. Description générale de l’application
+      5.1 Architecture générale
+      5.2 Description détaillée des fonctionnalités
+      5.3 Modèle de données
+      5.4 Règles de gestion
+6. Besoins fonctionnels (MVP)
+7. Technologies envisagées
+8. Product Backlog complet
+9. Conclusion
+1. Présentation du projet
+1.1 Contexte
+En Tunisie, les étudiants et jeunes diplômés en informatique cherchent leur stage, leur PFE ou leur premier emploi en parcourant quelques sites d’offres. Or, de nombreuses entreprises, en particulier les PME et les startups, ne publient pas toutes leurs opportunités, mais restent ouvertes à une candidature spontanée pertinente. On parle souvent de « marché caché » de l’emploi.
+Dans la pratique, un candidat qui veut tenter la voie spontanée doit :
+chercher lui-même les entreprises susceptibles de l’intéresser et leurs adresses de contact,
+rédiger un message différent pour chaque entreprise (ou, faute de temps, envoyer un message générique),
+retenir qui il a contacté, quand, et ce qui s’est passé ensuite, souvent dans un simple tableur.
+Ce processus est long, répétitif et peu efficace. Les candidatures génériques sont ignorées, et les candidats les plus débutants ne savent pas par où commencer.
+1.2 Vision du projet
+SmartApply Tunisia est une application web progressive (PWA) qui transforme un CV en campagne de candidatures spontanées ciblées :
+CV → analyse par IA → entreprises tunisiennes adaptées (même sans offre) → candidature personnalisée → modification par le candidat → envoi → suivi.
+Le candidat dépose son CV, l’IA analyse ses compétences, ses expériences, ses projets et son domaine recherché, puis propose des entreprises correspondant à son profil. Pour chacune, elle génère une candidature spontanée personnalisée que le candidat relit, modifie et envoie. Il suit ensuite toutes ses candidatures : envoyée, en attente, entretien, refusée, acceptée.
+Différence principale : SmartApply Tunisia n’est pas un site d’offres d’emploi. Sa valeur est de cibler et de rédiger pour des entreprises qui n’ont rien publié, tout en respectant les entreprises (limites anti-spam, désinscription, validation manuelle de chaque envoi).
+2. Problématique
+Question centrale : comment aider un étudiant ou jeune diplômé en informatique à identifier les bonnes entreprises tunisiennes, à les contacter de façon personnalisée et à suivre ses démarches, sans passer par une offre publiée et sans spammer les entreprises ?
+Cette question se décompose en sous-problèmes :
+Données : comment constituer et maintenir une base fiable d’entreprises IT tunisiennes avec un contact valide ?
+Compréhension : comment extraire correctement les compétences et projets d’un CV, en français comme en anglais ?
+Pertinence : comment classer les entreprises selon leur adéquation réelle et expliquer ce classement ?
+Qualité et honnêteté : comment générer des messages personnalisés qui n’inventent aucune information sur le candidat ?
+Respect des destinataires : comment éviter le spam et laisser aux entreprises le contrôle ?
+Suivi : comment garder un historique fiable des candidatures et de leurs statuts ?
+Vie privée : comment protéger des données aussi sensibles que des CV, y compris lors de l’usage d’un modèle d’IA externe gratuit ?
+2.1 Limites des solutions existantes
+3. Objectifs du projet
+3.1 Objectifs fonctionnels
+Permettre à un candidat d’aller du dépôt de CV au premier envoi en moins de 10 minutes.
+Extraire automatiquement le profil du candidat (compétences, expériences, projets, langues, domaine visé) et lui permettre de le corriger.
+Proposer une liste classée d’entreprises tunisiennes IT avec un pourcentage d’adéquation et trois raisons explicatives.
+Générer une candidature spontanée personnalisée en français ou en anglais, modifiable, sans invention de faits.
+Envoyer la candidature depuis la boîte mail du candidat (Gmail) et, si l’entreprise a revendiqué son profil, dans la boîte de réception de la plateforme.
+Suivre les candidatures avec les statuts : brouillon, envoyée, en attente, entretien, refusée, acceptée. Le candidat met à jour manuellement, et les entreprises vérifiées peuvent aussi pousser un statut (mode hybride).
+Offrir un espace entreprise (revendication de profil, boîte de réception, mise à jour de statut, désinscription) et un back-office administrateur (vérification des entreprises, modération des données, supervision).
+Proposer des services d’IA complémentaires : score du CV, analyse des compétences manquantes, simulateur d’entretien, classification des réponses reçues.
+Proposer des offres payantes pour candidats (Premium) et entreprises (Pro), avec paiement simulé en v1.
+Garantir le consentement, la suppression du compte et le stockage chiffré des CV.
+3.2 Objectifs techniques
+PWA installable (mobile et bureau), avec une coque applicative disponible hors ligne.
+Architecture en services : frontend React/Next.js, API NestJS, service IA Python (FastAPI), base PostgreSQL (Supabase).
+Traitements asynchrones fiables (file de jobs Redis/BullMQ) : analyse de CV, matching, génération, envoi, avec reprises, idempotence et dégradation gracieuse.
+IA hybride : analyse et embeddings en local (Python), modèle de langage gratuit hébergé pour la rédaction, avec repli par modèle de lettre si le quota est atteint.
+Protection des données : anonymisation des informations personnelles avant tout appel à un modèle externe, stockage privé, URL signées temporaires, contrôle d’accès par rôle.
+Coût nul : hébergement et services sur offres gratuites, avec vérification des limites dès la semaine 1.
+Qualité : tests unitaires, d’API et de bout en bout, intégration continue (GitHub Actions), conteneurisation (Docker Compose).
+Observabilité : journaux structurés, métriques et alertes dans Grafana Cloud, tableau de bord d’exploitation.
+Accessibilité et internationalisation : interface en français et en anglais, objectif WCAG 2.1 AA sur les parcours principaux.
+4. Public cible
+Périmètre v1 : domaine IT uniquement, public étudiants et jeunes diplômés. Hors périmètre : autres secteurs, interface en arabe, application mobile native, paiements réels, extraction de données depuis LinkedIn, envoi automatique sans validation du candidat.
+5. Description générale de l’application
+Parcours candidat :
+Inscription (email et mot de passe, ou Google), consentement, vérification de l’email.
+Dépôt du CV, analyse en arrière-plan, relecture et correction du profil, choix des objectifs (domaine, type de stage, villes, disponibilité).
+Liste d’entreprises classées avec explications : c’est le moment « aha ».
+Génération de la candidature, modification dans l’éditeur, vérifications avant envoi, confirmation, envoi.
+Suivi dans le tableau de bord (liste et Kanban), notifications.
+Parcours entreprise : inscription, vérification manuelle par l’administrateur, revendication du profil, réception des candidatures, mise à jour de statut.
+Parcours administrateur : file de vérification des entreprises, file de modération des données, tableau de bord d’exploitation.
+5.1 Architecture générale
+Architecture générale de SmartApply Tunisia
+Responsabilités :
+Traitements asynchrones principaux :
+5.2 Description détaillée des fonctionnalités
+Cette section décrit, module par module, le fonctionnement de chaque fonctionnalité de l’application web : ce que voit l’utilisateur, ce que fait le système, les règles à respecter et les cas particuliers. Les identifiants (A1, B2, etc.) renvoient au Product Backlog (section 8). Priorité : H = Haute (MVP), M = Moyenne, B = Basse.
+Principes communs à tous les écrans :
+Chaque liste ou page affiche trois états : chargement, vide (avec une action proposée) et erreur (avec un bouton « Réessayer »).
+Les traitements longs (analyse, matching, génération, envoi) affichent un état de progression et ne bloquent jamais l’interface.
+Toutes les actions sensibles (envoi, suppression, paiement) demandent une confirmation explicite.
+L’interface est responsive (mobile d’abord), bilingue (français et anglais) et accessible au clavier.
+5.2.1 Module A : Identité, accès et vie privée
+Inscription, connexion et récupération du compte (A1, A2, A3, A4, A12 : H)
+Écrans : inscription (email, mot de passe, choix du profil candidat ou entreprise, case de consentement), connexion, « mot de passe oublié », « vérifiez votre email ».
+Fonctionnement : l’authentification est déléguée à Supabase Auth. Après l’inscription, un email de vérification est envoyé. Tant que l’email n’est pas confirmé, seul l’écran « vérifiez votre boîte mail » est accessible, avec un bouton de renvoi (délai minimal de 60 secondes entre deux envois). La connexion Google crée ou retrouve le compte, l’adresse étant déjà vérifiée par Google. Le lien de réinitialisation du mot de passe a une durée de validité limitée.
+Règles : mot de passe d’au moins 8 caractères. Les messages d’erreur sont génériques (ils ne révèlent pas si un email existe). Après plusieurs échecs successifs, la connexion est temporairement bloquée. Le jeton de session est renouvelé automatiquement, et la déconnexion invalide la session.
+Rôles et contrôle d’accès (A5 : H)
+Fonctionnement : après connexion, l’utilisateur est redirigé selon son rôle : le candidat vers l’onboarding ou son tableau de bord, l’entreprise vers son espace (ou une page d’attente si elle n’est pas encore vérifiée), l’administrateur vers le back-office.
+Règles : chaque endpoint de l’API vérifie le rôle (guards NestJS). Une seconde protection existe dans la base de données (row-level security), si bien qu’une erreur d’API ne permet pas de lire les données d’un autre utilisateur. Un accès interdit affiche une page « Accès refusé ».
+Inscription et vérification des entreprises (A6 : H)
+Écran entreprise : formulaire (nom, site web, email professionnel, secteur, taille, ville, justificatif facultatif). Statut affiché : En attente, Vérifiée ou Refusée (avec le motif).
+Écran administrateur : file de vérification avec les informations saisies. Le système signale automatiquement si le domaine de l’email correspond au domaine du site web. L’administrateur approuve ou refuse en indiquant un motif, et l’entreprise est prévenue par notification et par email.
+Règles : tant qu’elle n’est pas vérifiée, une entreprise ne peut ni revendiquer un profil ni voir de candidatures. Une entreprise refusée peut corriger et soumettre à nouveau.
+Consentement et vie privée (A7, A13 : H)
+Fonctionnement : à l’inscription, le candidat accepte les conditions d’utilisation, la politique de confidentialité et, par une case distincte, le traitement de son CV par des services d’IA (sur données anonymisées). La version acceptée et la date sont enregistrées. Si les textes changent, un nouvel écran de consentement s’affiche à la connexion suivante.
+Paramètres : langue, préférences de notification et interrupteur « Visible par les entreprises (Pro) », désactivé par défaut.
+Suppression du compte (A8 : H)
+Fonctionnement : dans les paramètres, « Supprimer mon compte » demande une double confirmation (saisie d’un mot de confirmation et du mot de passe). Le compte est désactivé immédiatement. Une tâche planifiée supprime définitivement les données après un délai de grâce (7 jours, hypothèse). Une reconnexion pendant ce délai annule la suppression.
+Données supprimées : CV et fichiers, profil, données extraites, brouillons, lettres, suggestions. Seules des statistiques anonymes et les journaux techniques sans données personnelles sont conservés.
+Information affichée à l’utilisateur : les emails déjà reçus par des entreprises ne peuvent pas être rappelés.
+Stockage sécurisé des CV (A9 : H)
+Fonctionnement : les CV sont stockés dans un espace privé. Aucune URL publique n’existe. Quand le propriétaire ou une entreprise destinataire doit ouvrir un CV, l’API vérifie les droits puis génère une URL signée valable quelques minutes. Le chiffrement au repos est assuré par le fournisseur, avec une couche de chiffrement applicative optionnelle.
+Export, audit et double authentification (A10, A11 : M. A14 : B)
+Export : un bouton génère un fichier JSON avec le profil, les candidatures et les lettres du candidat.
+Audit : chaque action sensible (vérification d’entreprise, suppression, changement de rôle, dérogation d’offre) est consignée avec l’auteur et la date, consultable par l’administrateur.
+Double authentification : activation optionnelle par application d’authentification.
+5.2.2 Module B : Intelligence du CV et coach de carrière
+Dépôt du CV (B1 : H)
+Écran : zone de glisser-déposer. Formats PDF et DOCX, taille maximale de 5 Mo (hypothèse). Le type est vérifié sur le contenu du fichier et non sur l’extension.
+Règles : un seul CV est actif à la fois, les versions précédentes sont conservées. Un PDF scanné sans texte exploitable déclenche un message clair (la reconnaissance de caractères est hors périmètre v1) et propose de remplir le profil à la main.
+Analyse du CV (B2, B3, B4 : H)
+Étapes du traitement asynchrone : (1) extraction du texte, (2) détection de la langue (français ou anglais), (3) anonymisation des noms, emails, téléphones et adresses, remplacés par des marqueurs, (4) structuration en sections (formation, expériences, projets, compétences, langues, liens) par règles, NLP et modèle de langage sur le texte anonymisé, (5) restitution des marqueurs et enregistrement avec un niveau de confiance par champ.
+Interface : indicateur « Analyse de votre CV » puis passage automatique à la relecture. En cas d’échec, message clair et saisie manuelle possible.
+Profil et objectifs (B5 : H)
+Écran : formulaire prérempli par section. Les champs à faible confiance sont mis en évidence pour être vérifiés. Le candidat renseigne aussi ses objectifs : domaine (web, mobile, data, DevOps, cybersécurité, etc.), type de recherche (PFE, stage, premier emploi), villes préférées, disponibilité, préférence de télétravail.
+Règles : toute modification validée relance le calcul des correspondances.
+Normalisation des compétences (B6 : M)
+Fonctionnement : un référentiel de synonymes unifie les écritures (« ReactJS », « React.js », « react » deviennent « React »), ce qui améliore le matching et l’analyse des écarts.
+Score du CV et conseils (B7 : M)
+Fonctionnement : note de 0 à 100 avec quatre sous-notes : structure, complétude, clarté, mots-clés. Les règles calculent la partie objective (sections manquantes, longueur, cohérence), le modèle de langage rédige les conseils concrets (par exemple « ajoutez des résultats chiffrés à votre stage »).
+Limites : nombre d’analyses par mois selon l’offre.
+Analyse des compétences manquantes (B8 : M)
+Fonctionnement : le système compare les compétences du candidat avec les technologies des entreprises qui lui sont suggérées, classe les compétences absentes par fréquence et propose des pistes d’apprentissage.
+Affichage : liste classée avec, pour chaque compétence, le nombre d’entreprises concernées.
+Simulateur d’entretien (B9 : B)
+Déroulement : le candidat choisit une entreprise ou un poste. L’IA pose une question à la fois (5 à 10 au total), évalue chaque réponse, puis produit un bilan avec points forts, points à améliorer et note globale. L’historique de la conversation est renvoyé à chaque tour pour garder le contexte.
+Limites : nombre de séances par mois selon l’offre.
+5.2.3 Module C : Données entreprises et matching
+Catalogue d’entreprises et import initial (C1, C2 : H)
+Écran administrateur : liste, recherche, création, modification et désactivation des entreprises. Fiche : nom, secteur, taille, ville, site, logo, technologies, email de contact, ouverture aux stagiaires, source, date de dernière vérification.
+Import : téléversement d’un fichier CSV ou JSON, prévisualisation, rapport des lignes rejetées avec la raison, et dédoublonnage (nom normalisé et domaine du site). L’objectif de départ est d’environ 200 entreprises IT.
+Provenance, priorité des sources et modération (C3, C4, C5 : H)
+Fonctionnement : chaque champ conserve sa valeur, sa source (importée, crowdsourcée, collectée, revendiquée), son auteur et sa date. En cas de conflit, la règle de priorité s’applique (revendiqué > curé > collecté) et le conflit apparaît dans la file de modération.
+Écran de modération : comparaison côte à côte de la valeur actuelle et de la valeur proposée, avec les actions approuver, fusionner ou rejeter.
+Contributions des candidats (C6 : M)
+Fonctionnement : depuis une fiche entreprise, « Signaler une erreur » ou « Proposer une entreprise ». La proposition alimente la file de modération et n’est jamais publiée directement.
+Enrichissement des données (C7 : M)
+Fonctionnement : ajout d’étiquettes de technologies, taille et indicateur « ouvert aux stagiaires ». L’email de contact est contrôlé (syntaxe et existence d’un serveur de messagerie). Une adresse invalide est marquée et empêche l’envoi.
+Collecte automatique de données publiques (C8 : B)
+Fonctionnement : une tâche planifiée (hebdomadaire) en Python lit des sites d’entreprises et annuaires publics, respecte robots.txt, limite sa cadence et écrit uniquement dans la zone de modération. Chaque exécution produit un rapport (sources réussies, en échec, nouvelles entrées).
+Moteur de matching (C9, C10, C11, C12 : H pour C9 et C12, M pour C10 et C11)
+Étapes : (1) filtres stricts : exclusion des entreprises désinscrites, ignorées, déjà contactées depuis moins de 90 jours ou hors du domaine visé, (2) similarité sémantique entre le profil du candidat et la fiche de chaque entreprise (vecteurs dans pgvector), (3) ajustements par règles : domaine, ville, technologies communes, ouverture aux stagiaires, (4) classement et conservation des N meilleures (20 en offre gratuite, 100 en Premium), (5) génération de trois raisons lisibles (par exemple « utilise Angular et NestJS, présents dans votre CV », « située à Tunis, votre ville préférée »).
+Carte de suggestion : logo, nom, ville, technologies, pourcentage d’adéquation, trois raisons et boutons Postuler, Sauvegarder, Ignorer. Une entreprise ignorée disparaît et influence légèrement les classements suivants.
+Cas particuliers : si le profil est incomplet, un message invite à le compléter. Si aucune entreprise ne dépasse un seuil de pertinence, le message l’indique plutôt que d’afficher des résultats faibles.
+Parcourir le catalogue (C13 : M)
+Fonctionnement : page de recherche avec filtres par secteur, ville et technologie, qui permet d’ouvrir une fiche et de lancer une candidature même si l’entreprise ne figure pas dans le top.
+5.2.4 Module D : Studio de candidature
+Génération de la lettre (D1, D2 : H)
+Déroulement : un clic sur « Postuler » crée un brouillon et lance un job. Le service IA reçoit le profil anonymisé, les informations de l’entreprise, la langue et le type de candidature (PFE, stage, premier emploi), puis construit la consigne (prompt) pour le modèle de langage. Un contrôle d’ancrage compare la lettre produite au profil : tout employeur, diplôme ou compétence cité qui n’existe pas dans le profil entraîne un rejet. La lettre est ensuite désanonymisée et affichée.
+Structure typique : objet, formule d’appel, accroche liée à l’entreprise, deux éléments pertinents du parcours, demande claire (stage, PFE ou entretien), formule de politesse. Longueur cible : environ 150 à 250 mots (hypothèse).
+Sécurité : le texte provenant de sites d’entreprises est traité comme non fiable, ce qui évite qu’il détourne la consigne.
+Échec du contrôle : une régénération automatique est tentée une fois, puis la lettre de repli est utilisée.
+Éditeur de candidature (D3 : H. D4, D14 : M ou B)
+Écran : champs objet et corps modifiables, aperçu de l’email avec le CV joint, bouton Régénérer (limité par l’offre), sélecteur de ton (formel, neutre, chaleureux), historique des versions pour revenir à une version précédente.
+Lettre de repli (D5 : H)
+Fonctionnement : si le modèle de langage est indisponible ou si le quota gratuit est épuisé, une lettre construite à partir d’un modèle rédigé à l’avance est remplie avec les données du profil et de l’entreprise. L’utilisateur est informé qu’il s’agit d’un modèle et peut le modifier librement.
+Passerelle LLM (D6 : H)
+Fonctionnement : module unique qui masque le fournisseur utilisé. Il applique des reprises avec temporisation croissante, limite le débit global pour respecter les limites de l’offre gratuite, compte les appels et coupe temporairement les appels après des échecs répétés (disjoncteur). Le quota restant est visible dans le tableau de bord d’exploitation.
+Envoi de la candidature (D7, D8, D9, D10, D11, D13)
+Connexion Gmail (D7 : H) : le candidat autorise une seule fois l’application à envoyer des emails (permission d’envoi uniquement, aucune lecture de la boîte). L’email part de son adresse, vers l’adresse de contact de l’entreprise, avec le CV en pièce jointe. Il peut révoquer l’accès à tout moment. Pendant la phase de démonstration, l’application Google est en mode test, limité à des utilisateurs de test déclarés.
+Boîte de réception de la plateforme (D8 : H) : si l’entreprise a revendiqué son profil, la candidature apparaît aussi dans son espace.
+Envoi de secours (D9 : M) : si Gmail n’est pas disponible, l’email part d’une adresse de la plateforme avec l’adresse du candidat en réponse.
+Outlook (D10 : B) : même principe avec la messagerie de Microsoft.
+Contrôles avant envoi (D11 : H) : plafond journalier et hebdomadaire, règle d’une candidature par entreprise tous les 90 jours, désinscription de l’entreprise, adresse valide, CV joint, compte d’envoi connecté. Chaque blocage affiche un message précis. Une fenêtre de confirmation récapitule le destinataire, l’objet et la pièce jointe.
+Résultat (D13 : H) : états Envoi en cours, Envoyée ou Échec. Chaque envoi porte une clé d’idempotence, ce qui empêche tout doublon en cas de double clic ou de reprise. Une erreur temporaire peut être retentée, mais une candidature acceptée par le fournisseur n’est jamais renvoyée.
+File de revue (D12 : M)
+Fonctionnement : le candidat sélectionne plusieurs entreprises, les lettres sont préparées en arrière-plan, puis il les relit et les envoie une par une. Il n’existe aucun envoi automatique.
+5.2.5 Module E : Suivi, espace entreprise et notifications
+Tableau de bord des candidatures (E1 : H)
+Écran : bascule entre vue liste et vue Kanban (colonnes Envoyée, En attente, Entretien, Acceptée, Refusée), compteurs par statut, filtres (statut, période, entreprise) et recherche.
+Détail d’une candidature : lettre envoyée, CV utilisé, historique des statuts avec auteur et date, notes personnelles.
+Gestion des statuts (E2 : H)
+Fonctionnement : le candidat change le statut avec une note facultative et une date. Toutes les transitions sont historisées. Une candidature peut aussi être retirée.
+Règle : les statuts proposés dépendent de l’état actuel (par exemple, on ne peut pas passer de Brouillon à Entretien sans envoi).
+Espace entreprise (E3, E4 : H. E5, E6 : M)
+Revendication du profil : après vérification, l’entreprise recherche sa fiche dans le catalogue et la revendique, ou en crée une. Elle peut ensuite modifier le profil, ses technologies et son email de contact.
+Boîte de réception : liste des candidatures reçues avec filtres et recherche. Le détail affiche la lettre et le CV (URL signée temporaire).
+Mise à jour de statut : l’entreprise choisit un statut (en attente, entretien, acceptée, refusée) et peut ajouter un court message (500 caractères au maximum, hypothèse). Le candidat voit le badge « Mis à jour par l’entreprise ».
+Signalement (E5) : l’entreprise peut signaler une candidature abusive. Le signalement réduit le score de confiance du candidat et alerte l’administrateur.
+Préférences (E6) : profils recherchés et domaines acceptés, utilisés par le matching.
+Désinscription : un interrupteur empêche toute nouvelle candidature, avec effet immédiat sur le matching et les envois.
+Notifications (E7 : H. E8 : M. E9 : B)
+Événements : entreprise approuvée ou refusée, candidature reçue, statut modifié, quota atteint, échec d’envoi, paiement ou changement d’offre.
+Canaux : dans l’application (cloche avec compteur), par email, puis par notification push si le temps le permet.
+Relances, classification des réponses, statistiques, calendrier (E10, E11, E12, E13 : B)
+Relances : après 14 jours sans réponse, l’application propose un message de relance courtois à valider.
+Classification : le candidat colle la réponse d’une entreprise, l’IA la classe (entretien, refus, acceptation, demande d’informations) et propose un statut que le candidat confirme.
+Statistiques : taux de réponse, délai moyen de réponse, entonnoir par statut.
+Calendrier : export d’une date d’entretien au format .ics.
+5.2.6 Module F : Plateforme, PWA, facturation et exploitation
+Application web progressive (F1 : H. F12 : B)
+Installation : manifeste (nom, icônes, couleurs, mode autonome) et invitation à installer l’application sur mobile ou ordinateur.
+Service worker : la coque de l’application (interface, scripts, styles) est mise en cache pour s’ouvrir instantanément, y compris sans réseau. Les appels à l’API passent par le réseau en priorité. Les contenus sensibles (CV, lettres) ne sont jamais mis en cache.
+Hors ligne : une page dédiée s’affiche et les boutons qui exigent une connexion (générer, envoyer, payer) sont désactivés avec une explication. En option, la dernière version du tableau de bord reste consultable en lecture seule, et ces données locales sont effacées à la déconnexion.
+Mises à jour : une bannière « Nouvelle version disponible » propose de recharger.
+Contrainte technique : le service worker ne fonctionne que sur une version de production.
+Interface et design system (F3 : H)
+Navigation candidat : Tableau de bord, Suggestions, Candidatures, Mon CV et profil, Coach (score, compétences, simulateur), Abonnement, Paramètres.
+Principes : composants réutilisables, mise en page mobile d’abord, contrastes et libellés conformes à l’objectif WCAG 2.1 AA, bascule français et anglais sans rechargement.
+Offres et quotas (F4 : H)
+Fonctionnement : les offres sont définies comme des données (limites par fonctionnalité). Un compteur par utilisateur et par période est vérifié avant chaque action limitée. Quand une limite est atteinte, un message clair indique la limite et propose de passer à l’offre supérieure. Les compteurs sont remis à zéro à la fin de chaque période.
+Abonnements et paiement en mode test (F5 : H. F13 : M)
+Fonctionnement : page des offres avec comparaison, paiement hébergé par Stripe (cartes de test), mise à jour de l’abonnement par webhook traité de façon idempotente, annulation ou retour à l’offre gratuite en fin de période.
+Factures : historique des paiements consultable.
+Limite : aucun paiement réel en v1.
+Back-office administrateur (F6 : H. F7 : M)
+Écrans : utilisateurs, entreprises, file de vérification, file de modération, signalements, offres et dérogations, journal d’audit.
+Tableau de bord d’exploitation : jobs en échec avec bouton de relance, quota restant du modèle de langage, nombre d’envois par jour, inscriptions.
+Observabilité, déploiement et qualité (F8, F9, F10, F11)
+Observabilité (F8 : M) : métriques (latence, erreurs, profondeur des files, durée des jobs, appels au LLM, envois par jour), journaux structurés sans données personnelles, tableaux de bord et alertes Grafana (échecs de jobs, quota bas, erreurs serveur).
+Socle DevOps (F9 : H) : monorepo, Docker Compose pour le développement local, intégration continue (lint, tests, build, audit des dépendances), déploiement depuis la branche principale, scripts de données de démonstration.
+Tests de bout en bout (F10 : M) : parcours candidat complet, revendication d’un profil et mise à jour de statut par l’entreprise, vérification par l’administrateur.
+Feature flags (F11 : B) : activation progressive des fonctions optionnelles.
+5.3 Modèle de données
+5.4 Règles de gestion
+Anti-spam (offre gratuite) :
+Maximum 10 candidatures par jour et 30 par semaine par candidat.
+Une candidature par entreprise tous les 90 jours.
+Les entreprises peuvent se désinscrire et signaler un abus, ce qui réduit le score de confiance du candidat.
+Chaque candidature est relue et envoyée manuellement. Aucun envoi automatique en v1.
+Les offres payantes peuvent relever les plafonds d’envoi mais ne contournent jamais la désinscription, la règle des 90 jours ni la validation manuelle.
+Statuts d’une candidature : BROUILLON → ENVOYÉE → EN ATTENTE → ENTRETIEN → ACCEPTÉE / REFUSÉE, plus RETIRÉE. Mode hybride : le candidat peut toujours modifier, une entreprise vérifiée peut aussi pousser un statut, affiché avec le badge « mis à jour par l’entreprise ». Chaque changement est historisé.
+Priorité des sources de données entreprise : profil revendiqué > données crowdsourcées ou importées par l’administrateur > données issues du scraping. Tout conflit passe par la file de modération.
+Offres payantes (valeurs configurables, à titre indicatif) :
+6. Besoins fonctionnels (MVP)
+Le MVP regroupe toutes les exigences de priorité Haute : sans elles, la démonstration de bout en bout n’est pas possible. Les autres exigences (priorités Moyenne et Basse) figurent dans le Product Backlog complet (section 8).
+6.1 Identité, accès et vie privée (module A)
+6.2 Intelligence du CV (module B)
+6.3 Données entreprises et matching (module C)
+6.4 Studio de candidature (module D)
+6.5 Suivi, espace entreprise et notifications (module E)
+6.6 Plateforme, PWA, facturation et exploitation (module F)
+6.7 Exigences non fonctionnelles
+7. Technologies envisagées
+Les versions exactes ne sont pas figées ici. En semaine 1, l’équipe confirme les versions stables ou LTS actuelles dans les documentations officielles et les fixe dans les fichiers de verrouillage et les Dockerfiles.
+Vérifications de la semaine 1 : limites et conditions des offres gratuites (Vercel, Render, Hugging Face Spaces, Supabase, Redis, Brevo, Grafana Cloud), quotas et politique d’usage des données du LLM choisi, configuration OAuth de Gmail (mode test), compatibilité Next.js et Serwist, versions de tous les frameworks.
+8. Product Backlog complet
+Légende. Priorité : Haute (MVP), Moyenne, Basse (bonus). Les sprints durent deux semaines : Sprint 1 (semaines 1 et 2), Sprint 2 (semaines 3 et 4), Sprint 3 (semaines 5 et 6). Responsables : M1 à M6 (voir 8.7).
+8.1 Module A : Identité, accès et vie privée (M1)
+8.2 Module B : Intelligence du CV et coach de carrière (M2)
+8.3 Module C : Données entreprises et matching (M3)
+8.4 Module D : Studio de candidature (M4)
+8.5 Module E : Suivi, espace entreprise et notifications (M5)
+8.6 Module F : Plateforme, PWA, facturation et exploitation (M6)
+8.7 Organisation de l’équipe
+Chaque membre est responsable d’un module complet (frontend, backend, tests) et d’une responsabilité transversale.
+Binômes de secours : M1 et M6, M2 et M3, M4 et M5.
+Accords à conclure en semaine 1 : contrat OpenAPI, contrat du service IA (/parse, /embed, /letter), format JSON des profils et des entreprises, tables matches et applications, événements de notification, points d’extension du back-office.
+8.8 Planning des sprints
+Gel des fonctionnalités à la fin de la semaine 5. En cas de retard, les exigences de priorité Basse sont retirées en premier.
+8.9 Définition de « terminé »
+Par fonctionnalité : critères d’acceptation respectés, tests écrits et réussis, API documentée dans OpenAPI, textes en français et en anglais, états de chargement, vide et erreur gérés, journaux et métriques ajoutés si nécessaire, vérification d’accessibilité rapide, pull request relue et fusionnée, fonctionnalité présentée à l’équipe.
+Pour la v1 : tous les besoins du MVP fonctionnent sur l’environnement de démonstration déployé, le scénario de démonstration se déroule sans correction manuelle, et les mesures de vie privée (consentement, suppression, stockage chiffré) sont démontrées.
+Scénario de démonstration : (1) inscription et vérification, (2) dépôt du CV, (3) relecture du profil, (4) entreprises suggérées avec explications, (5) génération d’une lettre, (6) modification et envoi, (7) suivi dans le tableau de bord, (8) une entreprise revendique son profil et passe le statut à Entretien, (9) le candidat voit le badge, (10) tableau de bord administrateur et modération, (11) installation de la PWA sur téléphone, (12) passage à l’offre Premium en mode test.
+9. Conclusion
+SmartApply Tunisia répond à un besoin concret : aider les étudiants et jeunes diplômés en informatique à accéder au marché caché de l’emploi en Tunisie, de façon ciblée, personnalisée et respectueuse des entreprises. Le projet va au-delà d’un site d’offres : il relie CV, IA, entreprises adaptées, candidature spontanée, envoi et suivi dans un seul parcours, avec un espace entreprise et un back-office d’administration.
+Sur le plan technique, il rassemble des briques variées (PWA React/Next.js, API NestJS, service IA Python, PostgreSQL avec recherche vectorielle, files de jobs, paiement simulé, observabilité), ce qui permet de confier à chacun des six membres un module complet et significatif.
+Principaux risques et réponses :
+Perspectives (v2) : application mobile native, interface et lettres en arabe, autres secteurs que l’IT, paiements réels avec un fournisseur local, statistiques avancées pour les entreprises, détection automatique des réponses (avec permissions supplémentaires) et partenariats avec les universités. Le modèle de données garde les champs de langue, de secteur et d’offre ouverts pour accueillir ces évolutions sans refonte.
+
+=== DOCX TABLE 1 ===
+Version || 1.0
+Date || 5 octobre 2026
+Équipe || 6 membres
+Durée || environ 6 semaines (3 sprints de 2 semaines)
+Budget || 0 $ (offres gratuites uniquement)
+
+=== DOCX TABLE 2 ===
+Solution || Ce qu’elle apporte || Limites || Apport de SmartApply Tunisia
+Sites d’offres d’emploi (locaux et internationaux) || Offres publiées, recherche par mots-clés || Uniquement les entreprises qui publient. Aucune aide à la rédaction. Peu de suivi. || Cible aussi les entreprises sans offre
+LinkedIn || Réseau, messages directs || Messages manuels et souvent génériques. Fonctions avancées payantes. Peu adapté aux entreprises tunisiennes de petite taille. || Matching local et message personnalisé généré
+Candidature manuelle par email || Gratuit, direct || Chronophage, qualité variable, aucun suivi, risque de spam || Génération, contrôles anti-spam, suivi intégré
+Générateurs de CV et de lettres || Mise en forme, modèles || Ne proposent pas à qui écrire. Textes génériques. || Propose les entreprises et rédige pour chacune
+Tableurs de suivi || Souplesse || Mise à jour manuelle, aucune intégration || Tableau de suivi relié aux envois, statuts mis à jour aussi par les entreprises
+Réseaux personnels et recommandations || Très efficaces || Inégalement répartis, dépendants du carnet d’adresses || Démocratise l’accès aux entreprises
+
+=== DOCX TABLE 3 ===
+Profil || Description || Besoins principaux
+Candidat (cible principale v1) || Étudiant ou jeune diplômé en informatique, à la recherche d’un PFE, d’un stage ou d’un premier emploi en Tunisie. Parle français et anglais. || Savoir qui contacter, gagner du temps de rédaction, suivre ses démarches, améliorer son CV
+Entreprise || Entreprise ou startup IT en Tunisie, représentée par un membre de l’équipe (RH, responsable technique, fondateur). || Recevoir des candidatures pertinentes, contrôler les envois, répondre simplement, éviter le spam
+Administrateur || Équipe de la plateforme. || Vérifier les entreprises, modérer les données, superviser le système
+
+=== DOCX TABLE 4 ===
+Composant || Rôle
+PWA React / Next.js || Interface, navigation, état, traductions FR/EN, service worker (coque hors ligne, mise à jour). Aucune règle métier : le navigateur appelle directement l’API NestJS avec le jeton d’authentification. Les pages publiques (accueil) peuvent être rendues côté serveur, l’application connectée est rendue côté client.
+API NestJS || Point d’entrée unique. Autorisation par rôle, règles métier, quotas, anti-spam, facturation, orchestration des jobs. Les workers s’exécutent dans le même service sur l’hébergement gratuit.
+Service IA FastAPI || Sans état. Extraction de texte, anonymisation, embeddings, passerelle LLM, prompts, scores. Appelé uniquement par les workers, protégé par un jeton de service.
+Supabase || PostgreSQL avec pgvector, authentification (email, Google, vérification), stockage privé des CV.
+Redis / BullMQ || Tous les traitements lents ou limités en débit.
+Stripe (mode test) || Abonnements simulés.
+Grafana Cloud || Métriques, journaux, tableaux de bord, alertes.
+
+=== DOCX TABLE 5 ===
+Job || Déclencheur || Comportement en cas d’échec
+Analyse du CV || Dépôt du CV || Message clair, saisie manuelle du profil possible
+Calcul des correspondances || Profil validé ou modifié || Conservation des anciens résultats, bouton de nouvel essai
+Génération de lettre || Demande du candidat || Modèle de lettre de repli, utilisateur informé
+Envoi || Confirmation du candidat || Jamais d’envoi en double (clé d’idempotence), pas de nouvel essai une fois accepté par le fournisseur
+Collecte d’entreprises (scraping) || Planification hebdomadaire || Source marquée en échec, les autres continuent
+Webhook Stripe || Événement Stripe || Traitement idempotent, liste d’échecs pour l’administrateur
+
+=== DOCX TABLE 6 ===
+Entité || Champs clés et relations
+users || id, email, rôle (candidat, entreprise, admin), langue, email vérifié, statut
+consents || utilisateur, type, version, date d’acceptation
+candidate_profiles || compétences, formation, expériences, projets, langues, domaines visés, types recherchés, villes, disponibilité, visibilité auprès des entreprises, embedding
+cvs || candidat, chemin de stockage, version, statut d’analyse, données extraites, confiance
+companies || nom, secteur, taille, ville, site, pile technique, email de contact et sa validité, « ouvert aux stagiaires », désinscription, profil revendiqué, source, dernière vérification, embedding
+company_field_history || entreprise, champ, valeur, source, auteur, date (provenance de chaque donnée)
+company_staging || données proposées par scraping ou crowdsourcing, statut de modération
+company_members || entreprise, utilisateur, rôle dans l’entreprise
+matches || candidat, entreprise, score, raisons, état (suggérée, sauvegardée, ignorée, candidature envoyée)
+applications || candidat, entreprise, CV, objet, corps, langue, canal, statut, date d’envoi
+application_status_history || candidature, ancien et nouveau statut, auteur (candidat ou entreprise), note, date
+letter_versions || candidature, version, texte, origine (IA, modèle, utilisateur)
+reports || signalements d’entreprises contre des candidats
+plans, subscriptions, usage_counters || offres, abonnements Stripe, compteurs d’usage par période
+notifications, push_subscriptions || notifications internes et abonnements push
+llm_usage_log, audit_logs || suivi du quota IA, journal des actions sensibles
+
+=== DOCX TABLE 7 ===
+ || Candidat Gratuit || Candidat Premium
+Envois || 10/jour, 30/semaine || 25/jour, 75/semaine
+Générations de lettres || 10/jour || 40/jour
+Régénérations par lettre || 2 || 10
+Score du CV || 3/mois || Usage équitable illimité
+Analyse des compétences manquantes || 1/mois || Usage équitable illimité
+Simulateur d’entretien || 1 séance/mois || 10 séances/mois
+Entreprises suggérées || Top 20 || Top 100
+
+=== DOCX TABLE 8 ===
+ || Entreprise Gratuit || Entreprise Pro
+Revendiquer et modifier le profil || ✔ || ✔
+Boîte de réception et mise à jour de statut || ✔ || ✔
+Mise en avant (clairement indiquée, plafonnée pour garder la pertinence) ||  || ✔
+Recherche de candidats ayant accepté d’être visibles ||  || ✔
+Statistiques sur les candidatures reçues ||  || ✔
+
+=== DOCX TABLE 9 ===
+ID || Besoin
+A1 || Inscription et connexion par email et mot de passe
+A2 || Connexion avec Google
+A3 || Vérification obligatoire de l’email avant utilisation
+A4 || Réinitialisation du mot de passe
+A5 || Contrôle d’accès par rôle (candidat, entreprise, admin) dans l’API et la base de données
+A6 || Inscription des entreprises et vérification manuelle par un administrateur
+A7 || Écran de consentement versionné (conditions, vie privée, traitement du CV par des services d’IA)
+A8 || Suppression du compte et des données associées (CV, données extraites, brouillons, lettres)
+A9 || Stockage chiffré et privé des CV, accès par URL signées temporaires
+A12 || Limitation de débit et verrouillage sur les endpoints d’authentification
+A13 || Paramètres du profil : langue, notifications, visibilité auprès des entreprises (désactivée par défaut)
+
+=== DOCX TABLE 10 ===
+ID || Besoin
+B1 || Dépôt de CV (PDF ou DOCX, taille limitée, validation du type)
+B2 || Analyse du CV en données structurées avec niveau de confiance par champ (traitement asynchrone)
+B3 || Anonymisation des données personnelles avant tout appel à un modèle externe
+B4 || Prise en charge des CV en français et en anglais
+B5 || Écran de relecture du profil et définition des objectifs (domaine, type de stage, villes, disponibilité)
+
+=== DOCX TABLE 11 ===
+ID || Besoin
+C1 || Catalogue d’entreprises avec gestion par l’administrateur
+C2 || Import initial d’environ 200 entreprises IT tunisiennes (CSV/JSON) avec validation et dédoublonnage
+C3 || Provenance et historique de chaque champ
+C4 || Règle de priorité entre sources (revendiqué > curé > scraping)
+C5 || File de modération avec comparaison des valeurs
+C9 || Moteur de matching : similarité sémantique (pgvector) et règles (domaine, ville, technologies, ouverture aux stagiaires, désinscriptions), top 20 avec pourcentage
+C12 || Prise en compte des désinscriptions d’entreprises
+
+=== DOCX TABLE 12 ===
+ID || Besoin
+D1 || Génération d’une lettre personnalisée par entreprise, en français ou en anglais
+D2 || Règle d’ancrage : aucune information absente du profil du candidat, validation de la sortie, protection contre l’injection de prompt
+D3 || Éditeur (objet, corps, aperçu avec CV, régénération limitée par l’offre)
+D5 || Modèle de lettre de repli si le LLM est indisponible ou si le quota est atteint
+D6 || Passerelle LLM : abstraction du fournisseur, reprises avec temporisation, limitation de débit, suivi du quota
+D7 || Envoi depuis le compte Gmail du candidat (OAuth, permission d’envoi uniquement)
+D8 || Livraison dans la boîte de réception de la plateforme si l’entreprise a revendiqué son profil
+D11 || Contrôles avant envoi : plafonds, doublon, désinscription, validité de l’email, CV joint, confirmation
+D13 || Gestion du résultat d’envoi, sans envoi en double
+
+=== DOCX TABLE 13 ===
+ID || Besoin
+E1 || Tableau de bord des candidatures (liste et Kanban par statut, filtres, recherche)
+E2 || Gestion des statuts par le candidat avec note, date et historique
+E3 || Espace entreprise : revendication, modification du profil, candidatures reçues, CV consultable, désinscription
+E4 || L’entreprise peut pousser un statut et un court message, avec badge « mis à jour par l’entreprise »
+E7 || Notifications dans l’application
+
+=== DOCX TABLE 14 ===
+ID || Besoin
+F1 || PWA : manifeste, icônes, installation, service worker (coque en cache, réseau d’abord pour l’API), page hors ligne, invitation à mettre à jour
+F3 || Socle d’interface et design system, responsive, objectif d’accessibilité WCAG 2.1 AA, internationalisation FR/EN
+F4 || Moteur d’offres et de quotas
+F5 || Paiement Stripe en mode test (paiement, webhook idempotent, états d’abonnement)
+F6 || Socle du back-office administrateur (utilisateurs, entreprises, dérogations d’offre)
+F9 || Monorepo, Docker Compose, intégration continue GitHub Actions, déploiement, gestion des secrets, scripts de données de démonstration
+
+=== DOCX TABLE 15 ===
+Domaine || Exigence
+Performance (démo) || Environ 200 utilisateurs inscrits, 20 simultanés. API hors IA : 95e centile sous 500 ms. Analyse de CV sous 30 s, génération sous 20 s si le quota est disponible. Score Lighthouse performance supérieur ou égal à 85.
+Sécurité || Revue OWASP Top 10, validation de toutes les entrées, CORS restrictif, limitation de débit, secrets hors dépôt, contrôle des fichiers envoyés, assainissement des textes affichés, audit des dépendances en intégration continue.
+Vie privée || Minimisation, anonymisation avant LLM, aucun contenu de CV dans les journaux, consentement, suppression, visibilité des candidats opt-in. La loi tunisienne 2004-63 sur la protection des données personnelles (INPDP) sert de référence. L’équipe confirme ses obligations avec l’encadrement de l’école, ce document ne constitue pas un avis juridique.
+Fiabilité || États de chargement, vide et erreur sur chaque liste. Dégradations prévues : LLM indisponible (modèle de repli), échec d’analyse (saisie manuelle), échec Gmail (expéditeur de la plateforme), démarrage à froid (chargement et préchauffage avant démonstration).
+Accessibilité et langues || Navigation clavier, contrastes, libellés. Interface et lettres en français et en anglais.
+
+=== DOCX TABLE 16 ===
+Couche || Technologie || Rôle et justification
+Frontend || React, Next.js (App Router), TypeScript || PWA. Pages publiques rendues côté serveur, application connectée rendue côté client. Next.js sert uniquement de frontend.
+UI et données || Tailwind CSS avec shadcn/ui, TanStack Query, React Hook Form avec Zod, next-intl || Composants accessibles, gestion des appels API, formulaires validés, internationalisation FR/EN
+PWA || Manifeste Next.js (app/manifest.ts), service worker avec Serwist || Installation, coque hors ligne, mises à jour. À tester sur build de production. Compatibilité Serwist/Next.js à vérifier en semaine 1.
+API || NestJS, TypeScript, class-validator, OpenAPI/Swagger, @nestjs/throttler || Règles métier, rôles, quotas. Le fichier OpenAPI est le contrat entre frontend et backend.
+ORM || Prisma (ou TypeORM) || Requêtes typées, migrations versionnées
+File de jobs || Redis, BullMQ || Travaux asynchrones, reprises, limitation de débit des appels LLM
+Service IA || Python, FastAPI, Pydantic || Service sans état
+Analyse de CV || pdfplumber ou PyMuPDF, python-docx, spaCy (optionnel) || Extraction de texte et structuration
+Embeddings || sentence-transformers (petit modèle multilingue) || Matching sémantique FR/EN en local, sans coût. Taille à vérifier selon la RAM de l’hébergeur.
+LLM || Offre gratuite Gemini ou Groq derrière la passerelle || Lettres, score, simulateur, classification. Limites et politique d’usage des données à vérifier.
+Base de données || Supabase PostgreSQL, pgvector || Données relationnelles et recherche vectorielle
+Authentification || Supabase Auth || Email, Google, vérification, réinitialisation
+Stockage || Supabase Storage (espace privé) || CV
+Email || Gmail API (permission d’envoi), service d’email transactionnel gratuit (par exemple Brevo) || Envoi depuis le compte du candidat, emails système et repli
+Paiement || Stripe, mode test || Abonnements simulés
+Collecte de données || Scrapy ou httpx avec BeautifulSoup || Sites et annuaires publics uniquement, respect de robots.txt, résultat en zone de modération
+Observabilité || Grafana Cloud, prom-client, journaux JSON structurés || Métriques, journaux, tableaux de bord, alertes
+Tests || Jest ou Vitest, React Testing Library, Supertest, pytest, Playwright, Lighthouse CI || Unitaires, API, bout en bout, PWA
+DevOps || Docker, Docker Compose, GitHub Actions, Dependabot || Environnement identique pour tous, intégration et déploiement continus
+Hébergement || Vercel (PWA), Render (API), Hugging Face Spaces (service IA), Supabase, Redis gratuit, Grafana Cloud || Offres gratuites, limites à vérifier en semaine 1
+
+=== DOCX TABLE 17 ===
+ID || User story || Priorité || Sprint
+A1 || En tant qu’utilisateur, je veux m’inscrire et me connecter avec mon email et mon mot de passe afin d’accéder à mon espace || Haute || 1
+A2 || En tant qu’utilisateur, je veux me connecter avec Google afin de gagner du temps || Haute || 1
+A3 || En tant que plateforme, je veux exiger la vérification de l’email afin d’éviter les faux comptes || Haute || 1
+A4 || En tant qu’utilisateur, je veux réinitialiser mon mot de passe afin de récupérer mon compte || Haute || 1
+A5 || En tant que plateforme, je veux contrôler l’accès par rôle afin que chacun ne voie que ce qui le concerne || Haute || 1
+A7 || En tant que candidat, je veux comprendre et accepter l’usage de mes données afin de donner un consentement éclairé || Haute || 1
+A9 || En tant que candidat, je veux que mon CV soit stocké de façon privée et chiffrée afin de protéger mes données || Haute || 1
+A12 || En tant que plateforme, je veux limiter les tentatives de connexion afin de résister aux attaques || Haute || 1
+A13 || En tant qu’utilisateur, je veux régler ma langue, mes notifications et ma visibilité afin de contrôler mon expérience || Haute || 1
+A6 || En tant qu’administrateur, je veux vérifier manuellement les entreprises afin d’empêcher l’usurpation || Haute || 2
+A8 || En tant que candidat, je veux supprimer mon compte et mes données afin d’exercer mon droit à l’effacement || Haute || 2
+A10 || En tant que candidat, je veux exporter mes données afin de les récupérer || Moyenne || 3
+A11 || En tant qu’administrateur, je veux un journal d’audit afin de tracer les actions sensibles || Moyenne || 3
+A14 || En tant qu’utilisateur, je veux activer une double authentification afin de renforcer ma sécurité || Basse || 3
+
+=== DOCX TABLE 18 ===
+ID || User story || Priorité || Sprint
+B1 || En tant que candidat, je veux déposer mon CV (PDF ou DOCX) afin de lancer l’analyse || Haute || 1
+B2 || En tant que candidat, je veux que mon CV soit converti en profil structuré afin de ne pas tout ressaisir || Haute || 1
+B3 || En tant que plateforme, je veux anonymiser les données personnelles avant tout appel IA externe afin de protéger la vie privée || Haute || 1
+B4 || En tant que candidat, je veux que mes CV en français ou en anglais soient compris afin de rester dans ma langue || Haute || 1
+B5 || En tant que candidat, je veux corriger mon profil et définir mes objectifs afin d’obtenir des suggestions justes || Haute || 1
+B6 || En tant que plateforme, je veux normaliser les compétences afin d’améliorer le matching || Moyenne || 3
+B7 || En tant que candidat, je veux un score de CV avec des conseils afin d’améliorer mon CV || Moyenne || 3
+B8 || En tant que candidat, je veux connaître mes compétences manquantes par rapport aux entreprises visées afin de savoir quoi apprendre || Moyenne || 3
+B9 || En tant que candidat, je veux un simulateur d’entretien afin de m’entraîner et de recevoir un retour || Basse || 3
+
+=== DOCX TABLE 19 ===
+ID || User story || Priorité || Sprint
+C1 || En tant qu’administrateur, je veux gérer le catalogue d’entreprises afin de maintenir des données fiables || Haute || 1
+C2 || En tant qu’administrateur, je veux importer une liste initiale d’entreprises afin de démarrer avec des données utilisables || Haute || 1
+C3 || En tant qu’administrateur, je veux connaître la source de chaque champ afin d’arbitrer les conflits || Haute || 1
+C4 || En tant que plateforme, je veux appliquer une priorité entre sources afin que la donnée la plus fiable l’emporte || Haute || 2
+C5 || En tant qu’administrateur, je veux une file de modération avec comparaison afin de valider les changements || Haute || 2
+C9 || En tant que candidat, je veux une liste d’entreprises classées avec un pourcentage afin de savoir où postuler || Haute || 2
+C12 || En tant qu’entreprise, je veux pouvoir me désinscrire afin de ne plus recevoir de candidatures || Haute || 2
+C6 || En tant que candidat, je veux proposer une entreprise ou une correction afin d’enrichir la base || Moyenne || 3
+C7 || En tant que plateforme, je veux enrichir les données (technologies, taille, validité de l’email) afin d’améliorer la qualité || Moyenne || 3
+C10 || En tant que candidat, je veux trois raisons pour chaque suggestion afin de comprendre le classement || Moyenne || 3
+C11 || En tant que candidat, je veux sauvegarder ou ignorer une suggestion afin d’affiner mes résultats || Moyenne || 3
+C13 || En tant que candidat, je veux parcourir et filtrer les entreprises afin d’explorer par moi-même || Moyenne || 3
+C8 || En tant que plateforme, je veux collecter automatiquement des données publiques afin d’élargir le catalogue (après modération) || Basse || 3
+
+=== DOCX TABLE 20 ===
+ID || User story || Priorité || Sprint
+D6 || En tant que plateforme, je veux une passerelle LLM (reprises, limitation, quota) afin de fonctionner avec une offre gratuite || Haute || 1
+D1 || En tant que candidat, je veux générer une candidature personnalisée pour une entreprise afin de gagner du temps || Haute || 2
+D2 || En tant que candidat, je veux que la lettre n’invente rien afin de rester honnête || Haute || 2
+D3 || En tant que candidat, je veux modifier l’objet et le texte avant l’envoi afin de garder le contrôle || Haute || 2
+D5 || En tant que candidat, je veux une lettre de repli si l’IA est indisponible afin de ne jamais être bloqué || Haute || 2
+D7 || En tant que candidat, je veux envoyer depuis mon compte Gmail afin que les réponses arrivent dans ma boîte || Haute || 2
+D8 || En tant qu’entreprise, je veux voir les candidatures dans la plateforme afin de les traiter facilement || Haute || 2
+D11 || En tant que plateforme, je veux vérifier plafonds, doublons et désinscriptions avant l’envoi afin d’éviter le spam || Haute || 2
+D13 || En tant que candidat, je veux voir le résultat de l’envoi, sans envoi en double, afin d’être sûr de ce qui est parti || Haute || 2
+D4 || En tant que candidat, je veux l’historique des versions d’une lettre afin de revenir en arrière || Moyenne || 3
+D9 || En tant que candidat, je veux un envoi de secours depuis la plateforme afin de pouvoir envoyer sans Gmail || Moyenne || 3
+D12 || En tant que candidat, je veux préparer plusieurs lettres et les relire une par une afin d’aller plus vite sans envoi automatique || Moyenne || 3
+D14 || En tant que candidat, je veux choisir le ton de la lettre afin de l’adapter à l’entreprise || Basse || 3
+D10 || En tant que candidat, je veux envoyer depuis Outlook afin d’utiliser ma messagerie || Basse || 3
+
+=== DOCX TABLE 21 ===
+ID || User story || Priorité || Sprint
+E1 || En tant que candidat, je veux un tableau de bord (liste et Kanban) afin de suivre toutes mes candidatures || Haute || 2
+E2 || En tant que candidat, je veux modifier le statut avec une note afin de garder un historique || Haute || 2
+E3 || En tant qu’entreprise, je veux revendiquer et modifier mon profil et voir les candidatures reçues afin de les traiter || Haute || 2
+E4 || En tant qu’entreprise, je veux pousser un statut et un message afin d’informer le candidat || Haute || 2
+E7 || En tant qu’utilisateur, je veux des notifications dans l’application afin de ne rien manquer || Haute || 2
+E5 || En tant qu’entreprise, je veux signaler un abus afin de me protéger du spam || Moyenne || 3
+E6 || En tant qu’entreprise, je veux définir les profils recherchés afin de recevoir des candidatures pertinentes || Moyenne || 3
+E8 || En tant qu’utilisateur, je veux des notifications par email afin d’être prévenu hors de l’application || Moyenne || 3
+E10 || En tant que candidat, je veux des rappels de relance avec un brouillon afin de relancer poliment || Basse || 3
+E11 || En tant que candidat, je veux coller une réponse reçue et obtenir une suggestion de statut afin de mettre à jour plus vite || Basse || 3
+E12 || En tant que candidat, je veux des statistiques (taux de réponse, délai) afin d’évaluer ma campagne || Basse || 3
+E13 || En tant que candidat, je veux exporter la date d’entretien vers mon calendrier afin de ne pas l’oublier || Basse || 3
+E9 || En tant qu’utilisateur, je veux des notifications push afin d’être alerté instantanément || Basse || 3
+
+=== DOCX TABLE 22 ===
+ID || User story || Priorité || Sprint
+F9 || En tant qu’équipe, je veux un monorepo, Docker Compose, une CI et des déploiements afin de travailler sur un socle commun || Haute || 1
+F1 || En tant qu’utilisateur, je veux installer l’application sur mon téléphone et l’ouvrir hors ligne afin de l’utiliser comme une application native || Haute || 1
+F3 || En tant qu’utilisateur, je veux une interface responsive, accessible et bilingue afin de l’utiliser facilement || Haute || 1
+F4 || En tant que plateforme, je veux gérer les offres et quotas afin d’appliquer les limites de chaque abonnement || Haute || 2
+F5 || En tant qu’utilisateur, je veux passer à une offre payante (mode test) afin d’accéder aux fonctions avancées || Haute || 2
+F6 || En tant qu’administrateur, je veux un back-office pour gérer utilisateurs, entreprises et offres afin de superviser la plateforme || Haute || 2
+F7 || En tant qu’administrateur, je veux un tableau de bord d’exploitation (jobs en échec, quota LLM, envois du jour) afin de surveiller le système || Moyenne || 3
+F8 || En tant qu’équipe, je veux des métriques, journaux et alertes Grafana afin de détecter les problèmes || Moyenne || 3
+F10 || En tant qu’équipe, je veux des tests de bout en bout afin de sécuriser le parcours principal || Moyenne || 3
+F12 || En tant qu’utilisateur, je veux consulter mon tableau de bord hors ligne (dernières données) afin de l’ouvrir sans réseau || Basse || 3
+F11 || En tant qu’équipe, je veux des feature flags afin de livrer les fonctions optionnelles en sécurité || Basse || 3
+F13 || En tant qu’entreprise ou candidat, je veux consulter l’historique de mes factures afin de suivre mes paiements || Moyenne || 3
+
+=== DOCX TABLE 23 ===
+Membre || Module || Fonctionnalités principales || Responsabilité transversale
+M1 || A : Identité, accès, vie privée || Authentification, rôles, vérification des entreprises, consentement, suppression, stockage sécurisé || Revue de sécurité et règles d’accès
+M2 || B : Intelligence du CV || Dépôt et analyse du CV, profil, score, compétences manquantes, simulateur d’entretien || Squelette du service IA Python et anonymisation
+M3 || C : Données entreprises et matching || Catalogue, import, provenance, modération, crowdsourcing, scraping, matching || Cohérence du schéma de données et pgvector
+M4 || D : Studio de candidature || Génération, ancrage, passerelle LLM, repli, éditeur, envoi Gmail, contrôles avant envoi || Conventions de file de jobs et de limitation
+M5 || E : Suivi, espace entreprise, notifications || Tableau de bord et Kanban, statuts, espace entreprise, signalements, notifications, classification des réponses || Cohérence UX des parcours candidat et entreprise
+M6 || F : Plateforme, PWA, facturation, exploitation || PWA, design system, offres et quotas, Stripe, back-office, Grafana, CI/CD, tests de bout en bout || Environnements, livraisons et préparation de la démonstration
+
+=== DOCX TABLE 24 ===
+Sprint || Objectifs || Livrable
+Sprint 1 (S1-S2) || Vérification des offres gratuites et des versions, socle technique (monorepo, Docker Compose, CI), contrats d’API, authentification, rôles, dépôt et analyse du CV, catalogue et import d’entreprises, PWA et design system || Chacun lance la pile en local. Du CV au profil analysé.
+Sprint 2 (S3-S4) || Matching, génération de lettres avec repli, éditeur, envoi Gmail, tableau de bord de suivi, espace entreprise, vérification et modération, anti-spam et quotas, Stripe (mode test), notifications internes || Tous les besoins MVP fonctionnent de bout en bout
+Sprint 3 (S5-S6) || Fonctions de priorité Moyenne et Basse, scraping, Grafana, tests de bout en bout, accessibilité, performance, vérifications de confidentialité, jeu de données de démonstration, répétition || Application prête pour la démonstration
+
+=== DOCX TABLE 25 ===
+Risque || Réponse prévue
+Limites ou changements des offres gratuites (hébergement, Supabase, LLM, Redis) || Liste de vérification en semaine 1, couches d’abstraction, replis
+Démarrage à froid de l’hébergement gratuit || Écrans de chargement et préchauffage avant la démonstration
+Quota et politique de données d’un LLM gratuit || File de jobs avec limitation, lettre de repli, anonymisation, texte de consentement
+Qualité et légalité des données entreprises || Import maîtrisé, validation des emails, modération, collecte limitée aux sources publiques
+Spam envers les entreprises || Plafonds, règle des 90 jours, désinscription, signalements, validation manuelle
+Ampleur du périmètre pour 6 semaines || Priorités Haute, Moyenne et Basse, jalons de fin de sprint, liste de coupes prévue
+Paiements réels indisponibles en Tunisie (à vérifier) || Mode test uniquement en v1, solutions locales étudiées ensuite

@@ -1,0 +1,413 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "windows"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum PostCategory {
+  COMPANY_ANNOUNCEMENT
+  JOB_OPENING
+  INTERNSHIP_ANNOUNCEMENT
+  PFE_ANNOUNCEMENT
+  OPEN_DAY
+  RECRUITMENT_NEWS
+  CAREER_ADVICE
+  WORKSHOP
+  COMPANY_LIFE
+  TESTIMONIAL
+  SCHOLARSHIP
+  CAMPUS_NEWS
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+  REMOVED
+}
+
+enum PostSource {
+  MANUAL
+  IMPORTED
+}
+
+enum ContentLanguage {
+  FR
+  EN
+}
+
+enum ReportReason {
+  SPAM
+  ABUSE
+  MISINFORMATION
+  COPYRIGHT
+  OTHER
+}
+
+enum ReportStatus {
+  PENDING
+  DISMISSED
+  ACTIONED
+}
+
+enum ModerationAction {
+  UNPUBLISH
+  REMOVE
+  RESTORE
+  DISMISS_REPORTS
+}
+
+enum ReactionType {
+  LIKE
+  LOVE
+  CELEBRATE
+  INSIGHTFUL
+  SUPPORT
+  FUNNY
+}
+
+model Post {
+  id          String          @id @default(uuid()) @db.Uuid
+  companyId   String?         @map("company_id") @db.Uuid
+  jobId       String?         @map("job_id") @db.Uuid
+  authorId    String          @map("author_id") @db.Uuid
+  title       String
+  body        String          @db.Text
+  excerpt     String?
+  category    PostCategory
+  status      PostStatus      @default(DRAFT)
+  source      PostSource      @default(MANUAL)
+  sourceUrl   String?         @map("source_url")
+  sourceName  String?         @map("source_name")
+  language     ContentLanguage @default(FR)
+  postKind     String          @default("TEXT") @map("post_kind")
+  visibility   String          @default("PUBLIC")
+  commentMode  String          @default("ANYONE") @map("comment_mode")
+  media        Json            @default("[]")
+  poll         Json?
+  event        Json?
+  celebration  Json?
+  publishedAt  DateTime?       @map("published_at")
+  archivedAt  DateTime?       @map("archived_at")
+  deletedAt   DateTime?       @map("deleted_at")
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+
+  tags       PostTag[]
+  likes      PostLike[]
+  bookmarks  PostBookmark[]
+  comments   PostComment[]
+  reports    PostReport[]
+  moderation PostModerationLog[]
+  pollVotes  PostPollVote[]
+  hides      PostHide[]
+
+  @@index([status, publishedAt])
+  @@index([companyId, status])
+  @@index([category, status])
+  @@index([authorId])
+  @@map("posts")
+}
+
+model PostTag {
+  postId String @map("post_id") @db.Uuid
+  tag    String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tag])
+  @@index([tag])
+  @@map("post_tags")
+}
+
+model PostPollVote {
+  postId      String   @map("post_id") @db.Uuid
+  userId      String   @map("user_id") @db.Uuid
+  optionIndex Int      @map("option_index")
+  createdAt   DateTime @default(now()) @map("created_at")
+  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@id([postId, userId])
+  @@index([postId])
+  @@map("post_poll_votes")
+}
+
+model PostHide {
+  postId    String   @map("post_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@id([postId, userId])
+  @@index([userId])
+  @@map("post_hides")
+}
+
+model PostLike {
+  postId    String       @map("post_id") @db.Uuid
+  userId    String       @map("user_id") @db.Uuid
+  type      ReactionType @default(LIKE)
+  createdAt DateTime     @default(now()) @map("created_at")
+  post      Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@id([postId, userId])
+  @@index([userId])
+  @@index([postId, type])
+  @@map("post_likes")
+}
+
+model PostBookmark {
+  postId    String   @map("post_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@id([postId, userId])
+  @@index([userId])
+  @@map("post_bookmarks")
+}
+
+model PostComment {
+  id        String    @id @default(uuid()) @db.Uuid
+  postId    String    @map("post_id") @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  parentId  String?   @map("parent_id") @db.Uuid
+  body      String    @db.Text
+  deletedAt DateTime? @map("deleted_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  post    Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  parent  PostComment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies PostComment[] @relation("CommentReplies")
+  likes   CommentLike[]
+
+  @@index([postId, createdAt])
+  @@index([userId])
+  @@map("post_comments")
+}
+
+model CommentLike {
+  commentId String       @map("comment_id") @db.Uuid
+  userId    String       @map("user_id") @db.Uuid
+  type      ReactionType @default(LIKE)
+  createdAt DateTime     @default(now()) @map("created_at")
+  comment   PostComment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@id([commentId, userId])
+  @@index([userId])
+  @@index([commentId, type])
+  @@map("comment_likes")
+}
+
+model PostReport {
+  id           String       @id @default(uuid()) @db.Uuid
+  postId       String       @map("post_id") @db.Uuid
+  reporterId   String       @map("reporter_id") @db.Uuid
+  reason       ReportReason
+  details      String?      @db.Text
+  status       ReportStatus @default(PENDING)
+  reviewedById String?      @map("reviewed_by_id") @db.Uuid
+  reviewedAt   DateTime?    @map("reviewed_at")
+  reviewNote   String?      @map("review_note") @db.Text
+  createdAt    DateTime     @default(now()) @map("created_at")
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([reporterId, postId])
+  @@index([status, createdAt])
+  @@index([postId, status])
+  @@map("post_reports")
+}
+
+model PostModerationLog {
+  id        String           @id @default(uuid()) @db.Uuid
+  postId    String           @map("post_id") @db.Uuid
+  adminId   String           @map("admin_id") @db.Uuid
+  action    ModerationAction
+  reason    String           @db.Text
+  createdAt DateTime         @default(now()) @map("created_at")
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId, createdAt])
+  @@map("post_moderation_logs")
+}
+
+enum LetterSource {
+  AI
+  TEMPLATE
+}
+
+enum LetterStatus {
+  DRAFT
+  READY
+  SENT
+  FAILED
+}
+
+enum LetterUsageKind {
+  GENERATE
+  SEND
+}
+
+model ApplicationLetter {
+  id            String          @id @default(uuid()) @db.Uuid
+  applicationId String          @map("application_id") @db.Uuid
+  userId        String          @map("user_id") @db.Uuid
+  jobId         String          @map("job_id") @db.Uuid
+  language      ContentLanguage
+  subject       String
+  body          String          @db.Text
+  source        LetterSource
+  status        LetterStatus    @default(DRAFT)
+  warnings      String[]
+  recipient     String?
+  sentAt        DateTime?       @map("sent_at")
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime        @updatedAt @map("updated_at")
+
+  @@index([userId, createdAt])
+  @@index([applicationId])
+  @@map("application_letters")
+}
+
+enum JobType {
+  CDI
+  STAGE
+  PFE
+}
+
+enum JobStatus {
+  DRAFT
+  PUBLISHED
+  CLOSED
+  ARCHIVED
+}
+
+enum ApplicationStatus {
+  DRAFT
+  SUBMITTED
+}
+
+model Company {
+  id             String   @id @default(uuid()) @db.Uuid
+  name           String
+  city           String
+  sector         String
+  logoUrl        String?  @map("logo_url")
+  isClaimed      Boolean  @default(false) @map("is_claimed")
+  isVerified     Boolean  @default(false) @map("is_verified")
+  recruiterEmail String   @map("recruiter_email")
+  ownerEmail     String?  @map("owner_email")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  jobs           Job[]
+
+  @@index([ownerEmail])
+  @@index([name])
+  @@map("catalog_companies")
+}
+
+model Job {
+  id           String          @id @default(uuid()) @db.Uuid
+  companyId    String          @map("company_id") @db.Uuid
+  title        String
+  city         String
+  type         JobType
+  language     ContentLanguage @default(FR)
+  status       JobStatus       @default(DRAFT)
+  description  String          @db.Text
+  requirements String[]
+  createdAt    DateTime        @default(now()) @map("created_at")
+  updatedAt    DateTime        @updatedAt @map("updated_at")
+  company      Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  applications Application[]
+
+  @@index([companyId, status])
+  @@index([title])
+  @@map("catalog_jobs")
+}
+
+model CandidateProfile {
+  id          String   @id @default(uuid()) @db.Uuid
+  email       String   @unique
+  fullName    String   @map("full_name")
+  city        String
+  headline    String
+  avatarUrl   String?  @map("avatar_url")
+  skills      String[]
+  education   String[]
+  experiences Json
+  languages   Json
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("candidate_profiles")
+}
+
+model Application {
+  id         String            @id @default(uuid()) @db.Uuid
+  jobId      String            @map("job_id") @db.Uuid
+  ownerEmail String            @map("owner_email")
+  status     ApplicationStatus
+  createdAt  DateTime          @default(now()) @map("created_at")
+  updatedAt  DateTime          @updatedAt @map("updated_at")
+  job        Job               @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@index([ownerEmail])
+  @@index([jobId])
+  @@map("catalog_applications")
+}
+
+model LetterUsageEvent {
+  id        String          @id @default(uuid()) @db.Uuid
+  userId    String          @map("user_id") @db.Uuid
+  kind      LetterUsageKind
+  createdAt DateTime        @default(now()) @map("created_at")
+
+  @@index([userId, kind, createdAt])
+  @@map("letter_usage_events")
+}
+
+enum NetworkTargetType {
+  COMPANY
+  CANDIDATE
+}
+
+enum NetworkConnectStatus {
+  PENDING
+  CONNECTED
+}
+
+/// Suivre une entreprise ou un candidat (persisté Supabase)
+model NetworkFollow {
+  id         String            @id @default(uuid()) @db.Uuid
+  userId     String            @map("user_id") @db.Uuid
+  targetType NetworkTargetType @map("target_type")
+  targetId   String            @map("target_id") @db.Uuid
+  createdAt  DateTime          @default(now()) @map("created_at")
+
+  @@unique([userId, targetType, targetId])
+  @@index([userId, createdAt])
+  @@index([targetType, targetId])
+  @@map("network_follows")
+}
+
+/// Connexion candidat ↔ candidat (persisté Supabase)
+model NetworkConnection {
+  id          String               @id @default(uuid()) @db.Uuid
+  requesterId String               @map("requester_id") @db.Uuid
+  targetId    String               @map("target_id") @db.Uuid
+  status      NetworkConnectStatus @default(PENDING)
+  createdAt   DateTime             @default(now()) @map("created_at")
+  updatedAt   DateTime             @updatedAt @map("updated_at")
+
+  @@unique([requesterId, targetId])
+  @@index([targetId, status])
+  @@map("network_connections")
+}

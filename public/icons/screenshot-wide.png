@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#f8fafc"/>
+  <rect x="0" y="0" width="1280" height="56" fill="#0A66C2"/>
+  <text x="640" y="35" text-anchor="middle" font-family="system-ui" font-weight="700" font-size="20" fill="white">SmartApply</text>
+  <rect x="24" y="80" width="1232" height="120" rx="12" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="640" y="148" text-anchor="middle" font-family="system-ui" font-weight="600" font-size="16" fill="#1e293b">Annonces carrière</text>
+  <rect x="24" y="220" width="1232" height="100" rx="12" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+  <rect x="24" y="340" width="1232" height="100" rx="12" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+</svg>
