@@ -1,0 +1,11 @@
+import {z} from 'zod';
+import {id} from '../contracts.js';
+const aiEntry=z.object({title:z.string(),organization:z.string(),description:z.string(),start:z.string().nullable(),end:z.string().nullable(),current:z.boolean(),url:z.string().nullable(),technologies:z.array(z.string()),evidence:z.string()});
+export const extractionSchema=z.object({objective:z.string(),language:z.enum(['fr','en','unknown']),education:z.array(aiEntry),experience:z.array(aiEntry),projects:z.array(aiEntry),skills:z.array(z.object({name:z.string(),category:z.string(),proficiency:z.string(),evidence:z.string()})),requiredSkills:z.array(z.object({name:z.string(),evidence:z.string()})),recommendations:z.array(z.string())});
+export type Extraction=z.infer<typeof extractionSchema>;
+export const generatedLetterSchema=z.object({subject:z.string().min(1).max(200),body:z.string().min(30).max(15000)});
+const fields={title:z.string().trim().min(1).max(200),language:z.enum(['fr','en']),company:z.string().max(200),role:z.string().max(200),jobDescription:z.string().max(12000),tone:z.enum(['professional','enthusiastic','concise']),emphasis:z.string().max(2000),cvId:id.nullable()};
+export const createLetterSchema=z.object({...fields,company:fields.company.default(''),role:fields.role.default(''),jobDescription:fields.jobDescription.default(''),tone:fields.tone.default('professional'),emphasis:fields.emphasis.default(''),cvId:fields.cvId.default(null),subject:z.string().max(200).default(''),body:z.string().max(15000).default(''),source:z.enum(['manual','template']).default('manual')}).strict();
+export const patchLetterSchema=z.object({...Object.fromEntries(Object.entries(fields).map(([k,v])=>[k,v.optional()])),subject:z.string().max(200).optional(),body:z.string().max(15000).optional(),version:z.number().int().positive()}).strict();
+export const analysisInput=z.object({approvedText:z.string().trim().min(80).max(24000),sourceHash:z.string().regex(/^[a-f0-9]{64}$/),consent:z.literal(true),targetDescription:z.string().max(12000).default(''),language:z.enum(['fr','en']).default('fr')}).strict();
+export const generateInput=z.object({version:z.number().int().positive(),consent:z.literal(true),approvedText:z.string().trim().min(80).max(24000),sourceHash:z.string().regex(/^[a-f0-9]{64}$/)}).strict();
