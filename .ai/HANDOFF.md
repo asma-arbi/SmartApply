@@ -1,0 +1,19 @@
+# Handoff — correct Asma-base integration
+
+User explicitly rejected parent application/auth rewrite. Continue only in Desktop project pwa/asma/SmartApply. Never copy parent frontend/app over this base. Original app/actions.ts, lib/auth/session.ts, middleware, auth/Google pages, original dashboard/settings/admin/company code are byte-identical to pre-integration baseline. Sidebar gained links; original root config/package wiring adds modules. Recovery compatibility is a new Suspense layout around the untouched original page.
+
+Read CURRENT_STATE + CV-MODULES.md. Original hashes/backups are ignored in .module-backup; preservation command is mandatory after future changes. Original sidebar backup hash verified including CRLF. Node22+ module launcher selects bundled Node24 if system is20. Module UI runs React18 with no useActionState/async React19 transition dependency. CSS scoped .cv-module and own copied sidebar/header/mobile nav hidden inside her layout.
+
+Auth: requireIdentity first calls her getSessionUser, then verifies original signed cookies + bound live session/user/role through packages/data asmaSession. Principal emailVerified remains actual; authenticatedSession=true is trusted-server proof, accepted by module candidate/operation guards. No extra email gate, fake email verification or new issuer. All API/CRUD ownership derives from cookies, never submitted owner IDs. Backend mode asma mounts only private module/AI workflow controllers. API prefix /api/cv-module; Swagger /module-docs. Private file links use the same prefix/frame headers; new module pages/API excluded from original SW cache.
+
+Verified:9 unit,2 comprehensive browser tests, type checks, production build; live Atlas/Groq analysis+French/English+private files/version restoration with cleanup. Temporary local browser database deleted. No real account/email created by browser tests; live data checks use unique fictional ownership only. No hosted services provisioned, no resets.
+
+Current actual app localhost3030/API4300, unified exec supervisor74745; leave running for user. Parent port3120 is NOT this app. Default dev:modules uses3000; choose MODULE_WEB_PORT3030 if occupied. Build output .next-cv-build, development .next-cv-dev, fixture .next-module-browser. Current tests source dirs cv-module/tests; fixture backend uses4341/web3041 and isolated local Mongo. Avoid concurrent fixture runs on those ports. API-private analysis preview uses Nest default success201; test accepts successful status. Original logout returns /, not /login. Use Mes lettres back button to return from editor before creating another draft.
+
+No graph exists; context-check after updates. Keep .env/backend.env values, logs and traces out of messages/commits. Do not alter source Google/CAPTCHA/account behavior unless user explicitly requests it.
+
+## Latest cover-letter work
+See CURRENT_STATE. Changed backend/src/mongo/studio.ts, backend/src/studio/{ai,contracts,letter-quality}.ts and cv-module/components/letters.tsx. Generate endpoint now requires approvedText/sourceHash. Added cv-module/tests/letter-quality.test.ts. Live fictional FR/EN generation passed after safe signature restoration; all temporary records cleaned. Existing browser regression passed; deterministic coverage is limited to role/company and placeholder checks, not the full requested matrix. Semantic claims require user review.
+
+## Latest verification
+20 unit tests, module typecheck, two browser regression tests, and original-source preservation passed after the cover-letter change. Final build compiled but was interrupted after stalling in Next checks; earlier build passed before final changes. New reviewed-CV AI flow lacks end-to-end browser coverage. Live fictional FR/EN provider test preceded final guard/template edits. No graph exists; run context-check.

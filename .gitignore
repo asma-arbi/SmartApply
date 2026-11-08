@@ -34,3 +34,17 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# AI memory: generated and machine-local files
+.ai/LOCAL.json
+graphify-out/
+
+# CV module generated/private files
+.env
+backend/.env
+**/dist/
+**/node_modules/
+.module-backup/
+output/
+test-results/
+.next-*/
