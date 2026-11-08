@@ -6,6 +6,9 @@ const DASHBOARD_PREFIX = "/dashboard";
 const ACCESS_TOKEN_COOKIE = "smartapply_access_token";
 const REFRESH_TOKEN_COOKIE = "smartapply_refresh_token";
 
+// Page des entretiens partagée entre le recruteur et le candidat
+const SHARED_INTERVIEWS_PATH = "/dashboard/company/interviews";
+
 const ACCESS_TOKEN_SECRET = new TextEncoder().encode(
   process.env.JWT_SECRET || "smartapply_jwt_super_secret_key_minimum_32_characters_long_2026"
 );
@@ -88,10 +91,18 @@ export async function middleware(req: NextRequest) {
         return res; // Super Admin a tous les droits
       }
 
+      // Le candidat peut accéder à la page des entretiens (vue candidat)
+      const isSharedInterviews =
+        pathname === SHARED_INTERVIEWS_PATH || pathname.startsWith(`${SHARED_INTERVIEWS_PATH}/`);
+
       if (pathname.startsWith("/dashboard/candidate") && userRole !== "candidat") {
         return NextResponse.redirect(new URL("/access-denied", req.url));
       }
-      if (pathname.startsWith("/dashboard/company") && userRole !== "entreprise") {
+      if (
+        pathname.startsWith("/dashboard/company") &&
+        userRole !== "entreprise" &&
+        !(isSharedInterviews && userRole === "candidat")
+      ) {
         return NextResponse.redirect(new URL("/access-denied", req.url));
       }
       if (pathname.startsWith("/dashboard/admin") && userRole !== "admin") {

@@ -24,6 +24,7 @@ const navConfig: Record<string, NavItem[]> = {
     { href: "/", label: "Offres d'emploi", icon: <BriefcaseIcon /> },
     { href: "/dashboard/candidate/companies", label: "Entreprises", icon: <BuildingIcon /> },
     { href: "/dashboard/candidate/applications", label: "Mes candidatures", icon: <ClipboardIcon /> },
+    { href: "/dashboard/company/interviews", label: "Mes entretiens", icon: <CalendarIcon /> },
     { href: "/dashboard/candidate/saved", label: "Sauvegardés", icon: <BookmarkIcon /> },
     { href: "/dashboard/candidate/settings", label: "Mon Profil & Paramètres", icon: <SettingsIcon /> },
   ],
@@ -31,6 +32,7 @@ const navConfig: Record<string, NavItem[]> = {
     { href: "/dashboard/company", label: "Mon espace", icon: <HomeIcon />, exact: true },
     { href: "/dashboard/company/jobs", label: "Mes offres", icon: <ClipboardIcon /> },
     { href: "/dashboard/jobs/new", label: "Publier une offre", icon: <PlusCircleIcon /> },
+    { href: "/dashboard/company/interviews", label: "Entretiens", icon: <CalendarIcon /> },
     { href: "/dashboard/company/edit", label: "Profil Entreprise", icon: <SettingsIcon /> },
   ],
   admin: [
@@ -38,6 +40,7 @@ const navConfig: Record<string, NavItem[]> = {
     { href: "/dashboard/admin/users", label: "Utilisateurs", icon: <UsersIcon /> },
     { href: "/dashboard/admin/companies", label: "Entreprises", icon: <BuildingIcon /> },
     { href: "/dashboard/admin/jobs", label: "Offres", icon: <BriefcaseIcon /> },
+    { href: "/dashboard/company/interviews", label: "Entretiens", icon: <CalendarIcon /> },
     { href: "/dashboard/admin/reports", label: "Rapports", icon: <ChartBarIcon /> },
     { href: "/dashboard/sessions", label: "Sécurité & Sessions", icon: <ShieldIcon /> },
   ],
@@ -258,6 +261,17 @@ function PlusCircleIcon() {
       <circle cx="12" cy="12" r="10" />
       <line x1="12" y1="8" x2="12" y2="16" />
       <line x1="8" y1="12" x2="16" y2="12" />
+    </svg>
+  );
+}
+
+function CalendarIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+      <rect x="3" y="4" width="18" height="18" rx="2" />
+      <line x1="16" y1="2" x2="16" y2="6" />
+      <line x1="8" y1="2" x2="8" y2="6" />
+      <line x1="3" y1="10" x2="21" y2="10" />
     </svg>
   );
 }
