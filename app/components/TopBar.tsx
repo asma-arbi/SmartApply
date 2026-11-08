@@ -19,6 +19,7 @@ const ROUTE_TITLES: Record<string, { section: string; title: string }> = {
   "/dashboard/candidate/settings": { section: "Candidat", title: "Paramètres" },
   "/dashboard/company": { section: "Entreprise", title: "Mon espace" },
   "/dashboard/company/jobs": { section: "Entreprise", title: "Mes offres d'emploi" },
+  "/dashboard/company/jobs/new": { section: "Entreprise", title: "Publier une offre" },
   "/dashboard/jobs/new": { section: "Entreprise", title: "Publier une offre" },
   "/dashboard/company/settings": { section: "Entreprise", title: "Paramètres" },
   "/dashboard/admin": { section: "Administration", title: "Tableau de bord" },
@@ -38,16 +39,26 @@ export default function TopBar({ userName, userEmail, role }: TopBarProps) {
   const [unread, setUnread] = useState(0);
   useEffect(() => { let live = true; const refresh = async () => { const r = await listNotifications(); if (live && r.ok) setUnread(r.data.filter((n: any) => !n.read).length); }; void refresh(); const timer = window.setInterval(() => void refresh(), 30000); return () => { live = false; window.clearInterval(timer); }; }, [pathname]);
 
-  // Find matching route or fallback dynamically
-  const routeInfo = ROUTE_TITLES[pathname] ?? {
-    section: role === "entreprise" ? "Entreprise" : role === "admin" ? "Administration" : "Candidat",
-    title: pathname
-      .split("/")
-      .filter(Boolean)
-      .pop()
-      ?.replace(/-/g, " ")
-      ?.replace(/\b\w/g, (c) => c.toUpperCase()) ?? "Tableau de bord",
-  };
+  // Determine route info based on pathname pattern
+  let routeInfo = ROUTE_TITLES[pathname];
+  
+  if (!routeInfo) {
+    // Handle dynamic routes
+    if (pathname.match(/^\/dashboard\/company\/jobs\/[^/]+$/)) {
+      routeInfo = { section: "Entreprise", title: "Modifier l'offre" };
+    } else {
+      // Fallback for unknown routes
+      routeInfo = {
+        section: role === "entreprise" ? "Entreprise" : role === "admin" ? "Administration" : "Candidat",
+        title: pathname
+          .split("/")
+          .filter(Boolean)
+          .pop()
+          ?.replace(/-/g, " ")
+          ?.replace(/\b\w/g, (c) => c.toUpperCase()) ?? "Tableau de bord",
+      };
+    }
+  }
 
   const initial = (userName?.charAt(0) || userEmail?.charAt(0) || "U").toUpperCase();
 

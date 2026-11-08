@@ -20,6 +20,7 @@ export default async function PublicPage({
 
   const db = await getDb();
 
+  // Fetch company-created jobs
   const pipeline: any[] = [
     { $match: { status: "published" } },
     { $sort: { created_at: -1 } },
@@ -55,7 +56,53 @@ export default async function PublicPage({
     });
   }
 
-  const jobs = await db.collection("jobs").aggregate(pipeline).toArray();
+  const companyJobs = await db.collection("jobs").aggregate(pipeline).toArray();
+
+  // Fetch external opportunities (scraped jobs)
+  const externalQuery: any = { is_active: true };
+  
+  if (q) {
+    const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp(escaped, "i");
+    externalQuery.$or = [
+      { title: regex },
+      { company_name: regex },
+      { location: regex },
+    ];
+  }
+
+  const externalJobs = await db
+    .collection("external_jobs")
+    .find(externalQuery)
+    .sort({ scraped_at: -1 })
+    .limit(30)
+    .toArray();
+
+  // Combine both sources
+  const allJobs = [
+    ...companyJobs.map((job: any) => ({
+      ...job,
+      source: "company" as const,
+    })),
+    ...externalJobs.map((job: any) => ({
+      id: job.id,
+      title: job.title,
+      location: job.location,
+      type: job.type,
+      created_at: job.scraped_at,
+      companies: { name: job.company_name },
+      source: "external" as const,
+      external_url: job.external_url,
+      external_source: job.source,
+    })),
+  ];
+
+  // Sort combined results by date
+  const jobs = allJobs.sort((a: any, b: any) => {
+    const dateA = new Date(a.created_at || a.scraped_at).getTime();
+    const dateB = new Date(b.created_at || b.scraped_at).getTime();
+    return dateB - dateA;
+  });
 
   const jobTypeColor: Record<string, string> = {
     Stage: "badge-blue",
@@ -222,14 +269,25 @@ export default async function PublicPage({
 
         {jobs && jobs.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {jobs.map((job) => {
+            {jobs.map((job: any) => {
               const company = job.companies as { name: string } | null;
+              const isExternal = job.source === "external";
+              const jobUrl = isExternal ? job.external_url : `/jobs/${job.id}`;
+              
               return (
                 <Link
                   key={job.id}
-                  href={`/jobs/${job.id}`}
-                  className="card-hover p-5 block group"
+                  href={jobUrl}
+                  target={isExternal ? "_blank" : undefined}
+                  rel={isExternal ? "noopener noreferrer" : undefined}
+                  className="card-hover p-5 block group relative"
                 >
+                  {isExternal && (
+                    <div className="absolute top-3 right-3 flex items-center gap-1 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded text-[10px] font-semibold text-amber-700">
+                      <ExternalIcon />
+                      {job.external_source === "keejob" ? "Keejob" : job.external_source}
+                    </div>
+                  )}
                   <div className="flex items-start justify-between mb-3">
                     <div className="w-11 h-11 bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-xl flex items-center justify-center text-blue-700 font-bold text-lg flex-shrink-0">
                       {company?.name?.charAt(0) ?? "?"}
@@ -248,7 +306,7 @@ export default async function PublicPage({
                     </span>
                     <span className="flex items-center gap-1">
                       <ClockIcon />
-                      {new Date(job.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}
+                      {new Date(job.created_at || job.scraped_at).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}
                     </span>
                   </div>
                 </Link>
@@ -331,6 +389,15 @@ function ClockIcon() {
   return (
     <svg className="w-3 h-3 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
       <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+    </svg>
+  );
+}
+function ExternalIcon() {
+  return (
+    <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+      <polyline points="15 3 21 3 21 9" />
+      <line x1="10" y1="14" x2="21" y2="3" />
     </svg>
   );
 }

@@ -5,6 +5,7 @@ import { getDb } from "@/lib/mongodb";
 import { Company, Job } from "@/lib/models/types";
 import { deleteJob } from "@/app/actions";
 import { PostsFeed } from "@/cv-module/components/posts";
+import JobActionButton from "./jobs/components/JobActionButton";
 
 export const dynamic = "force-dynamic";
 
@@ -102,7 +103,7 @@ export default async function CompanyDashboard() {
             Modifier le profil
           </Link>
           <Link
-            href="/dashboard/jobs/new"
+            href="/dashboard/company/jobs/new"
             className="btn-primary text-xs sm:text-sm py-2.5 px-4"
             id="add-job-btn"
           >
@@ -337,17 +338,16 @@ export default async function CompanyDashboard() {
             </p>
           </div>
           <Link
-            href="/dashboard/jobs/new"
+            href="/dashboard/company/jobs"
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100/80 px-3.5 py-2 rounded-lg transition-colors"
           >
-            <PlusIcon />
-            Nouvelle offre
+            Gérer les offres →
           </Link>
         </div>
 
         <div className="divide-y divide-slate-100">
           {jobs && jobs.length > 0 ? (
-            jobs.map((job) => (
+            jobs.slice(0, 5).map((job) => (
               <div
                 key={job.id}
                 className="flex flex-col sm:flex-row sm:items-center justify-between p-5 hover:bg-slate-50/60 transition-colors gap-4"
@@ -355,7 +355,7 @@ export default async function CompanyDashboard() {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2.5 flex-wrap mb-1">
                     <Link
-                      href={`/jobs/${job.id}`}
+                      href={`/dashboard/company/jobs/${job.id}`}
                       className="font-bold text-slate-900 hover:text-blue-600 transition-colors text-sm"
                     >
                       {job.title}
@@ -385,19 +385,17 @@ export default async function CompanyDashboard() {
 
                 <div className="flex items-center gap-2 flex-shrink-0 self-end sm:self-center">
                   <Link
-                    href={`/dashboard/jobs/${job.id}`}
+                    href={`/dashboard/company/jobs/${job.id}`}
                     className="text-xs font-semibold text-slate-700 hover:text-blue-600 px-3 py-1.5 rounded-lg border border-slate-200 hover:border-blue-200 hover:bg-blue-50 transition-all"
                   >
                     Modifier
                   </Link>
-                  <form action={deleteJob.bind(null, job.id)}>
-                    <button
-                      type="submit"
-                      className="text-xs font-semibold text-red-600 hover:text-red-700 px-3 py-1.5 rounded-lg border border-transparent hover:border-red-200 hover:bg-red-50 transition-all"
-                    >
-                      Supprimer
-                    </button>
-                  </form>
+                  <JobActionButton
+                    action={deleteJob.bind(null, job.id)}
+                    label="Supprimer"
+                    variant="delete"
+                    title="Supprimer l'offre"
+                  />
                 </div>
               </div>
             ))
@@ -410,12 +408,23 @@ export default async function CompanyDashboard() {
               <p className="text-slate-500 text-sm mt-1 mb-6 max-w-sm">
                 Publiez votre première offre d&apos;emploi pour commencer à recevoir des candidatures qualifiées.
               </p>
-              <Link href="/dashboard/jobs/new" className="btn-primary">
+              <Link href="/dashboard/company/jobs/new" className="btn-primary">
                 <PlusIcon /> Publier une offre
               </Link>
             </div>
           )}
         </div>
+
+        {jobs && jobs.length > 5 && (
+          <div className="px-6 py-4 border-t border-slate-100 bg-slate-50">
+            <Link
+              href="/dashboard/company/jobs"
+              className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+            >
+              Voir toutes les offres ({jobs.length}) →
+            </Link>
+          </div>
+        )}
       </div>
       <PostsFeed
         canInteract

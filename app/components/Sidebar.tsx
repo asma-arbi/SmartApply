@@ -38,8 +38,8 @@ const navConfig: Record<string, NavItem[]> = {
   ],
   entreprise: [
     { href: "/dashboard/company", label: "Mon espace", icon: <HomeIcon />, exact: true },
-    { href: "/dashboard/company/jobs", label: "Mes offres", icon: <ClipboardIcon /> },
-    { href: "/dashboard/jobs/new", label: "Publier une offre", icon: <PlusCircleIcon /> },
+    { href: "/dashboard/company/jobs", label: "Gestion des offres", icon: <BriefcaseIcon /> },
+    { href: "/dashboard/company/jobs/new", label: "Publier une offre", icon: <PlusCircleIcon /> },
     { href: "/dashboard/company/edit", label: "Profil Entreprise", icon: <SettingsIcon /> },
     { href: "/dashboard/posts", label: "Fil des publications", icon: <UsersIcon /> },
     { href: "/dashboard/company/posts", label: "Mes publications", icon: <ClipboardIcon /> },
