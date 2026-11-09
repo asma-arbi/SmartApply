@@ -1,0 +1,10 @@
+{
+  "/login/page": "app/login/page.js",
+  "/jobs/[id]/page": "app/jobs/[id]/page.js",
+  "/dashboard/candidate/page": "app/dashboard/candidate/page.js",
+  "/dashboard/candidate/companies/page": "app/dashboard/candidate/companies/page.js",
+  "/dashboard/candidate/(cv-modules)/opportunities/page": "app/dashboard/candidate/(cv-modules)/opportunities/page.js",
+  "/dashboard/candidate/(cv-modules)/cv/page": "app/dashboard/candidate/(cv-modules)/cv/page.js",
+  "/dashboard/candidate/(cv-modules)/interviews/page": "app/dashboard/candidate/(cv-modules)/interviews/page.js",
+  "/dashboard/candidate/(cv-modules)/applications/page": "app/dashboard/candidate/(cv-modules)/applications/page.js"
+}

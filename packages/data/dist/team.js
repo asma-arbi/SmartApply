@@ -1,0 +1,41 @@
+import { randomUUID } from 'node:crypto';
+import { z } from 'zod';
+import { AccountRepository } from './accounts.js';
+import { DataError } from './identity.js';
+const text = (max) => z.string().trim().max(max).default('');
+const url = text(1000).refine(v => !v || (/^https?:\/\//.test(v) && z.url().safeParse(v).success), 'Lien HTTP(S) requis.');
+export class TeamRepository {
+    connection;
+    constructor(connection) {
+        this.connection = connection;
+    }
+    get db() { return this.connection.db; }
+    accounts() { return new AccountRepository(this.connection); }
+    parse(s, v) { const r = s.safeParse(v); if (!r.success)
+        throw new DataError('VALIDATION', r.error.issues.map(i => i.message).join(' · ')); return r.data; }
+    async company(p, input) { const u = await this.accounts().authorize(p); if (u.role !== 'entreprise' && u.role !== 'admin')
+        throw new DataError('FORBIDDEN', 'Accès entreprise requis.', 403); const v = this.parse(z.object({ name: z.string().trim().min(1).max(150), sector: text(100), size: text(50), city: text(100), website: url, description: text(10000), phone: text(50), linkedin_url: url, logo_url: url }).strict(), input); const old = await this.db.collection('companies').findOne({ id: p.userId }); if (old?.archived)
+        throw new DataError('COMPANY_ARCHIVED', 'Entreprise archivée.', 409); await this.db.collection('companies').updateOne({ id: p.userId }, { $set: { ...v, status: old?.status === 'verified' ? 'pending' : old?.status ?? 'pending', updated_at: new Date().toISOString() }, $setOnInsert: { created_at: new Date().toISOString() } }, { upsert: true }); }
+    async saveJob(p, input) { await this.accounts().authorize(p, 'recruiter'); const v = this.parse(z.object({ id: text(300), title: z.string().trim().min(1).max(200), location: text(200), type: text(80), description: z.string().trim().min(1).max(30000), status: z.enum(['draft', 'published', 'closed']) }).strict(), input); const company = await this.db.collection('companies').findOne({ id: p.userId, status: 'verified', archived: { $ne: true } }); if (!company)
+        throw new DataError('COMPANY_UNVERIFIED', 'Votre entreprise doit être vérifiée avant la gestion des offres.', 403); const now = new Date().toISOString(); if (v.id) {
+        const r = await this.db.collection('jobs').updateOne({ id: v.id, company_id: p.userId, archived: { $ne: true } }, { $set: { ...v, updated_at: now } });
+        if (!r.matchedCount)
+            throw new DataError('FORBIDDEN', 'Offre non autorisée.', 403);
+    }
+    else
+        await this.db.collection('jobs').insertOne({ ...v, id: randomUUID(), company_id: p.userId, created_at: now, updated_at: now, route: 'internal' }); }
+    async deleteJob(p, id) { const u = await this.accounts().authorize(p); const filter = { id }; if (u.role !== 'admin') {
+        if (u.role !== 'entreprise')
+            throw new DataError('FORBIDDEN', 'Accès refusé.', 403);
+        filter.company_id = p.userId;
+    } if (!await this.db.collection('jobs').findOne(filter))
+        throw new DataError('FORBIDDEN', 'Offre non autorisée.', 403); await this.db.collection('jobs').updateOne(filter, { $set: { archived: true, status: 'closed', updated_at: new Date().toISOString() } }); }
+    async companyStatus(p, id, status, reason = '') { await this.accounts().authorize(p, 'admin'); if (!['verified', 'pending', 'rejected'].includes(status))
+        throw new DataError('VALIDATION', 'Statut invalide.'); const result = await this.db.collection('companies').updateOne({ id, archived: { $ne: true } }, { $set: { status, rejection_reason: reason.slice(0, 1000), updated_at: new Date().toISOString() } }); if (!result.matchedCount)
+        throw new DataError('NOT_FOUND', 'Entreprise introuvable ou archivée.', 404); }
+    async deleteCompany(p, id) { await this.accounts().authorize(p, 'admin'); await this.db.collection('companies').updateOne({ id }, { $set: { archived: true, status: 'rejected' } }); await this.db.collection('jobs').updateMany({ company_id: id }, { $set: { archived: true, status: 'closed' } }); }
+    async jobStatus(p, id, status) { await this.accounts().authorize(p, 'admin'); if (!['published', 'draft', 'closed'].includes(status))
+        throw new DataError('VALIDATION', 'Statut invalide.'); const job = await this.db.collection('jobs').findOne({ id, archived: { $ne: true } }); if (!job)
+        throw new DataError('NOT_FOUND', 'Offre introuvable.', 404); if (status === 'published' && !await this.db.collection('companies').findOne({ id: job.company_id, status: 'verified', archived: { $ne: true } }))
+        throw new DataError('COMPANY_UNVERIFIED', 'Entreprise non vérifiée.', 409); await this.db.collection('jobs').updateOne({ id }, { $set: { status } }); }
+}

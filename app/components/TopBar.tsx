@@ -1,6 +1,9 @@
 "use client";
 
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { listNotifications } from "@/cv-module/actions/messagingActions";
 
 interface TopBarProps {
   userName?: string;
@@ -16,6 +19,7 @@ const ROUTE_TITLES: Record<string, { section: string; title: string }> = {
   "/dashboard/candidate/settings": { section: "Candidat", title: "Paramètres" },
   "/dashboard/company": { section: "Entreprise", title: "Mon espace" },
   "/dashboard/company/jobs": { section: "Entreprise", title: "Mes offres d'emploi" },
+  "/dashboard/company/jobs/new": { section: "Entreprise", title: "Publier une offre" },
   "/dashboard/jobs/new": { section: "Entreprise", title: "Publier une offre" },
   "/dashboard/company/settings": { section: "Entreprise", title: "Paramètres" },
   "/dashboard/admin": { section: "Administration", title: "Tableau de bord" },
@@ -23,21 +27,67 @@ const ROUTE_TITLES: Record<string, { section: string; title: string }> = {
   "/dashboard/admin/companies": { section: "Administration", title: "Entreprises" },
   "/dashboard/admin/jobs": { section: "Administration", title: "Offres d'emploi" },
   "/dashboard/admin/reports": { section: "Administration", title: "Rapports & Audit" },
+  "/dashboard/posts": { section: "Communauté", title: "Publications" },
+  "/dashboard/messages": { section: "Communauté", title: "Messagerie" },
+  "/dashboard/notifications": { section: "Communauté", title: "Notifications" },
+  "/dashboard/company/posts": { section: "Entreprise", title: "Mes publications" },
+  "/dashboard/admin/posts": { section: "Administration", title: "Modération des publications" },
 };
+
+function sectionForRole(role?: string) {
+  if (role === "entreprise") return "Entreprise";
+  if (role === "admin") return "Administration";
+  return "Candidat";
+}
 
 export default function TopBar({ userName, userEmail, role }: TopBarProps) {
   const pathname = usePathname();
+  const [unread, setUnread] = useState(0);
 
-  // Find matching route or fallback dynamically
-  const routeInfo = ROUTE_TITLES[pathname] ?? {
-    section: role === "entreprise" ? "Entreprise" : role === "admin" ? "Administration" : "Candidat",
-    title: pathname
-      .split("/")
-      .filter(Boolean)
-      .pop()
-      ?.replace(/-/g, " ")
-      ?.replace(/\b\w/g, (c) => c.toUpperCase()) ?? "Tableau de bord",
-  };
+  // Notifications non lues (rafraîchies toutes les 30 secondes)
+  useEffect(() => {
+    let live = true;
+    const refresh = async () => {
+      const r = await listNotifications();
+      if (live && r.ok) {
+        setUnread((r.data as any[]).filter((n: any) => !n.read).length);
+      }
+    };
+    void refresh();
+    const timer = window.setInterval(() => void refresh(), 30000);
+    return () => {
+      live = false;
+      window.clearInterval(timer);
+    };
+  }, [pathname]);
+
+  // Détermination du fil d'Ariane (une seule déclaration)
+  let routeInfo: { section: string; title: string } | undefined = ROUTE_TITLES[pathname];
+
+  if (!routeInfo) {
+    if (pathname.startsWith("/dashboard/company/interviews")) {
+      // Page des entretiens partagée : le libellé suit le rôle connecté
+      routeInfo = {
+        section: sectionForRole(role),
+        title: role === "candidat" ? "Mes entretiens" : "Entretiens",
+      };
+    } else if (pathname.match(/^\/dashboard\/company\/jobs\/[^/]+$/)) {
+      // Routes dynamiques
+      routeInfo = { section: "Entreprise", title: "Modifier l'offre" };
+    } else {
+      // Repli pour les routes inconnues
+      routeInfo = {
+        section: sectionForRole(role),
+        title:
+          pathname
+            .split("/")
+            .filter(Boolean)
+            .pop()
+            ?.replace(/-/g, " ")
+            ?.replace(/\b\w/g, (c) => c.toUpperCase()) ?? "Tableau de bord",
+      };
+    }
+  }
 
   const initial = (userName?.charAt(0) || userEmail?.charAt(0) || "U").toUpperCase();
 
@@ -53,14 +103,18 @@ export default function TopBar({ userName, userEmail, role }: TopBarProps) {
       {/* Right controls: Notifications & User profile */}
       <div className="flex items-center gap-3">
         {/* Notification Bell */}
-        <button
-          type="button"
-          aria-label="Notifications"
-          className="relative p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-xl transition-colors"
+        <Link
+          href="/dashboard/notifications"
+          aria-label={`Notifications${unread ? `, ${unread} non lues` : ""}`}
+          className="relative rounded-xl p-2 text-slate-400 transition-colors hover:bg-slate-50 hover:text-slate-600"
         >
-          <BellIcon className="w-4 h-4" />
-          <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-blue-600 rounded-full ring-2 ring-white" />
-        </button>
+          <BellIcon className="h-4 w-4" />
+          {unread > 0 ? (
+            <span className="absolute -right-1 -top-1 min-w-4 rounded-full bg-blue-600 px-1 text-center text-[9px] font-bold text-white ring-2 ring-white">
+              {unread > 9 ? "9+" : unread}
+            </span>
+          ) : null}
+        </Link>
 
         <div className="h-4 w-px bg-slate-100" />
 

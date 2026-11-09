@@ -389,57 +389,202 @@ export async function revokeAllSessionsAction() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-//  JOBS ACTIONS (MongoDB)
+//  JOBS ACTIONS (MongoDB) - Enhanced with validation & activity logging
 // ═══════════════════════════════════════════════════════════════
 
 export async function saveJob(fd: FormData) {
   const sessionData = await getSessionUser();
   if (!sessionData) redirect("/login");
+  if (sessionData.user.role !== "entreprise") {
+    throw new Error("Seules les entreprises peuvent créer des offres");
+  }
 
   const db = await getDb();
   const id = String(fd.get("id") ?? "");
+  const isUpdate = !!id;
+
+  // Identifiant de l'offre : déclaré AVANT toute utilisation (corrige l'erreur TS2448)
+  let jobId = id;
+
+  // Basic fields
   const title = String(fd.get("title") ?? "").trim();
   const location = String(fd.get("location") ?? "").trim();
   const type = String(fd.get("type") ?? "CDI").trim();
   const description = String(fd.get("description") ?? "").trim();
-  const status = (String(fd.get("status") ?? "published")) as "published" | "draft" | "closed";
+  const status = (String(fd.get("status") ?? "draft")) as "published" | "draft" | "closed";
+
+  // Extended fields
+  const category = String(fd.get("category") ?? "").trim() || undefined;
+  const work_mode = String(fd.get("work_mode") ?? "").trim() || undefined;
+  const experience_level = String(fd.get("experience_level") ?? "").trim() || undefined;
+
+  // Salary
+  const salary_min = fd.get("salary_min") ? Number(fd.get("salary_min")) : undefined;
+  const salary_max = fd.get("salary_max") ? Number(fd.get("salary_max")) : undefined;
+  const currency = String(fd.get("currency") ?? "TND").trim();
+
+  // Deadline
+  const application_deadline = String(fd.get("application_deadline") ?? "").trim() || undefined;
+
+  // Arrays
+  const rawSkills = String(fd.get("skills") ?? "").trim();
+  const skills = rawSkills ? rawSkills.split(",").map((s) => s.trim()).filter(Boolean) : undefined;
+
+  const rawRequirements = String(fd.get("requirements") ?? "").trim();
+  const requirements = rawRequirements ? rawRequirements.split("\n").map((s) => s.trim()).filter(Boolean) : undefined;
+
+  const rawResponsibilities = String(fd.get("responsibilities") ?? "").trim();
+  const responsibilities = rawResponsibilities ? rawResponsibilities.split("\n").map((s) => s.trim()).filter(Boolean) : undefined;
+
+  const rawBenefits = String(fd.get("benefits") ?? "").trim();
+  const benefits = rawBenefits ? rawBenefits.split("\n").map((s) => s.trim()).filter(Boolean) : undefined;
 
   const now = new Date().toISOString();
 
-  if (id) {
+  // Prepare job object
+  const jobData: Partial<Job> = {
+    title,
+    location,
+    type,
+    description,
+    status,
+    category,
+    work_mode: work_mode as any,
+    experience_level: experience_level as any,
+    salary_min,
+    salary_max,
+    currency,
+    application_deadline,
+    skills,
+    requirements,
+    responsibilities,
+    benefits,
+    updated_at: now,
+  };
+
+  // Validate if attempting to publish
+  if (status === "published") {
+    const { validateJobForPublishing } = await import("@/lib/jobs/validation");
+    const errors = validateJobForPublishing(jobData);
+    if (errors.length > 0) {
+      // Store validation errors and keep as draft
+      jobData.status = "draft";
+      jobData.validation_errors = errors;
+
+      // Save the draft first
+      if (isUpdate) {
+        await db.collection("jobs").updateOne(
+          { id, company_id: sessionData.user.id },
+          { $set: jobData }
+        );
+      } else {
+        // Create new draft job
+        const newJobId = crypto.randomUUID();
+        const newJob: Job = {
+          id: newJobId,
+          company_id: sessionData.user.id,
+          ...jobData,
+          created_at: now,
+          views_count: 0,
+          applications_count: 0,
+        } as Job;
+        await db.collection("jobs").insertOne(newJob as any);
+        jobId = newJobId;
+      }
+
+      // Log activity
+      const { logJobActivity } = await import("@/lib/jobs/activities");
+      await logJobActivity({
+        jobId,
+        userId: sessionData.user.id,
+        userName: sessionData.user.name,
+        userRole: sessionData.user.role as any,
+        action: isUpdate ? "updated" : "created",
+      });
+
+      revalidatePath("/dashboard/company/jobs");
+
+      // Redirect with error message
+      const errorMsg = encodeURIComponent(errors.join(", "));
+      redirect(`/dashboard/company/jobs/${jobId}?error=validation&msg=${errorMsg}`);
+    } else {
+      jobData.validation_errors = [];
+      if (!isUpdate) {
+        jobData.published_at = now;
+      }
+    }
+  }
+
+  jobData.last_validated_at = now;
+
+  if (isUpdate) {
+    // Get previous state for activity logging
+    const previousJob = await db.collection<Job>("jobs").findOne({
+      id,
+      company_id: sessionData.user.id,
+    });
+
+    if (!previousJob) {
+      throw new Error("Offre non trouvée ou accès non autorisé");
+    }
+
+    // Update existing job
     await db.collection("jobs").updateOne(
       { id, company_id: sessionData.user.id },
-      {
-        $set: {
-          title,
-          location,
-          type,
-          description,
-          status,
-          updated_at: now,
-        },
-      }
+      { $set: jobData }
     );
+
+    // Log activity
+    const { logJobActivity } = await import("@/lib/jobs/activities");
+    await logJobActivity({
+      jobId: id,
+      userId: sessionData.user.id,
+      userName: sessionData.user.name,
+      userRole: sessionData.user.role as any,
+      action: previousJob.status !== status ? "status_changed" : "updated",
+      metadata: {
+        previous_status: previousJob.status,
+        new_status: status,
+      },
+    });
   } else {
+    // Create new job
+    jobId = crypto.randomUUID();
     const newJob: Job = {
-      id: crypto.randomUUID(),
+      id: jobId,
       company_id: sessionData.user.id,
-      title,
-      location,
-      type,
-      description,
-      status,
+      ...jobData,
       created_at: now,
-      updated_at: now,
-    };
+      views_count: 0,
+      applications_count: 0,
+    } as Job;
+
     await db.collection("jobs").insertOne(newJob as any);
+
+    // Log activity
+    const { logJobActivity } = await import("@/lib/jobs/activities");
+    await logJobActivity({
+      jobId,
+      userId: sessionData.user.id,
+      userName: sessionData.user.name,
+      userRole: sessionData.user.role as any,
+      action: "created",
+    });
   }
 
   revalidatePath("/");
   revalidatePath("/dashboard/company");
+  revalidatePath("/dashboard/company/jobs");
   revalidatePath("/dashboard/admin");
   revalidatePath("/dashboard/admin/jobs");
-  redirect("/dashboard/company");
+  revalidatePath(`/jobs/${jobId}`);
+
+  // Redirect based on status
+  if (status === "published") {
+    redirect("/dashboard/company/jobs?success=published");
+  } else {
+    redirect(`/dashboard/company/jobs?success=saved`);
+  }
 }
 
 export async function deleteJob(id: string) {
@@ -447,11 +592,126 @@ export async function deleteJob(id: string) {
   if (!sessionData) redirect("/login");
 
   const db = await getDb();
+
+  // Get job to verify ownership
+  const job = await db.collection<Job>("jobs").findOne({
+    id,
+    company_id: sessionData.user.id,
+  });
+
+  if (!job) {
+    throw new Error("Offre non trouvée ou accès non autorisé");
+  }
+
+  // Delete the job
   await db.collection("jobs").deleteOne({ id, company_id: sessionData.user.id });
+
+  // Log activity
+  const { logJobActivity } = await import("@/lib/jobs/activities");
+  await logJobActivity({
+    jobId: id,
+    userId: sessionData.user.id,
+    userName: sessionData.user.name,
+    userRole: sessionData.user.role as any,
+    action: "deleted",
+  });
 
   revalidatePath("/");
   revalidatePath("/dashboard/company");
   revalidatePath("/dashboard/admin");
+}
+
+/**
+ * Change job status (draft -> published -> closed)
+ */
+export async function changeJobStatus(jobId: string, newStatus: "draft" | "published" | "closed") {
+  const sessionData = await getSessionUser();
+  if (!sessionData) redirect("/login");
+
+  const db = await getDb();
+
+  // Get current job
+  const job = await db.collection<Job>("jobs").findOne({
+    id: jobId,
+    company_id: sessionData.user.id,
+  });
+
+  if (!job) {
+    redirect("/dashboard/company/jobs?error=not_found");
+  }
+
+  // Check if transition is allowed
+  const { canTransitionStatus } = await import("@/lib/jobs/validation");
+  const transition = canTransitionStatus(job.status, newStatus, job);
+
+  if (!transition.allowed) {
+    // Instead of throwing error, redirect with validation message
+    const errorMsg = encodeURIComponent(transition.reason || "Transition non autorisée");
+    redirect(`/dashboard/company/jobs?error=validation&msg=${errorMsg}`);
+  }
+
+  const now = new Date().toISOString();
+  const updateData: any = {
+    status: newStatus,
+    updated_at: now,
+  };
+
+  // Set published_at on first publish
+  if (newStatus === "published" && !job.published_at) {
+    updateData.published_at = now;
+  }
+
+  // Set closed_at when closing
+  if (newStatus === "closed") {
+    updateData.closed_at = now;
+  }
+
+  // Clear validation errors on successful publish
+  if (newStatus === "published") {
+    updateData.validation_errors = [];
+  }
+
+  // Update job
+  await db.collection("jobs").updateOne(
+    { id: jobId },
+    { $set: updateData }
+  );
+
+  // Log activity
+  const { logJobActivity } = await import("@/lib/jobs/activities");
+  const action = newStatus === "published" && job.status === "closed" ? "reopened" : newStatus;
+  await logJobActivity({
+    jobId,
+    userId: sessionData.user.id,
+    userName: sessionData.user.name,
+    userRole: sessionData.user.role as any,
+    action: action as any,
+    metadata: {
+      previous_status: job.status,
+      new_status: newStatus,
+    },
+  });
+
+  revalidatePath("/");
+  revalidatePath("/dashboard/company");
+  revalidatePath("/dashboard/company/jobs");
+  revalidatePath(`/jobs/${jobId}`);
+  redirect("/dashboard/company/jobs?success=status_changed");
+}
+
+/**
+ * Increment job views count
+ */
+export async function incrementJobViews(jobId: string) {
+  try {
+    const db = await getDb();
+    await db.collection("jobs").updateOne(
+      { id: jobId },
+      { $inc: { views_count: 1 } }
+    );
+  } catch (error) {
+    console.error("[Job] Failed to increment views:", error);
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════

@@ -1,39 +1,29 @@
 import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth/session";
-import { getDb } from "@/lib/mongodb";
-import "./_module/index.css";
-import App from "./_module/App";
+import { listReceivedApplications } from "@/cv-module/actions/applicationActions";
+import ReceivedApplications, { type Received } from "./ReceivedApplications";
 
 export const dynamic = "force-dynamic";
 
-const ROLE_MAP: Record<string, "ENTERPRISE" | "CANDIDATE" | "ADMIN"> = {
-  entreprise: "ENTERPRISE",
-  candidat: "CANDIDATE",
-  admin: "ADMIN",
-};
+export default async function CompanyApplicationsPage() {
+  const session = await getSessionUser();
+  if (!session) redirect("/login");
+  if (session.user.role !== "entreprise") redirect("/access-denied");
 
-export default async function InterviewsPage() {
-  const sessionData = await getSessionUser();
-  if (!sessionData) redirect("/login");
+  const result = await listReceivedApplications();
 
-  const { user } = sessionData;
-  const role = ROLE_MAP[user.role] ?? "CANDIDATE";
+  return (
+    <div className="mx-auto max-w-5xl p-6 lg:p-8">
+      <h1 className="text-2xl font-bold text-slate-900">Candidatures reçues</h1>
+      <p className="mb-6 mt-1 text-sm text-slate-500">
+        Consultez les candidats qui ont postulé à vos offres et planifiez leurs entretiens.
+      </p>
 
-  let companyName: string | undefined;
-  if (role === "ENTERPRISE") {
-    const db = await getDb();
-    const company = await db.collection("companies").findOne({ id: user.id });
-    companyName = (company as { name?: string } | null)?.name;
-  }
-
-  const sessionUser = {
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    role,
-    companyId: role === "ENTERPRISE" ? user.id : undefined,
-    companyName,
-  };
-
-  return <App sessionUser={sessionUser} />;
+      {result.ok ? (
+        <ReceivedApplications items={result.data as Received[]} />
+      ) : (
+        <p className="rounded-xl bg-red-50 p-4 text-sm text-red-700">{result.error.message}</p>
+      )}
+    </div>
+  );
 }

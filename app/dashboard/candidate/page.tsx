@@ -1,12 +1,19 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth/session";
 import { getDb } from "@/lib/mongodb";
 import { Company } from "@/lib/models/types";
+import { PostsFeed } from "@/cv-module/components/posts";
 
 export const dynamic = "force-dynamic";
 
 export default async function CandidateDashboard() {
   const sessionData = await getSessionUser();
+
+  if (!sessionData) redirect("/login?revoked=1");
+  if (sessionData.user.role !== "candidat") {
+    redirect(sessionData.user.role === "entreprise" ? "/dashboard/company" : "/dashboard/admin");
+  }
 
   const userName =
     (sessionData?.user?.name as string) ||
@@ -324,6 +331,12 @@ export default async function CandidateDashboard() {
           </div>
         )}
       </section>
+
+      <PostsFeed
+        canInteract
+        canPublish
+        manageHref="/dashboard/posts?view=mine"
+      />
     </div>
   );
 }

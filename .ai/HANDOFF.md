@@ -1,0 +1,4 @@
+# Handoff — company feed visual refinement
+User screenshot is the shared Posts feed viewed as recruiter, not only the company management page. Updated posts-feed.tsx with recruiter-specific heading/card, inline SVG format icons (including company job shortcut), collapsible advanced search, company rail and empty-state publish CTA. CSS scoped to `.company-feed-design`; existing actions/auth untouched. Candidate keeps expanded filters. Prior company workspace remains available.
+
+Frontend TypeScript passed. Edge mocked UI regression passed, including company empty state, opening filters and overflow widths320/390/768/1440. Visually inspected screenshots in output/posts-review/company-feed-redesign.png and company-feed-empty.png. No live database verification or fresh production build required for this visual-only change. context-check unavailable, no graph. See CURRENT_STATE for architecture and existing backend limitations.

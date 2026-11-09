@@ -76,6 +76,33 @@ export async function initDatabase(): Promise<void> {
     await db.collection("jobs").createIndex({ id: 1 }, { unique: true });
     await db.collection("jobs").createIndex({ company_id: 1 });
     await db.collection("jobs").createIndex({ status: 1 });
+    await db.collection("jobs").createIndex({ category: 1, status: 1 });
+    await db.collection("jobs").createIndex({ type: 1, status: 1 });
+    await db.collection("jobs").createIndex({ published_at: -1 });
+    await db.collection("jobs").createIndex({ company_id: 1, status: 1, created_at: -1 });
+    await db.collection("jobs").createIndex(
+      { title: "text", description: "text", location: "text" },
+      { name: "job_search_text" }
+    );
+
+    // 6. Index Job Activities (audit log)
+    await db.collection("job_activities").createIndex({ id: 1 }, { unique: true });
+    await db.collection("job_activities").createIndex({ job_id: 1, timestamp: -1 });
+    await db.collection("job_activities").createIndex({ user_id: 1, timestamp: -1 });
+    await db.collection("job_activities").createIndex({ action: 1, timestamp: -1 });
+
+    // 7. Index External Jobs
+    await db.collection("external_jobs").createIndex({ id: 1 }, { unique: true });
+    await db.collection("external_jobs").createIndex(
+      { source: 1, external_id: 1 },
+      { unique: true }
+    );
+    await db.collection("external_jobs").createIndex({ content_hash: 1 });
+    await db.collection("external_jobs").createIndex({ is_active: 1, scraped_at: -1 });
+    await db.collection("external_jobs").createIndex(
+      { title: "text", description: "text" },
+      { name: "external_job_search_text" }
+    );
 
     indexesInitialized = true;
   } catch (err) {

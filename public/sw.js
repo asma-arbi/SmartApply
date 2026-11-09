@@ -40,6 +40,9 @@ self.addEventListener("activate", (event) => {
 // 3. Interception des requêtes réseau (Fetch Strategy)
 self.addEventListener("fetch", (event) => {
   const req = event.request;
+  // Added CV module: private files, AI and professional pages must never enter offline caches.
+  const modulePath=new URL(req.url).pathname;
+  if(modulePath.startsWith('/api/cv-module/')||/^\/dashboard\/candidate\/(cv|professional-profile|letters|matching|interviews|applications|opportunities)(\/|$)/.test(modulePath))return;
 
   // On ignore les requêtes non-GET et les requêtes externes hors domaine
   if (req.method !== "GET") return;

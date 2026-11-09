@@ -24,24 +24,37 @@ const navConfig: Record<string, NavItem[]> = {
     { href: "/", label: "Offres d'emploi", icon: <BriefcaseIcon /> },
     { href: "/dashboard/candidate/companies", label: "Entreprises", icon: <BuildingIcon /> },
     { href: "/dashboard/candidate/applications", label: "Mes candidatures", icon: <ClipboardIcon /> },
-    { href: "/dashboard/company/interviews", label: "Mes entretiens", icon: <CalendarIcon /> },
+    { href: "/dashboard/candidate/interviews", label: "Mes entretiens", icon: <CalendarIcon /> },
+    { href: "/dashboard/candidate/cv", label: "Mon CV", icon: <ClipboardIcon /> },
+    { href: "/dashboard/candidate/professional-profile", label: "Mon profil professionnel", icon: <UsersIcon /> },
+    { href: "/dashboard/candidate/letters", label: "Mes lettres de motivation", icon: <ClipboardIcon /> },
+    { href: "/dashboard/candidate/matching", label: "Matching IA", icon: <ChartIcon /> },
+    { href: "/dashboard/messages", label: "Messagerie", icon: <UsersIcon /> },
+    { href: "/dashboard/notifications", label: "Notifications", icon: <BellIcon /> },
+    { href: "/dashboard/posts", label: "Fil des publications", icon: <UsersIcon />, exact: true },
+    { href: "/dashboard/posts?view=mine", label: "Mes publications", icon: <ClipboardIcon />, exact: true },
     { href: "/dashboard/candidate/saved", label: "Sauvegardés", icon: <BookmarkIcon /> },
     { href: "/dashboard/candidate/settings", label: "Mon Profil & Paramètres", icon: <SettingsIcon /> },
   ],
   entreprise: [
     { href: "/dashboard/company", label: "Mon espace", icon: <HomeIcon />, exact: true },
-    { href: "/dashboard/company/jobs", label: "Mes offres", icon: <ClipboardIcon /> },
-    { href: "/dashboard/jobs/new", label: "Publier une offre", icon: <PlusCircleIcon /> },
-    { href: "/dashboard/company/interviews", label: "Entretiens", icon: <CalendarIcon /> },
+    { href: "/dashboard/company/jobs", label: "Mes offres", icon: <BriefcaseIcon />, exact: true },
+    { href: "/dashboard/company/jobs/new", label: "Publier une offre", icon: <PlusCircleIcon /> },
+    { href: "/dashboard/company/interviews", label: "Candidatures & entretiens", icon: <CalendarIcon /> },
     { href: "/dashboard/company/edit", label: "Profil Entreprise", icon: <SettingsIcon /> },
+    { href: "/dashboard/posts", label: "Fil des publications", icon: <UsersIcon />, exact: true },
+    { href: "/dashboard/company/posts", label: "Mes publications", icon: <ClipboardIcon /> },
+    { href: "/dashboard/messages", label: "Messagerie", icon: <UsersIcon /> },
+    { href: "/dashboard/notifications", label: "Notifications", icon: <BellIcon /> },
   ],
   admin: [
     { href: "/dashboard/admin", label: "Tableau de bord", icon: <ChartIcon />, exact: true },
     { href: "/dashboard/admin/users", label: "Utilisateurs", icon: <UsersIcon /> },
     { href: "/dashboard/admin/companies", label: "Entreprises", icon: <BuildingIcon /> },
     { href: "/dashboard/admin/jobs", label: "Offres", icon: <BriefcaseIcon /> },
-    { href: "/dashboard/company/interviews", label: "Entretiens", icon: <CalendarIcon /> },
     { href: "/dashboard/admin/reports", label: "Rapports", icon: <ChartBarIcon /> },
+    { href: "/dashboard/posts", label: "Fil des publications", icon: <UsersIcon />, exact: true },
+    { href: "/dashboard/admin/posts", label: "Modération des publications", icon: <ShieldIcon /> },
     { href: "/dashboard/sessions", label: "Sécurité & Sessions", icon: <ShieldIcon /> },
   ],
 };
@@ -60,8 +73,9 @@ export default function Sidebar({ role, userName, userEmail }: SidebarProps) {
   }, []);
 
   const isActive = (item: NavItem) => {
-    if (item.exact) return pathname === item.href;
-    return pathname.startsWith(item.href) && item.href !== "/";
+    const path = item.href.split("?")[0];
+    if (item.exact) return pathname === path;
+    return pathname.startsWith(path) && path !== "/";
   };
 
   return (
@@ -130,7 +144,7 @@ export default function Sidebar({ role, userName, userEmail }: SidebarProps) {
             const active = isActive(item);
             return (
               <Link
-                key={item.href}
+                key={`${item.href}-${item.label}`}
                 href={item.href}
                 onClick={() => setOpen(false)}
                 aria-current={active ? "page" : undefined}
@@ -318,6 +332,10 @@ function LogoutIcon() {
   );
 }
 
+function BellIcon() {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M10 21h4"/></svg>;
+}
+
 function MenuIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="w-5 h-5">
@@ -343,3 +361,4 @@ function ShieldIcon() {
     </svg>
   );
 }
+
