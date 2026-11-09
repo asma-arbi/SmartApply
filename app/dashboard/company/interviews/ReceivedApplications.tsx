@@ -115,7 +115,7 @@ export default function ReceivedApplications({ items }: { items: Received[] }) {
   );
 }
 
-function ScheduleForm({ app, onClose }: { app: Received; onClose: () => void }) {
+export function ScheduleForm({ app, onClose }: { app: Received; onClose: () => void }) {
   const router = useRouter();
   const [date, setDate] = useState("");
   const [duration, setDuration] = useState("45");
@@ -129,29 +129,20 @@ function ScheduleForm({ app, onClose }: { app: Received; onClose: () => void }) 
     e.preventDefault();
     setBusy(true);
     setError("");
-    const result = await scheduleInterview(
-      app.id,
-      {
+    try {
+      const result = await scheduleInterview(app.id, {
         version: app.version,
-        scheduledAt: new Date(date).toISOString(),
-        durationMinutes: Number(duration),
-        mode,
-        location,
-        note,
-      },
-      crypto.randomUUID()
-    );
-    setBusy(false);
-    if (!result.ok) {
-      setError(result.error.message);
-      return;
-    }
-    onClose();
-    router.refresh();
+        scheduledAt: new Date(date + ':00+01:00').toISOString(),
+        durationMinutes: Number(duration), mode, location, note,
+      }, crypto.randomUUID());
+      if (!result?.ok) { setError(result?.error?.message || "Impossible de planifier l’entretien. Réessayez."); return; }
+      onClose(); router.refresh();
+    } catch { setError("Impossible de planifier l’entretien. Réessayez."); }
+    finally { setBusy(false); }
   }
 
   const field = "mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm";
-  const now = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  const now = new Date(Date.now() + 3600000).toISOString().slice(0, 16);
 
   return (
     <form onSubmit={submit} className="mt-4 space-y-3 rounded-xl border border-slate-200 p-4">
@@ -159,7 +150,7 @@ function ScheduleForm({ app, onClose }: { app: Received; onClose: () => void }) 
 
       <div className="grid gap-3 md:grid-cols-3">
         <label className="text-sm font-medium text-slate-700 md:col-span-2">
-          Date et heure
+          Date et heure (Africa/Tunis)
           <input
             type="datetime-local"
             required

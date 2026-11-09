@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { logout } from "@/app/actions";
 
 interface SidebarProps {
@@ -73,7 +73,9 @@ export default function Sidebar({ role, userName, userEmail }: SidebarProps) {
     return () => window.removeEventListener("resize", handler);
   }, []);
 
+  const searchParams=useSearchParams();
   const isActive = (item: NavItem) => {
+    if(item.href.startsWith('/dashboard/posts'))return pathname==='/dashboard/posts'&&(item.href.includes('view=mine')?searchParams.get('view')==='mine':searchParams.get('view')!=='mine');
     const path = item.href.split("?")[0];
     if (item.exact) return pathname === path;
     return pathname.startsWith(path) && path !== "/";

@@ -4,17 +4,18 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const Module=require('node:module');
 const ts=require('typescript');
+const {ObjectId}=require('mongodb');
 class DataError extends Error{constructor(code,message,status=400){super(message);this.code=code;this.status=status;}}
 let principal,collections;
 function matches(row,filter){return Object.entries(filter).every(([key,v])=>{
  if(key==='$or')return v.some(f=>matches(row,f));if(key==='$and')return v.every(f=>matches(row,f));
- const actual=row[key];if(v&&typeof v==='object'&&!(v instanceof Date))return Object.entries(v).every(([op,value])=>op==='$ne'?actual!==value:op==='$in'?value.includes(actual):op==='$nin'?!value.includes(actual):op==='$lte'?actual<=value:op==='$regex'?new RegExp(value,v.$options).test(Array.isArray(actual)?actual.join(' '):actual||''):op==='$options');
+ const actual=row[key];if(v instanceof ObjectId)return actual instanceof ObjectId&&actual.equals(v);if(v&&typeof v==='object'&&!(v instanceof Date))return Object.entries(v).every(([op,value])=>op==='$ne'?actual!==value:op==='$in'?value.includes(actual):op==='$nin'?!value.includes(actual):op==='$lte'?actual<=value:op==='$regex'?new RegExp(value,v.$options).test(Array.isArray(actual)?actual.join(' '):actual||''):op==='$options');
  return Array.isArray(actual)?actual.includes(v):actual===v;
 });}
 function collection(name){const data=collections[name]??=[];return {
  createIndex:async()=>{},findOne:async f=>data.find(r=>matches(r,f))||null,
  countDocuments:async f=>data.filter(r=>matches(r,f)).length,
- insertOne:async r=>{data.push({...r,_id:r.id});return {insertedId:r.id};},
+ insertOne:async r=>{const id=r.id||new ObjectId();data.push({...r,_id:id});return {insertedId:id};},
  updateOne:async(f,u,o={})=>{let r=data.find(r=>matches(r,f));const existed=!!r;if(!r&&o.upsert){r={...f,...u.$setOnInsert};data.push(r);}if(r)Object.assign(r,u.$set);return {matchedCount:Number(existed)};},
  updateMany:async(f,u)=>data.filter(r=>matches(r,f)).forEach(r=>Object.assign(r,u.$set)),
  deleteOne:async f=>{const i=data.findIndex(r=>matches(r,f));if(i>=0)data.splice(i,1);return {deletedCount:i>=0?1:0};},
@@ -57,6 +58,13 @@ test('due posts publish on request; scheduled posts can archive',async()=>{
  await api.archivePost(id,true);assert.equal(collections.posts[0].status,'draft');
  collections.posts[0].status='scheduled';collections.posts[0].scheduled_at=new Date(Date.now()-1000);
  assert.equal((await api.listPosts()).data.length,1);assert.equal(collections.posts[0].status,'published');
+});
+test('only the author can cancel a scheduled publication, preserving its content as a draft',async()=>{
+ const {data:id}=await api.savePost(input({status:'scheduled',scheduledAt:new Date(Date.now()+3600000).toISOString()}));
+ principal={userId:'company-1',role:'recruiter'};assert.equal((await api.managePost(id,'unschedule')).ok,false);
+ principal={userId:'candidate-1',role:'candidate'};assert.equal((await api.managePost(id,'unschedule')).ok,true);
+ assert.equal(collections.posts[0].status,'draft');assert.equal(collections.posts[0].scheduled_at,null);assert.equal(collections.posts[0].content,'Un contenu professionnel de test.');
+ assert.equal((await api.managePost(id,'unschedule')).ok,false);
 });
 test('reaction changes and bookmark toggles preserve one entry per user',async()=>{
  const {data:id}=await api.savePost(input());await api.postInteraction(id,'like','LOVE');await api.postInteraction(id,'like','CELEBRATE');
@@ -102,4 +110,38 @@ test('uploads reject unauthenticated requests, unsupported MIME, bad signatures 
  data.set('file',new File(['not an image'],'image.png',{type:'image/png'}));assert.equal((await api.uploadPostMedia(data)).ok,false);
  data.set('file',new File([new Uint8Array(4*1024*1024+1)],'large.pdf',{type:'application/pdf'}));assert.equal((await api.uploadPostMedia(data)).ok,false);
  principal=null;assert.equal((await api.uploadPostMedia(data)).error.status,401);
+});
+test('candidate stage posts always publish personally',async()=>{
+ const r=await api.savePost(input({category:'Annonce de stage ou PFE',publishAs:'company'}));
+ assert.equal(r.ok,true);assert.equal(collections.posts[0].publish_as,'personal');assert.equal(collections.posts[0].company_id,null);
+});
+test('uploaded images and PDFs can be attached; repost authors can retain only their copied media',async()=>{
+ const image=new FormData();image.set('file',new File([Buffer.from([137,80,78,71,13,10,26,10])],'test.png',{type:'image/png'}));
+ const pdf=new FormData();pdf.set('file',new File(['%PDF-test'],'test.pdf',{type:'application/pdf'}));
+ const imageUrl=(await api.uploadPostMedia(image)).data;const pdfUrl=(await api.uploadPostMedia(pdf)).data;
+ assert.equal((await api.savePost(input({postKind:'PHOTO',mediaUrl:pdfUrl}))).ok,false);
+ assert.equal((await api.savePost(input({postKind:'DOCUMENT',mediaUrl:imageUrl}))).ok,false);
+ const {data:id}=await api.savePost(input({postKind:'PHOTO',mediaUrl:imageUrl}));
+ assert.ok(id);assert.equal((await api.savePost(input({title:'',content:'',postKind:'DOCUMENT',mediaUrl:pdfUrl}))).ok,true);
+ assert.equal(collections.posts[1].media_name,'test.pdf');assert.equal(collections.posts[1].title,'test.pdf');
+ principal={userId:'company-1',role:'recruiter'};
+ assert.equal((await api.postInteraction(id,'repost')).ok,true);const repost=collections.posts.find(p=>p.repost_of===id);
+ assert.equal(repost.media_url,imageUrl);
+ assert.equal((await api.savePost(input({postKind:'PHOTO',mediaUrl:imageUrl}),repost.id)).ok,true);
+ assert.equal((await api.savePost(input({postKind:'DOCUMENT',mediaUrl:pdfUrl}),repost.id)).ok,false);
+ assert.equal((await api.savePost(input({postKind:'PHOTO',mediaUrl:imageUrl}))).ok,false);
+});
+test('short text is accepted, but a blank text post is rejected',async()=>{
+ assert.equal((await api.savePost(input({content:'👍'}))).ok,true);
+ assert.equal((await api.savePost(input({content:'  '}))).ok,false);
+});
+test('feed counts visible published reposts and MyPosts includes interaction state',async()=>{
+ const {data:id}=await api.savePost(input({postKind:'POLL',pollOptions:['Oui','Non']}));
+ await api.postInteraction(id,'like','LOVE');await api.postInteraction(id,'save');await api.postInteraction(id,'vote','1');
+ principal={userId:'company-1',role:'recruiter'};await api.postInteraction(id,'repost');
+ const repost=collections.posts.find(p=>p.repost_of===id);collections.posts.push({...repost,id:'private-repost',visibility:'members'},{...repost,id:'draft-repost',status:'draft'});
+ assert.equal((await api.listPosts({id})).data[0].reposts,2);
+ principal=null;assert.equal((await api.listPosts({id})).data[0].reposts,1);
+ principal={userId:'candidate-1',role:'candidate'};const mine=(await api.listMine()).data.find(p=>p.id===id);
+ assert.equal(mine.reposts,2);assert.equal(mine.reaction,'LOVE');assert.equal(mine.liked,true);assert.equal(mine.saved,true);assert.equal(mine.poll_results.myOption,1);assert.equal(mine.can_manage,true);
 });

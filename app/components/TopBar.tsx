@@ -16,6 +16,7 @@ const ROUTE_TITLES: Record<string, { section: string; title: string }> = {
   "/dashboard/candidate/companies": { section: "Candidat", title: "Entreprises" },
   "/dashboard/candidate/matching": { section: "Candidat", title: "Matching IA" },
   "/dashboard/candidate/applications": { section: "Candidat", title: "Mes candidatures" },
+  "/dashboard/candidate/interviews": { section: "Candidat", title: "Mes entretiens" },
   "/dashboard/candidate/saved": { section: "Candidat", title: "Offres sauvegardées" },
   "/dashboard/candidate/settings": { section: "Candidat", title: "Paramètres" },
   "/dashboard/company": { section: "Entreprise", title: "Mon espace" },
