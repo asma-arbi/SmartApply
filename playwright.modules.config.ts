@@ -1,0 +1,1 @@
+import {defineConfig} from '@playwright/test';export default defineConfig({testDir:'./cv-module/tests',testMatch:'integration.spec.ts',workers:1,timeout:180000,expect:{timeout:60000},use:{baseURL:'http://127.0.0.1:3041',channel:'msedge',headless:true,serviceWorkers:'block',viewport:{width:1440,height:1000}},reporter:'list',outputDir:'test-results/modules'});

@@ -1,0 +1,589 @@
+[
+  {
+    "company": "Quicky Prime",
+    "reference": "01",
+    "title": "AI Report Studio",
+    "description": "01\nAI Report Studio\nAn agentic AI system that generates and analyzes reports.\nAgentic AI Full-stack Document Intelligence\nOVERVIEW\nAI Report Studio is a multi-agent platform that produces\nstructured, professional reports from raw inputs (data,\nnotes, documents) and analyzes existing reports to\nextract insights, detect inconsistencies and suggest\nimprovements. Agents collaborate through a LangGraph\nworkflow to plan, write, review and refine each report.\nOBJECTIVES\nKEY FEATURES\nTECH STACK\nReact JS NestJS PostgreSQL\nDocker Docker Compose\nLangChain LangGraph\nPROJECT INFO\nCode Project-01\nType Agentic AI / Web\nDuration 4  6 months\nInterns 1  2\nProfile Software / AI engineering\nDesign the agent graph and state management with\nLangGraph\nBuild a REST API with NestJS and a React dashboard\nContainerize the full stack with Docker Compose\nReport generation from prompts, templates and\nuploaded sources\nReport analysis: summary, key findings, quality\nand consistency checks\nMulti-agent pipeline: planner, writer, reviewer,\nformatter\nTemplate management and export PDF / DOCX\nHistory, versioning and user workspaces\nQuicky Prime · Internship Projects 20262027 04",
+    "skills": [
+      "React",
+      "PostgreSQL",
+      "Docker",
+      "SQL"
+    ],
+    "sourceFile": "1793619249366.pdf",
+    "sourcePages": [
+      4
+    ]
+  },
+  {
+    "company": "Quicky Prime",
+    "reference": "02",
+    "title": "AI Career Autopilot",
+    "description": "02\nAI Career Autopilot\nAn AI platform that builds your CV and applies to open positions for you.\nGenerative AI Automation HR Tech\nOVERVIEW\nAI Career Autopilot helps candidates create a strong,\ntailored CV with AI, then automatically finds relevant open\npositions and submits applications on their behalf. Each\napplication is adapted to the job description, and the\ncandidate keeps full visibility over every submission.\nOBJECTIVES\nKEY FEATURES\nTECH STACK\nReact JS NestJS PostgreSQL\nLangChain LangGraph\nBrowser automation Docker\nPROJECT INFO\nCode Project-02\nType AI / Automation\nDuration 4  6 months\nInterns 1  2\nProfile Software / AI engineering\nBuild the CV generation and job matching agents\nImplement a reliable, controllable auto-apply pipeline\nDeliver a clean candidate-facing web application\nAI CV generation from a profile, LinkedIn data or\nan existing CV\nCV tailoring per job offer (keywords, skills, ATS\noptimization)\nJob discovery and matching with a relevance\nscore\nAutomatic application submission with cover\nletter generation\nApplication tracking dashboard and notifications\nQuicky Prime · Internship Projects 20262027 05",
+    "skills": [
+      "React",
+      "PostgreSQL",
+      "Docker",
+      "SQL"
+    ],
+    "sourceFile": "1793619249366.pdf",
+    "sourcePages": [
+      5
+    ]
+  },
+  {
+    "company": "Quicky Prime",
+    "reference": "03",
+    "title": "AI Interview Assistant",
+    "description": "03\nAI Interview Assistant\nAI agents that interview candidates for an open position before the real interview.\nAI Agents Conversational AI Recruitment\nOVERVIEW\nAI Interview Assistant runs a first-round interview with\neach candidate using AI agents configured for a specific\nopen position. The agents ask role-relevant technical and\nbehavioral questions, adapt follow-ups to the answers,\nand deliver a structured evaluation so recruiters focus on\nthe strongest profiles.\nOBJECTIVES\nKEY FEATURES\nTECH STACK\nReact JS NestJS PostgreSQL\nLangChain LangGraph\nSpeech-to-Text / TTS Docker\nPROJECT INFO\nCode Project-03\nType AI Agents / Web\nDuration 4  6 months\nInterns 1  2\nProfile Software / AI engineering\nDesign a fair, consistent multi-agent interview flow\nBuild the evaluation and reporting engine\nDeliver candidate and recruiter interfaces\nPosition setup: job description, skills and\nevaluation criteria\nAdaptive interview agents (technical, HR, soft\nskills)\nText and voice interview modes\nAutomatic scoring, strengths / weaknesses and\nfull transcript\nRecruiter dashboard with candidate ranking\nQuicky Prime · Internship Projects 20262027 06",
+    "skills": [
+      "React",
+      "PostgreSQL",
+      "Docker",
+      "SQL"
+    ],
+    "sourceFile": "1793619249366.pdf",
+    "sourcePages": [
+      6
+    ]
+  },
+  {
+    "company": "Quicky Prime",
+    "reference": "04",
+    "title": "Social Media Crew",
+    "description": "04\nSocial Media Crew\nAI agent \"co-workers\" that create and manage social media accounts and content.\nMulti-Agent Marketing Automation Scheduling\nOVERVIEW\nSocial Media Crew is a platform of AI agents that behave\nlike a digital marketing team. They create and manage\nsocial media accounts, plan content strategies, and\ngenerate and publish posts weekly or on any defined\nschedule, so brands keep a consistent online presence\nwith minimal manual effort.\nOBJECTIVES\nKEY FEATURES\nTECH STACK\nReact JS NestJS PostgreSQL\nLangChain LangGraph\nSocial media APIs\nJob queue / Cron Docker\nPROJECT INFO\nCode Project-04\nType Multi-Agent / SaaS\nDuration 4  6 months\nInterns 1  2\nProfile Software / AI engineering\nDesign agent roles and collaboration with LangGraph\nIntegrate social media APIs and a job scheduler\nBuild a content calendar and approval interface\nSpecialized agents: strategist, copywriter,\ndesigner, publisher\nAccount setup and management across social\nnetworks\nPost generation (text and visuals) aligned with\nbrand voice\nScheduling: weekly, custom duration or\ncampaign-based\nContent calendar, approval flow and performance\ninsights\nQuicky Prime · Internship Projects 20262027 07",
+    "skills": [
+      "React",
+      "PostgreSQL",
+      "Docker",
+      "Git",
+      "SQL"
+    ],
+    "sourceFile": "1793619249366.pdf",
+    "sourcePages": [
+      7
+    ]
+  },
+  {
+    "company": "Quicky Prime",
+    "reference": "05",
+    "title": "Sprint Assistant",
+    "description": "05\nSprint Assistant\nAnalyze, describe and fill Jira tickets from a simple chat.\nAI Assistant Developer Productivity Jira Integration\nOVERVIEW\nSprint Assistant is a conversational assistant connected to\nJira. It analyzes existing tickets, writes clear descriptions\nand acceptance criteria, and creates or completes tickets\ndirectly from a chat conversation, turning a few sentences\ninto a well-structured, ready-to-work issue.\nOBJECTIVES\nKEY FEATURES\nTECH STACK\nReact JS NestJS PostgreSQL\nLangChain LangGraph\nJira REST API Docker\nPROJECT INFO\nCode Project-05\nType AI Assistant / Integration\nDuration 4  6 months\nInterns 1\nProfile Software / AI engineering\nBuild a chat agent with Jira tools (read, create, update)\nDefine ticket quality rules and templates\nDeliver a chat interface integrated with the team\nworkflow\nTicket analysis: clarity, missing information,\nduplicates\nGeneration of description, acceptance criteria\nand sub-tasks\nCreate and update tickets from chat (type,\npriority, labels, assignee)\nEstimation suggestions and sprint context\nawareness\nSecure integration via the Jira REST API\nQuicky Prime · Internship Projects 20262027 08",
+    "skills": [
+      "React",
+      "PostgreSQL",
+      "Docker",
+      "SQL"
+    ],
+    "sourceFile": "1793619249366.pdf",
+    "sourcePages": [
+      8
+    ]
+  },
+  {
+    "company": "Quicky Prime",
+    "reference": "06",
+    "title": "QA Studio",
+    "description": "06\nQA Studio\nAn AI agent that tests Jira tickets on the built platform in a real browser.\nHarness Engineering QA Automation Browser Agents\nOVERVIEW\nQA Studio reads a Jira ticket and its acceptance criteria,\nturns them into test scenarios, and executes them on the\ndelivered platform inside a real browser, like a QA\nengineer would. Built on harness engineering principles, it\ngives the agent controlled tools, environments and\nfeedback loops so results are reliable and reproducible.\nOBJECTIVES\nKEY FEATURES\nTECH STACK\nNestJS React JS PostgreSQL\nLangGraph Playwright\nJira REST API Docker CI/CD\nPROJECT INFO\nCode Project-06\nType AI Agent / QA\nDuration 4  6 months\nInterns 1\nProfile Software / AI / QA engineering\nDesign the agent harness and browser tool layer\nConnect the flow to Jira and CI pipelines\nMeasure reliability and reduce flaky results\nTest scenario generation from Jira tickets\nExecution in a real browser (navigation, forms,\nassertions)\nAgent harness: tools, sandboxed environment,\nretries, guardrails\nEvidence capture: screenshots, videos, logs\nTest report posted back to the Jira ticket\nQuicky Prime · Internship Projects 20262027 09",
+    "skills": [
+      "React",
+      "PostgreSQL",
+      "Docker",
+      "SQL"
+    ],
+    "sourceFile": "1793619249366.pdf",
+    "sourcePages": [
+      9
+    ]
+  },
+  {
+    "company": "Quicky Prime",
+    "reference": "07",
+    "title": "Cloud VoIP & Softphone",
+    "description": "07\nCloud VoIP & Softphone\nA cloud telephony platform with a web and mobile softphone.\nVoIP / Telephony WebRTC Web & Mobile\nOVERVIEW\nA cloud VoIP platform that gives businesses SIP numbers,\ninteractive voice menus IVR, call queues, smart routing\nand call recording, plus a WebRTC softphone that works\nin the browser and on the phone, with contacts and call\nhistory.\nOBJECTIVES\nKEY FEATURES\nTECH STACK\nAsterisk LiveKit FastAPI\nNext.js Flutter\nPROJECT INFO\nCode Project-07\nType VoIP / Web & Mobile\nDuration 4  6 months\nInterns 1  2\nProfile Software / Telecom\nengineering\nSet up and configure the Asterisk telephony core\nBuild the WebRTC softphone with LiveKit (web and\nFlutter)\nDeliver an admin portal with FastAPI and Next.js\nSIP numbers provisioning and management\nIVR builder, call queues and routing rules\nCall recording and playback\nWebRTC softphone for browser and mobile\nContacts and call history\nQuicky Prime · Internship Projects 20262027 10",
+    "skills": [
+      "Next.js",
+      "Flutter",
+      "FastAPI"
+    ],
+    "sourceFile": "1793619249366.pdf",
+    "sourcePages": [
+      10
+    ]
+  },
+  {
+    "company": "Quicky Prime",
+    "reference": "08",
+    "title": "Multilingual Speech AI",
+    "description": "08\nMultilingual Speech AI\nReal-time speech recognition, voice synthesis and a voice assistant.\nSpeech AI Real-time Voice Assistant\nOVERVIEW\nA real-time multilingual speech platform: live transcription\nin Darija, French, Arabic and English, natural text-to-\nspeech, and a voice assistant that answers simple\nrequests and hands the conversation over to a human\nwhen needed.\nOBJECTIVES\nKEY FEATURES\nTECH STACK\nfaster-whisper Piper / XTTS\nSilero VAD LiveKit\nPROJECT INFO\nCode Project-08\nType Speech AI / Real-time\nDuration 4  6 months\nInterns 1  2\nProfile AI / ML engineering\nFine-tune and evaluate speech recognition for Darija\nBuild a low-latency real-time audio pipeline\nDesign the assistant logic and human handover\nLive transcription in Darija, French, Arabic and\nEnglish\nNatural text-to-speech voices\nVoice activity detection for smooth turn-taking\nVoice assistant for simple requests\nSeamless handover to a human agent\nQuicky Prime · Internship Projects 20262027 11",
+    "skills": [],
+    "sourceFile": "1793619249366.pdf",
+    "sourcePages": [
+      11
+    ]
+  },
+  {
+    "company": "Quicky Prime",
+    "reference": "09",
+    "title": "LLM Gateway & Conversation Intelligence",
+    "description": "09\nLLM Gateway & Conversation Intelligence\nA cost-optimized LLM platform that turns conversations into insights.\nLLM Ops Cost Optimization Analytics\nOVERVIEW\nA cost-optimized LLM platform built around an LLM\ngateway with model routing, semantic caching and cost\ntracking. It is used to generate summaries, action items,\nsentiment and quality scores from conversations.\nOBJECTIVES\nKEY FEATURES\nTECH STACK\nvLLM / Ollama Qdrant Redis\nFastAPI\nPROJECT INFO\nCode Project-09\nType LLM Platform / AI\nDuration 4  6 months\nInterns 1  2\nProfile AI / Backend engineering\nSelf-host and benchmark open-source models\nImplement routing, caching and cost tracking\nBuild the conversation analysis pipeline\nLLM gateway with model routing by task and cost\nSemantic cache to reuse similar answers\nPer-request cost and usage tracking\nConversation summaries and action items\nSentiment analysis and quality scoring\nQuicky Prime · Internship Projects 20262027 12",
+    "skills": [
+      "FastAPI",
+      "LLM"
+    ],
+    "sourceFile": "1793619249366.pdf",
+    "sourcePages": [
+      12
+    ]
+  },
+  {
+    "company": "Quicky Prime",
+    "reference": "10",
+    "title": "Unified Communication Hub",
+    "description": "10\nUnified Communication Hub\nAll customer channels in one inbox, with AI reply suggestions.\nOmnichannel Generative AI Automation\nOVERVIEW\nA unified customer communication hub that brings\nWhatsApp, Messenger, Instagram and SMS into one\ninbox, with AI-generated reply suggestions, plus\nautomated outbound campaigns and reminders.\nOBJECTIVES\nKEY FEATURES\nTECH STACK\nMeta WhatsApp Cloud API\nMessenger API Instagram API\nFastAPI Next.js\nPROJECT INFO\nCode Project-10\nType Omnichannel / Web\nDuration 4  6 months\nInterns 1  2\nProfile Software / AI engineering\nIntegrate the Meta WhatsApp, Messenger and Instagram\nAPIs\nBuild the AI reply suggestion engine\nDeliver the inbox and campaign interface\nSingle inbox for WhatsApp, Messenger,\nInstagram and SMS\nAI reply suggestions based on context\nConversation assignment and tagging\nAutomated outbound campaigns\nScheduled reminders and notifications\nQuicky Prime · Internship Projects 20262027 13",
+    "skills": [
+      "Next.js",
+      "FastAPI"
+    ],
+    "sourceFile": "1793619249366.pdf",
+    "sourcePages": [
+      13
+    ]
+  },
+  {
+    "company": "Quicky Prime",
+    "reference": "11",
+    "title": "Ops Dashboard & CRM Hub",
+    "description": "11\nOps Dashboard & CRM Hub\nReal-time operations dashboard and CRM integration hub.\nReal-time Dashboards Integrations\nOVERVIEW\nA real-time operations dashboard showing live activity,\nKPIs and alerts, with supervisor controls, reports and\nexports, plus an integration hub with connectors for Odoo,\nHubSpot and Zoho.\nOBJECTIVES\nKEY FEATURES\nTECH STACK\nWebSockets Next.js Grafana\nFastAPI\nPROJECT INFO\nCode Project-11\nType Dashboard / Integration\nDuration 4  6 months\nInterns 1  2\nProfile Software / Data engineering\nBuild real-time data streaming with WebSockets\nDesign the KPI dashboard and alerting\nDevelop the CRM connectors\nLive activity feed and real-time KPIs\nAlerts and supervisor controls\nReports and exports\nConnectors for Odoo, HubSpot and Zoho\nGrafana dashboards for monitoring\nQuicky Prime · Internship Projects 20262027 14",
+    "skills": [
+      "Next.js",
+      "FastAPI"
+    ],
+    "sourceFile": "1793619249366.pdf",
+    "sourcePages": [
+      14
+    ]
+  },
+  {
+    "company": "Quicky Prime",
+    "reference": "12",
+    "title": "Secure Access VPN",
+    "description": "12\nSecure Access VPN\nAn access management system with a self-hosted VPN on a VPS server.\nCybersecurity Zero Trust Infrastructure\nOVERVIEW\nSet up a centralized access management system that\nprotects company servers and internal tools behind a self-\nhosted VPN on a VPS. Only authenticated and authorized\nusers and devices can reach internal resources, with role-\nbased access, multi-factor authentication and full audit\nlogs.\nOBJECTIVES\nKEY FEATURES\nTECH STACK\nWireGuard / OpenVPN Keycloak\nLinux Ubuntu) UFW / iptables\nFail2ban Docker Grafana\nPROJECT INFO\nCode Project-12\nType Cybersecurity / Infrastructure\nDuration 4  6 months\nInterns 1\nProfile Network / Security\nengineering\nDeploy and harden the VPS and the VPN server\nDesign the access policy model (roles, groups,\nresources)\nBuild an admin portal and an audit dashboard\nSelf-hosted VPN on a VPS server WireGuard /\nOpenVPN\nUser, group and role-based access policies\nMulti-factor authentication and single sign-on\nDevice onboarding and access revocation\nAccess logs, monitoring and security alerts\nQuicky Prime · Internship Projects 20262027 15",
+    "skills": [
+      "Docker",
+      "Linux"
+    ],
+    "sourceFile": "1793619249366.pdf",
+    "sourcePages": [
+      15
+    ]
+  },
+  {
+    "company": "Quicky Prime",
+    "reference": "13",
+    "title": "3D Virtual Try-On",
+    "description": "13\n3D Virtual Try-On\nTry clothes and accessories on a 3D avatar or live camera before buying.\nComputer Vision 3D / AR E-commerce\nOVERVIEW\n3D Virtual Try-On lets shoppers see how clothes, glasses\nor accessories look on them before buying. From a photo\nor the live camera, the platform builds a 3D body or face\nmodel, fits the product on it in real time and lets the user\nturn, compare sizes and share the result, helping online\nstores raise conversion and reduce returns.\nOBJECTIVES\nKEY FEATURES\nTECH STACK\nPython PyTorch MediaPipe\nThree.js WebGL React JS\nFastAPI Docker\nPROJECT INFO\nCode Project-13\nType Computer Vision / 3D\nDuration 4  6 months\nInterns 1  2\nProfile AI / Computer vision\nengineering\nBuild the body / face tracking and 3D reconstruction\npipeline\nRender products on the avatar in real time in the browser\nIntegrate the try-on widget into an online store\nBody and face pose estimation from a photo or\nlive camera\n3D avatar generation with the user's\nmeasurements\nReal-time garment and accessory fitting\nSize recommendation and 360° preview\nWeb plugin for e-commerce stores\nQuicky Prime · Internship Projects 20262027 16",
+    "skills": [
+      "Python",
+      "React",
+      "FastAPI",
+      "Docker",
+      "PyTorch"
+    ],
+    "sourceFile": "1793619249366.pdf",
+    "sourcePages": [
+      16
+    ]
+  },
+  {
+    "company": "Quicky Prime",
+    "reference": "14",
+    "title": "AI Smart Wallet",
+    "description": "14\nAI Smart Wallet\nA Flutter mobile app that turns a simple wallet into an AI-powered wallet.\nMobile Flutter) FinTech Generative AI\nOVERVIEW\nAI Smart Wallet is a mobile app built with Flutter that\ntransforms a classic wallet into an intelligent financial\nassistant. It tracks income and spending automatically,\nscans receipts, categorizes every transaction, predicts\nupcoming expenses and gives personalized saving advice\nthrough a built-in AI chat assistant.\nOBJECTIVES\nKEY FEATURES\nTECH STACK\nFlutter Dart FastAPI\nPostgreSQL LangChain\nGoogle ML Kit Firebase\nDocker\nPROJECT INFO\nCode Project-14\nType Mobile / AI\nDuration 4  6 months\nInterns 1  2\nProfile Mobile / AI engineering\nBuild the cross-platform mobile app with Flutter\nDevelop the AI services: categorization, OCR, insights\nDesign a secure backend and API for wallet data\nAutomatic transaction categorization with AI\nReceipt and invoice scanning OCR\nSmart budgets, spending insights and predictions\nAI chat assistant: ask questions about your\nmoney\nAlerts for unusual spending and bill reminders\nQuicky Prime · Internship Projects 20262027 17",
+    "skills": [
+      "Flutter",
+      "FastAPI",
+      "PostgreSQL",
+      "Docker",
+      "SQL"
+    ],
+    "sourceFile": "1793619249366.pdf",
+    "sourcePages": [
+      17
+    ]
+  },
+  {
+    "company": "ReDX",
+    "reference": "1",
+    "title": "Performance Analysis and Optimization of Scientific Python Environments on HPC Shared Filesystems",
+    "description": "Performance\n \nAnalysis\n \nand\n \nOptimization\n \nof\n \nScientific\n \nPython\n \nEnvironments\n \non\n \nHPC\n \nShared\n \nFilesystems\n \n \nContext\n \nand\n \nProblem\n \nStatement\n \nHigh-Performance\n \nComputing\n \n(HPC)\n \nsystems\n \nrely\n \non\n \ncomplex\n \nscientific\n \nsoftware\n \nenvironments\n \nmanaged\n \nthrough\n \ntools\n \nsuch\n \nas\n \nConda,\n \nEasyBuild,\n \nand\n \nSingularity/Apptainer.\n \nThese\n \nenvironments,\n \nparticularly\n \nthose\n \ncontaining\n \nPython\n \nlibraries\n \nsuch\n \nas\n \nPyTorch,\n \nNumPy,\n \nand\n \nSciPy,\n \nmay\n \nconsist\n \nof\n \nthousands\n \nof\n \nsmall\n \nfiles.\n \nWhen\n \ndeployed\n \non\n \nshared\n \nfilesystems\n \nsuch\n \nas\n \nLustre\n \nor\n \nNFS,\n \nsimultaneous\n \napplication\n \ninitialization\n \nacross\n \nmultiple\n \ncompute\n \nnodes\n \ncan\n \ngenerate\n \nsubstantial\n \nmetadata\n \noperations,\n \npotentially\n \nleading\n \nto\n \nfilesystem\n \ncontention\n \nand\n \nincreased\n \nstartup\n \nlatency.\n \nAlternative\n \napproaches,\n \nsuch\n \nas\n \ncontainerization\n \nand\n \nnode-local\n \nstorage,\n \nmay\n \nreduce\n \nthese\n \noverheads.\n \nHowever,\n \ntheir\n \nimpact\n \non\n \napplication\n \ninitialization,\n \nscalability,\n \nand\n \nactual\n \nGPU\n \ntraining\n \nperformance\n \nrequires\n \nfurther\n \ninvestigation.\n \nThis\n \nproject\n \naims\n \nto\n \nanalyze\n \nhow\n \nsoftware\n \ndeployment\n \nstrategies\n \nand\n \nfilesystem\n \nplacement\n \naffect\n \nthe\n \nperformance\n \nof\n \nscientific\n \nPython\n \nworkloads\n \non\n \nHPC\n \nclusters\n,\n \nand\n \ninvestigate\n \nmethods\n \nto\n \nreduce\n \nthe\n \nassociated\n \noverhead.\n \nProject\n \nGoals\n \nThe\n \nmain\n \nobjectives\n \nare\n \nto:\n \n●\n \nEvaluate\n \nthe\n \nimpact\n \nof\n \nscientific\n \nPython\n \nenvironment\n \nplacement\n \non\n \nshared\n \nfilesystem\n \nmetadata\n \nactivity\n \nand\n \napplication\n \nstartup\n \nperformance.\n \n●\n \nInvestigate\n \ncontainer-based\n \ndeployment\n \nusing\n \nSingularity/Apptainer\n \nas\n \na\n \nstrategy\n \nfor\n \nreducing\n \nfilesystem\n \nmetadata\n \noverhead.\n \n●\n \nAssess\n \nthe\n \nbenefits\n \nand\n \ncosts\n \nof\n \nstaging\n \nsoftware\n \nenvironments\n \nand\n \ncontainer\n \nimages\n \nonto\n \nnode-local\n \nstorage.\n \n●\n \nCharacterize\n \nhow\n \nthese\n \ndeployment\n \nstrategies\n \ninfluence\n \nPyTorch\n \ninitialization,\n \nGPU\n \ntraining\n \nthroughput,\n \nand\n \nmulti-node\n \nscalability.\n \nThe\n \nproject\n \nwill\n \ndeploy\n \nequivalent\n \nPyTorch\n \nsoftware\n \nenvironments\n \nusing\n \nConda,\n \nEasyBuild\n \nand\n \nApptainer\n \nacross\n \nNFS,\n \nLustre,\n \nand\n \nnode-local\n \nstorage.\n \n \nThe\n \nexperimental\n \nevaluation\n \nwill\n \nfocus\n \non\n \nthree\n \nmain\n \naspects:\n \nSoftware\n \nInitialization\n \nand\n \nFilesystem\n \nBehavior:\n \nMeasure\n \ninstallation\n \ntime,\n \nPython\n \nlibrary\n \nimport\n \nlatency,\n \nCUDA\n \ninitialization,\n \nand\n \nmetadata-related\n \noperations.\n \nApplication\n \nPerformance\n \nand\n \nScalability:\n \nExecute\n \nPyTorch\n \nbenchmarks,\n \nincluding\n \nResNet-50\n \nand\n \nDistributedDataParallel\n \n(DDP),\n \nunder\n \ndifferent\n \ndeployment\n \nconfigurations\n \nand\n \nprocess\n \nconcurrency\n \nlevels.\n \nAnalyze\n \nstartup\n \ntime,\n \nGPU\n \nutilization,\n \ntraining\n \nthroughput,\n \nand\n \nmulti-node\n \nscalability.\n \nOptimization\n \nand\n \nAutomation:\n \nEvaluate\n \nstrategies\n \nsuch\n \nas\n \npackaging\n \nenvironments\n \ninto\n \nApptainer\n \nimages\n \nand\n \nstaging\n \nthem\n \nonto\n \nnode-local\n \nstorage.\n \nDevelop\n \na\n \nlightweight\n \nframework\n \nto\n \nautomate\n \nexperiments\n \nand\n \nrecommend\n \nsuitable\n \ndeployment\n \nstrategies\n \nbased\n \non\n \nworkload\n \ncharacteristics\n \nand\n \nmeasured\n \noverheads.\n \nExperiments\n \nwill\n \ndistinguish\n \nenvironment-related\n \nfilesystem\n \nactivity\n \nfrom\n \ntraining\n \ndataset\n \nI/O,\n \nwhile\n \naccounting\n \nfor\n \nstaging\n \ncosts\n \nand\n \nfilesystem\n \ncaching\n \neffects.\n \nDeliverables\n \n:\n \n●\n \nA\n \nreproducible\n \nbenchmarking\n \nframework\n \nfor\n \nConda\n \nand\n \ncontainerized\n \nPyTorch\n \nenvironments.\n \n●\n \nA\n \ncomparative\n \nperformance\n \nanalysis\n \nacross\n \nLustre,\n \nNFS,\n \nand\n \nnode-local\n \nstorage.\n \n●\n \nAn\n \nevaluation\n \nof\n \nfilesystem\n \nmetadata\n \noverhead\n \nand\n \nits\n \nimpact\n \non\n \nlarge-scale\n \nPython\n \napplication\n \ninitialization.\n \n●\n \nPractical\n \nguidelines\n \nfor\n \nefficient\n \nscientific\n \nPython\n \nenvironment\n \ndeployment\n \non\n \nHPC\n \nsystems.\n \nRequired\n \nskills:\n \n●\n \nStrong\n \nproblem-solving\n \nskills,\n \ncuriosity,\n \nand\n \nwillingness\n \nto\n \nlearn\n \nnew\n \ntechnologies.\n \n●\n \nFamiliarity\n \nwith\n \nLinux\n \nenvironments.\n \n●\n \nProgramming\n \nskills\n \nin\n \nC/C++\n \nor\n \nPython.\n \n●\n \nFamiliarity\n \nwith\n \nGit\n \nand\n \nversion\n \ncontrol.\n \n●\n \nGood\n \ncommand\n \nof\n \nEnglish.\n \n●\n \nAbility\n \nto\n \nwork\n \nindependently\n \nand\n \ncollaboratively.\n \nPlanned\n \ntraining:\n \n●\n \nLinux\n \nfundamentals\n \nthrough\n \nthe\n \n“Complete\n \nLinux\n \nTraining\n \nCourse”\n \non\n \nUdemy\n \n●\n \nIntroduction\n \nto\n \nHPC\n \nsystems\n \nand\n \nparallel\n \nprogramming\n \n(MPI,\n \nOpenMP,\n \nGPU\n \nbasics)\n \n●\n \nTraining\n \non\n \nHPC\n \nsoftware\n \nmanagement\n \ntools\n \nsuch\n \nas\n \nEasyBuild\n \n●\n \nMentorship\n \nthrough\n \n1:1\n \nsessions\n \nwith\n \nReDX\n \nengineers\n \nand\n \ndomain\n \nexperts\n \n \nDuration\n \nand\n \nOther\n \nDetails\n \n:\n \n●\n \nRecommended\n \nperiod:\n \n6\n \nmonths.\n \n●\n \nCompensation:\n \nInterns\n \nwill\n \nreceive\n \na\n \nmonthly\n \nstipend,\n \nwith\n \nthe\n \npossibility\n \nof\n \nan\n \nend-of-internship\n \nperformance\n \nbonus.\n \n●\n \nPossibility\n \nto\n \nwork\n \nwith\n \nend\n \ncustomers.",
+    "skills": [
+      "Python",
+      "PyTorch",
+      "Linux",
+      "Git"
+    ],
+    "sourceFile": "1793706682156.pdf",
+    "sourcePages": [
+      2
+    ]
+  },
+  {
+    "company": "ReDX",
+    "reference": "2",
+    "title": "Deployment, Validation, and Optimization of the Scientific and AI Software Stack on an HPC cluster",
+    "description": "Deployment,\n \nValidation,\n \nand\n \nOptimization\n \nof\n \nthe\n \nScientific\n \nand\n \nAI\n \nSoftware\n \nStack\n \non\n \nan\n \nHPC\n \ncluster\n \nContext\n \nand\n \nProblem\n \nStatement\n \nHigh-Performance\n \nComputing\n \n(HPC)\n \nsystems\n \nrely\n \non\n \na\n \ncomprehensive\n \nsoftware\n \necosystem\n \nto\n \nsupport\n \nscientific\n \nsimulations,\n \nengineering\n \napplications,\n \nand\n \nAI\n \nworkloads.\n \nThis\n \necosystem\n \nincludes\n \nprogramming\n \ncompilers,\n \nparallel\n \nprogramming\n \nlibraries,\n \nmathematical\n \nlibraries,\n \nGPU\n \ncomputing\n \nframeworks,\n \nand\n \nscientific\n \nand\n \nAI\n \napplications.\n \nMaintaining\n \na\n \nconsistent,\n \noptimized,\n \nand\n \nup-to-date\n \nsoftware\n \nstack\n \nis\n \nessential\n \nto\n \nensuring\n \nsystem\n \nperformance,\n \napplication\n \ncompatibility,\n \nand\n \nefficient\n \nutilization\n \nof\n \nHPC\n \nresources.\n \nHowever,\n \ndeploying\n \nand\n \nmaintaining\n \na\n \nlarge\n \nsoftware\n \nportfolio\n \npresents\n \nseveral\n \nchallenges,\n \nincluding\n \ndependency\n \nmanagement,\n \ncompiler\n \nand\n \nlibrary\n \ncompatibility,\n \nGPU\n \narchitecture\n \nsupport,\n \nbuild\n \noptimization,\n \nand\n \nreproducibility.\n \nOn\n \nHPC\n \nsystems,\n \nsoftware\n \nenvironments\n \nare\n \ntypically\n \nmanaged\n \nthrough\n \ntools\n \nsuch\n \nas\n \nEasyBuild\n \nand\n \nLmod,\n \nenabling\n \nusers\n \nto\n \naccess\n \nmultiple\n \nsoftware\n \nversions\n \nand\n \ntoolchains\n \nthrough\n \nenvironment\n \nmodules.\n \nAs\n \nnew\n \nversions\n \nof\n \ncompilers,\n \nlibraries,\n \nand\n \nscientific\n \napplications\n \nbecome\n \navailable,\n \nthe\n \nsoftware\n \nstack\n \nmust\n \nbe\n \nregularly\n \nupdated,\n \ndeployed,\n \nand\n \nvalidated\n \nto\n \nensure\n \ncompatibility\n \nwith\n \nthe\n \nunderlying\n \nhardware\n \nand\n \nsoftware\n \ninfrastructure.\n \nThis\n \nproject\n \naims\n \nto\n \ndeploy\n \nand\n \nvalidate\n \na\n \ncomprehensive\n \nset\n \nof\n \ncore\n \ncompilers,\n \nlibraries,\n \nand\n \nscientific/AI\n \napplications\n \non\n \nthe\n \nHPC\n \ncluster\n \nusing\n \ntheir\n \nlatest\n \nstable\n \nversions.\n \nIt\n \nwill\n \nalso\n \nestablish\n \nreproducible\n \ndeployment\n \nand\n \nvalidation\n \nprocedures\n \nto\n \nfacilitate\n \nfuture\n \nsoftware\n \nstack\n \nmaintenance\n \nand\n \nevolution.\n \nProject\n \nGoals\n \nThe\n \nmain\n \nobjectives\n \nare\n \nto:\n \n●\n \nDeploy\n \nthe\n \nlatest\n \nstable\n \nversions\n \nof\n \ncore\n \nprogramming\n \ncompilers\n \nand\n \ntoolchains,\n \nincluding\n \nGCC,\n \nIntel\n \noneAPI,\n \nand\n \nother\n \nrelevant\n \ncompiler\n \nsuites.\n \n●\n \nInstall\n \nand\n \nvalidate\n \nessential\n \nHPC\n \nlibraries\n \nand\n \nparallel\n \nprogramming\n \nframeworks,\n \nincluding\n \nMPI,\n \nOpenMP,\n \nBLAS/LAPACK,\n \nFFTW,\n \nHDF5,\n \nand\n \nrelated\n \nmathematical\n \nand\n \nscientific\n \nlibraries.\n \n●\n \nDeploy\n \nand\n \nvalidate\n \nGPU\n \ncomputing\n \nsoftware,\n \nincluding\n \nCUDA,\n \ncuDNN,\n \nand\n \nrelevant\n \nGPU-accelerated\n \nlibraries\n \nand\n \nframeworks.\n \n \n●\n \nInstall\n \nand\n \nvalidate\n \na\n \nselection\n \nof\n \nwidely\n \nused\n \nscientific\n \napplications,\n \nsuch\n \nas\n \nGROMACS,\n \nLAMMPS,\n \nCP2K,\n \nVASP,\n \nQuantum\n \nESPRESSO,\n \nand\n \nother\n \nrelevant\n \napplications.\n \n●\n \nDeploy\n \nand\n \nvalidate\n \nAI\n \nand\n \nmachine\n \nlearning\n \nframeworks,\n \nincluding\n \nPyTorch,\n \nTensorFlow,\n \nand\n \ntheir\n \nassociated\n \nGPU\n \nacceleration\n \ncomponents.\n \n●\n \nDevelop\n \nand\n \nmaintain\n \nEasyBuild\n \nrecipes\n \nand\n \nLmod\n \nmodulefiles\n \nto\n \nensure\n \nreproducible\n \nand\n \nstandardized\n \nsoftware\n \ndeployment.\n \n●\n \nPerform\n \nfunctional\n \nand\n \nperformance\n \nvalidation\n \nto\n \nverify\n \nsoftware\n \ncompatibility,\n \ncorrectness,\n \nand\n \nexecution\n \nefficiency\n \nacross\n \nCPU\n \nand\n \nGPU\n \nresources.\n \n●\n \nEstablish\n \nautomated\n \nprocedures\n \nfor\n \nsoftware\n \ndeployment,\n \ntesting,\n \nand\n \nvalidation\n \nto\n \nsimplify\n \nfuture\n \nupdates\n \nand\n \nmaintenance.\n \nProject\n \nScope\n \nand\n \nMethodology\n \nThe\n \nproject\n \nwill\n \nfocus\n \non\n \ndeploying\n \na\n \nstructured\n \nportfolio\n \nof\n \nHPC\n \nsoftware\n \ncomponents\n \non\n \nthe\n \ncluster,\n \ncovering\n \nthe\n \nfollowing\n \nareas:\n \n1.\n \nCompilers\n \nand\n \nDevelopment\n \nToolchains\n \nDeploy\n \nand\n \nvalidate\n \nthe\n \nlatest\n \nstable\n \nversions\n \nof\n \nmajor\n \ncompiler\n \nsuites,\n \nincluding\n \nGCC\n \nand\n \nIntel\n \noneAPI.\n \nConfigure\n \ncompatible\n \nsoftware\n \ntoolchains\n \nand\n \nverify\n \nsupport\n \nfor\n \nC,\n \nC++,\n \nand\n \nFortran\n \napplications.\n \n2.\n \nCore\n \nHPC\n \nLibraries\n \nand\n \nParallel\n \nProgramming\n \nFrameworks\n \nInstall\n \nand\n \nvalidate\n \nessential\n \nHPC\n \nlibraries\n \nand\n \nframeworks,\n \nincluding:\n \n●\n \nMPI\n \nimplementations\n \n(OpenMPI,\n \nIntel\n \nMPI).\n \n●\n \nOpenMP\n \nsupport.\n \n●\n \nBLAS/LAPACK\n \nand\n \noptimized\n \nmathematical\n \nlibraries.\n \n●\n \nFFTW,\n \nHDF5,\n \nNetCDF,\n \nand\n \nother\n \nscientific\n \nlibraries.\n \n●\n \nGPU-accelerated\n \nlibraries\n \nsuch\n \nas\n \ncuBLAS,\n \ncuFFT,\n \nand\n \ncuDNN.\n \n3.\n \nScientific\n \nand\n \nEngineering\n \nApplications\n \nDeploy\n \nand\n \nvalidate\n \na\n \nrepresentative\n \nportfolio\n \nof\n \nscientific\n \napplications,\n \nincluding:\n \n●\n \nMolecular\n \ndynamics:\n \nGROMACS\n \nand\n \nLAMMPS.\n \n●\n \nComputational\n \nchemistry:\n \nCP2K\n \nand\n \nQuantum\n \nESPRESSO.\n \n●\n \nComputational\n \nscience\n \nand\n \nengineering:\n \nVASP\n \nand\n \nother\n \nrelevant\n \napplications.\n \n●\n \nVisualization\n \nand\n \npost-processing:\n \nParaView.\n \n \n \n \n4.\n \nAI\n \nand\n \nMachine\n \nLearning\n \nFrameworks\n \nDeploy\n \nand\n \nvalidate\n \nthe\n \nlatest\n \nstable\n \nversions\n \nof\n \nmajor\n \nAI\n \nframeworks\n \nand\n \nsupporting\n \nlibraries,\n \nincluding:\n \n●\n \nPyTorch.\n \n●\n \nTensorFlow.\n \n●\n \nRelevant\n \nCUDA-enabled\n \ndependencies.\n \n●\n \nSupporting\n \nPython\n \nscientific\n \nlibraries\n \nsuch\n \nas\n \nNumPy,\n \nSciPy,\n \nand\n \nscikit-learn.\n \n5.\n \nSoftware\n \nManagement,\n \nAutomation,\n \nand\n \nValidation\n \nUse\n \nEasyBuild\n \nto\n \ncreate\n \nand\n \nmaintain\n \nreproducible\n \nsoftware\n \nbuild\n \nrecipes\n \nand\n \nLmod\n \nmodulefiles\n \nto\n \nprovide\n \na\n \nconsistent\n \nuser\n \nexperience.\n \nDevelop\n \nvalidation\n \nprocedures\n \nand\n \nautomated\n \ntests\n \nto\n \nverify:\n \n●\n \nSuccessful\n \nsoftware\n \ninstallation\n \nand\n \ndependency\n \nresolution.\n \n●\n \nCompatibility\n \nacross\n \ncompiler\n \nand\n \nMPI\n \ntoolchains.\n \n●\n \nCPU\n \nand\n \nGPU\n \nfunctionality.\n \n●\n \nSingle-node\n \nand\n \nmulti-node\n \nexecution.\n \n●\n \nBasic\n \nperformance\n \nbenchmarks\n \nagainst\n \nreference\n \nconfigurations.\n \n●\n \nReproducibility\n \nacross\n \nsoftware\n \nversions\n \nand\n \ndeployment\n \nenvironments.\n \nThe\n \nvalidation\n \nprocess\n \nwill\n \ninclude\n \nrepresentative\n \nbenchmarks\n \nsuch\n \nas\n \nHPL,\n \nOSU\n \nMicro-Benchmarks,\n \nSTREAM,\n \nand\n \napplication-specific\n \ntest\n \ncases\n \nwhere\n \napplicable.\n \nDeliverables\n \n●\n \nA\n \ncomprehensive\n \nand\n \ndocumented\n \nHPC\n \nsoftware\n \nstack\n \ndeployed\n \non\n \nthe\n \ncluster,\n \ncovering\n \ncompilers,\n \nlibraries,\n \nscientific\n \napplications,\n \nand\n \nAI\n \nframeworks.\n \n●\n \nA\n \ncollection\n \nof\n \nreproducible\n \nEasyBuild\n \nrecipes\n \nand\n \nassociated\n \nLmod\n \nmodulefiles.\n \n●\n \nValidation\n \nreports\n \ndocumenting\n \ninstallation\n \nstatus,\n \ncompatibility,\n \nfunctionality,\n \nand\n \nperformance\n \nresults.\n \n●\n \nA\n \nstructured\n \nsoftware\n \ncompatibility\n \nmatrix\n \ncovering\n \ncompiler\n \nversions,\n \nMPI\n \nimplementations,\n \nlibraries,\n \nand\n \napplication\n \ndependencies.\n \n●\n \nAutomated\n \ndeployment\n \nand\n \nvalidation\n \nscripts\n \nto\n \nfacilitate\n \nfuture\n \nsoftware\n \nupdates.\n \n●\n \nTechnical\n \ndocumentation\n \ndescribing\n \nthe\n \ndeployment\n \nprocedures,\n \nsoftware\n \nconfigurations,\n \nknown\n \nlimitations,\n \nand\n \nrecommendations\n \nfor\n \nongoing\n \nmaintenance.\n \nRequired\n \nskills\n \n●\n \nStrong\n \nproblem-solving\n \nskills,\n \ncuriosity,\n \nand\n \nwillingness\n \nto\n \nlearn\n \nnew\n \ntechnologies.\n \n●\n \nFamiliarity\n \nwith\n \nLinux\n \nenvironments\n \nand\n \ncommand-line\n \noperations.\n \n \n●\n \nProgramming\n \nskills\n \nin\n \nC/C++\n \nor\n \nPython.\n \n●\n \nBasic\n \nunderstanding\n \nof\n \nsoftware\n \ncompilation,\n \nlibraries,\n \nand\n \ndependency\n \nmanagement.\n \n●\n \nFamiliarity\n \nwith\n \nGit\n \nand\n \nversion\n \ncontrol.\n \n●\n \nInterest\n \nin\n \nHigh-Performance\n \nComputing,\n \nscientific\n \ncomputing,\n \nor\n \nAI.\n \n●\n \nGood\n \ncommand\n \nof\n \nEnglish.\n \n●\n \nAbility\n \nto\n \nwork\n \nindependently\n \nand\n \ncollaboratively.\n \nPlanned\n \ntraining\n \n●\n \nLinux\n \nfundamentals\n \nthrough\n \nthe\n \n“Complete\n \nLinux\n \nTraining\n \nCourse”\n \non\n \nUdemy.\n \n●\n \nIntroduction\n \nto\n \nHPC\n \nsystems\n \nand\n \nparallel\n \nprogramming\n \n(MPI,\n \nOpenMP,\n \nand\n \nGPU\n \ncomputing\n \nfundamentals).\n \n●\n \nHands-on\n \ntraining\n \non\n \nHPC\n \nsoftware\n \nmanagement\n \ntools,\n \nparticularly\n \nEasyBuild\n \nand\n \nLmod.\n \n●\n \nIntroduction\n \nto\n \nsoftware\n \ncompilation,\n \ntoolchains,\n \ndependency\n \nmanagement,\n \nand\n \nenvironment\n \nmodules.\n \n●\n \nPractical\n \ntraining\n \non\n \ndeploying\n \nand\n \nbenchmarking\n \nscientific\n \nand\n \nAI\n \napplications.\n \n●\n \nIntroduction\n \nto\n \nautomated\n \ntesting\n \nand\n \nvalidation\n \nusing\n \nscripting\n \nand\n \nbenchmarking\n \ntools.\n \n●\n \nMentorship\n \nthrough\n \n1:1\n \nsessions\n \nwith\n \nReDX\n \nengineers\n \nand\n \nHPC\n \ndomain\n \nexperts.\n \nDuration\n \nand\n \nOther\n \nDetails\n \n●\n \nRecommended\n \nperiod:\n \n6\n \nmonths.\n \n●\n \nCompensation:\n \nInterns\n \nwill\n \nreceive\n \na\n \nmonthly\n \nstipend,\n \nwith\n \nthe\n \npossibility\n \nof\n \nan\n \nend-of-internship\n \nperformance\n \nbonus.\n \n●\n \nPossibility\n \nto\n \nwork\n \nwith\n \nend\n \ncustomers.\n \n●\n \nHands-on\n \nexperience\n \nwith\n \na\n \nproduction\n \nHPC\n \nenvironment\n \nand\n \na\n \nbroad\n \nportfolio\n \nof\n \nscientific\n \nand\n \nAI\n \napplications.",
+    "skills": [
+      "Python",
+      "PyTorch",
+      "TensorFlow",
+      "Linux",
+      "Git"
+    ],
+    "sourceFile": "1793706682156.pdf",
+    "sourcePages": [
+      5
+    ]
+  },
+  {
+    "company": "ReDX",
+    "reference": "3",
+    "title": "Secure AI Workflow in Bi-directional Client-Server Architecture",
+    "description": "Secure\n \nAI\n \nWorkflow\n \nin\n \nBi-directional\n \nClient-Server\n \nArchitecture\n \nBrief\n \nDescription:\n \n \nThis\n \ninternship\n \nproject\n \nfocuses\n \non\n \nthe\n \ndesign\n \nand\n \nimplementation\n \nof\n \na\n \nsecure\n  \nAI-based\n \nprocessing\n \nof\n \nmultimodal\n \nsubmissions,\n \nwith\n \ncontrolled\n \nhandling\n \nof\n \nuser\n \ndata\n \nbefore\n \nand\n \nwhile\n \nexecuting\n \nan\n \nAI\n \npipeline.\n \nThe\n \nobjective\n \nis\n \nto\n \nimprove\n \nhow\n \nour\n \nplatform\n \nprocesses\n \nour\n \nAI\n \nmodels\n \nin\n \na\n \nsecurity\n \nand\n \nprivacy-preserving\n \nmanner\n \nwhile\n \nensuring\n \nthat\n \nsensitive\n \ncontent\n \nis\n \nhandled\n \nsafely\n \nthroughout\n \nthe\n \npipeline\n \nand\n \nAI\n \ndecision\n \nworkflow\n \nwith\n \nminimum\n \nloss\n \nof\n \ninformation.\n \nCurrent\n \nStatus:\n \nOur\n \nplatform\n \nalready\n \nprocesses\n \nvarious\n \ntypes\n \nof\n \ndata\n \ngenerated\n \nthroughout\n \nthe\n \napplication\n \nlifecycle,\n \nincluding\n \nuser\n \ninteractions,\n \noperational\n \noutcomes,\n \nand\n \nAI-assisted\n \nprocessing\n \nresults.\n \nAs\n \nthe\n \nplatform\n \nevolves,\n \nthese\n \nflows\n \nneed\n \nstronger\n \nprivacy\n \nprotection\n \nand\n \nsecure\n \noperation.\n \nThe\n \nproject\n \naims\n \nto\n \nbuild\n \nthe\n \nsupporting\n \narchitecture\n \nrequired\n \nto\n \nsecure\n \nAI\n \nprocessing.\n \nProject\n \nGoals:\n \n●\n \nDesign\n \nprivacy-preserving,\n \nsecure,\n \nand\n \nencrypted\n \nAI\n \ninference\n \nworkflows\n \nfor\n \nthe\n  \nREDX\n \nplatform.\n \n●\n \nInvestigate\n \nTrusted\n \nExecution\n \nEnvironments\n \n(TEE)\n \nand\n \nconfidential\n \ncomputing\n \n●\n \nAssess\n \nthe\n \nfeasibility\n \nand\n \nperformance\n \ntrade-offs\n \nof\n \nSecure\n \nMulti-Party\n \nComputation\n \n(MPC)\n \nand\n \nsplit\n \ninference\n \nfor\n \nmultimodal\n \nworkloads.\n \n●\n \nInvestigate\n \nperformance,\n \nsecurity\n \nlevel,\n \nand\n \nlatency\n \nof\n \nthe\n \ndeveloped\n \nsolution.\n \n●\n \nApply\n \nexecution\n \nacceleration\n \ntechniques\n \nto\n \nreduce\n \nend-to-end\n \ninference\n \ntime.\n \n●\n \nProtect\n \nAI\n \ndecisions\n \nagainst\n \nprompt\n \ninjection\n \nand\n \nmanipulation\n \nattempts\n \nto\n \nensure\n \nreliable,\n \ntrustworthy\n \ninference.\n \nRequired\n \nSkills:\n \n●\n \nKnowledge\n \nof\n \ndata\n \nengineering\n \nand\n \ndata\n \nquality,\n \nwith\n \nexperience\n \nin\n \nPython\n \nand\n \nbackend\n \nintegration\n \n●\n \nUnderstanding\n \nof\n \nAI/ML,\n \nmultimodal\n \nmodels,\n \nand\n \ninference\n \npipelines,\n \nwith\n \nawareness\n \nof\n \nsecurity,\n \nprivacy-preserving\n \ntechniques,\n \nand\n \naccess\n \ncontrol.\n \n●\n \nAnalytical\n \nskills,\n \nEnglish\n \ncommunication\n \nskills,\n \nand\n \nfamiliarity\n \nwith\n \nGit;\n \n \n \n \n \nDeliverables\n:\n \n●\n \nA\n \ntechnical\n \nreport\n \ndetailing\n \nplatform\n \ndesign,\n \nimplementation,\n \nand\n \nevaluation.\n \n●\n \nSource\n \ncode\n \nand\n \ndocumentation\n \nfor\n \nthe\n \nproposed\n \nsecure\n \nsolution\n \nof\n \nthe\n \nAI\n \nworkflow\n \nprocessing\n \nand\n \nthe\n \nprompt\n \ninjection\n \nprevention\n \nmechanism.\n \n●\n \nPerformance\n \nmetrics\n \ncovering\n \ndata\n \nquality,\n \nAI\n \ninference\n \nperformance,\n \nsecurity,\n \nand\n \nsafeguarding\n \nefficiency\n \n●\n \nA\n \ndemonstration\n \nprototype\n \nshowcasing\n \nsecure\n \nAI\n \nprocessing.\n \nDuration\n \nand\n \nOther\n \nDetails:\n \n●\n \nRecommended\n \nperiod:\n \n4\n \nto\n \n6\n \nmonths.\n \n●\n \nCompensation:\n \nInterns\n \nwill\n \nreceive\n \na\n \nmonthly\n \nstipend\n \nand\n \nmay\n \nreceive\n \nan\n \nend-of-internship\n \nperformance\n \nbonus.\n \n●\n \nPossibility\n \nto\n \nwork\n \nwith\n \nend\n \ncustomers",
+    "skills": [
+      "Python",
+      "Git"
+    ],
+    "sourceFile": "1793706682156.pdf",
+    "sourcePages": [
+      9
+    ]
+  },
+  {
+    "company": "ReDX",
+    "reference": "4",
+    "title": "Workflow Automation, Data Management and Monitoring Tools",
+    "description": "Workflow\n \nAutomation,\n \nData\n \nManagement\n \nand\n \nMonitoring\n \nTools\n \nBrief\n \nDescription\n \nThis\n \ninternship\n \nfocuses\n \non\n \nbuilding\n \ntools\n \nto\n \nautomate\n \nroutine\n \ntasks,\n \norganize\n \ndata,\n \nand\n \nmonitor\n \ndaily\n \noperations.\n \nThe\n \nproject\n \ncovers\n \nthree\n \nmain\n \nareas:\n \n●\n \nAutomating\n \nrepetitive\n \ntasks\n \nand\n \nconnecting\n \ntools.\n \n●\n \nImproving\n \ndata\n \norganization,\n \nquality,\n \nand\n \nreuse.\n \n●\n \nTracking\n \nsystem\n \nactivity\n \nand\n \ndetecting\n \nproblems.\n \nThe\n \ngoal\n \nis\n \nto\n \nreduce\n \nmanual\n \nwork,\n \nmake\n \ninformation\n \neasier\n \nto\n \nmanage,\n \nand\n \nhelp\n \nteams\n \nidentify\n \nand\n \nresolve\n \nissues.\n \nCurrent\n \nStatus\n \nExisting\n \ntools\n \nsupport\n \ndaily\n \noperations,\n \nbut\n \nsome\n \ntasks\n \nstill\n \nrequire\n \nmanual\n \neffort,\n \nand\n \ninformation\n \nis\n \nscattered\n \nacross\n \nmultiple\n \nsources.\n \nThe\n \nproject\n \naims\n \nto\n \nconnect\n \nthese\n \ntools,\n \nimprove\n \ndata\n \norganization,\n \nand\n \nmake\n \nactivities\n \neasier\n \nto\n \nfollow.\n \nProject\n \nGoals\n \nAI\n \nWorkflow\n \nAutomation\n \nand\n \nTracking\n \n●\n \nIdentify\n \nrepetitive\n \ntasks\n \nand\n \nautomate\n \nroutine\n \nchecks,\n \nnotifications,\n \nand\n \nreports.\n \n●\n \nTrack\n \nchanges\n \nto\n \nprompts,\n \nmodels,\n \nand\n \nsettings,\n \nrecording\n \nwhich\n \nversions\n \nwere\n \nused\n \nfor\n \neach\n \nAI\n \nresult.\n \n●\n \nRecord\n \ninputs,\n \noutputs,\n \nevaluation\n \nscores,\n \nprocessing\n \ntimes,\n \nand\n \nerrors\n \nto\n \ncompare\n \nresults\n \nand\n \ninvestigate\n \nproblems.\n \n●\n \nRun\n \nrepeatable\n \ntests\n \nto\n \ncheck\n \nhow\n \nchanges\n \naffect\n \nAI\n \nresults.\n \nData\n \nManagement\n \nand\n \nOrganization\n \n●\n \nCreate\n \nclear\n \nand\n \nconsistent\n \nways\n \nto\n \norganize\n \ndata.\n \n●\n \nSet\n \nrules\n \nfor\n \nstoring,\n \nchecking,\n \nupdating,\n \nand\n \nkeeping\n \ninformation.\n \n●\n \nIdentify\n \nmissing,\n \nincorrect,\n \nor\n \nduplicate\n \ndata.\n \n \n●\n \nTrack\n \nwhere\n \ndata\n \ncomes\n \nfrom\n \nand\n \nhow\n \nit\n \nchanges.\n \n●\n \nPrepare\n \nreliable\n \ndatasets\n \nfor\n \nanalysis\n \nand\n \nfuture\n \nuse.\n \nMonitoring\n \nand\n \nReporting\n \n●\n \nCollect\n \nlogs\n \nand\n \nactivity\n \ninformation\n \nin\n \none\n \nplace.\n \n●\n \nTrack\n \nservice\n \navailability,\n \nprocessing\n \ntimes,\n \nand\n \nerrors.\n \n●\n \nMake\n \ntasks\n \neasier\n \nto\n \nfollow\n \nfrom\n \nstart\n \nto\n \nfinish.\n \n●\n \nBuild\n \ndashboards\n \nand\n \nalerts\n \nto\n \ndetect\n \nservice\n \ninterruptions,\n \nrepeated\n \nfailures,\n \nslow\n \nprocessing,\n \nand\n \ngrowing\n \nqueues.\n \n●\n \nGenerate\n \nregular\n \nreports\n \nshowing\n \nperformance\n \ntrends\n \nand\n \nrecurring\n \nissues.\n \nIntegration\n \nand\n \nTesting\n \n●\n \nConnect\n \nthe\n \ndeveloped\n \ntools\n \nto\n \nexisting\n \nsystems.\n \n●\n \nCheck\n \nthat\n \nautomated\n \nworkflows\n \nrun\n \ncorrectly\n \nand\n \nhandle\n \nfailures.\n \n●\n \nVerify\n \nthat\n \nAI\n \nresults\n \ncan\n \nbe\n \nlinked\n \nto\n \nthe\n \nversions\n \nand\n \nsettings\n \nused.\n \n●\n \nEvaluate\n \ndata\n \nquality,\n \nperformance,\n \nand\n \nmonitoring.\n \n●\n \nMeasure\n \ntime\n \nsaved\n \nand\n \nreductions\n \nin\n \nmanual\n \nwork.\n \nRequired\n \nSkills\n \n●\n \nKnowledge\n \nof\n \nPython,\n \nSQL,\n \nAPIs,\n \nand\n \nbackend\n \ndevelopment.\n \n●\n \nBasic\n \nunderstanding\n \nof\n \nAI\n \nworkflows\n \nand\n \ndata\n \nmanagement.\n \n●\n \nInterest\n \nin\n \nautomation,\n \ntesting,\n \nand\n \nmonitoring\n \ntools.\n \n●\n \nProblem-solving\n \nskills,\n \nEnglish\n \ncommunication\n \nskills,\n \nand\n \nfamiliarity\n \nwith\n \nGit.\n \n●\n \nExperience\n \nwith\n \nautomation\n \nplatforms,\n \ndashboards,\n \nDatabricks,\n \nor\n \nMLflow\n \nis\n \na\n \nplus.\n \nDeliverables\n \n●\n \nWorking\n \ntools\n \nfor\n \nautomation,\n \nAI\n \ntracking,\n \ndata\n \nmanagement,\n \nand\n \nmonitoring.\n \n●\n \nDashboards,\n \nalerts,\n \nand\n \nautomated\n \nreports.\n \n●\n \nSource\n \ncode\n \nand\n \ninstructions\n \nfor\n \nusing\n \nand\n \nmaintaining\n \nthe\n \ntools.\n \n●\n \nA\n \ntechnical\n \nreport\n \nexplaining\n \nthe\n \nimplementation,\n \ntest\n \nresults,\n \nand\n \nimprovements.\n \n●\n \nA\n \ndemonstration\n \nshowing\n \nhow\n \nthe\n \ntools\n \nwork\n \nand\n \nsave\n \ntime.\n \nDuration\n \nand\n \nOther\n \nDetails\n \n●\n \nRecommended\n \nduration:\n \n4–6\n \nmonths.\n \n●\n \nCompensation:\n \nMonthly\n \nstipend,\n \nwith\n \na\n \npossible\n \nperformance\n \nbonus\n \nat\n \nthe\n \nend\n \nof\n \nthe\n \ninternship.\n \n●\n \nOpportunity\n \nto\n \nwork\n \nwith\n \nend\n \ncustomers.",
+    "skills": [
+      "Python",
+      "Git",
+      "SQL"
+    ],
+    "sourceFile": "1793706682156.pdf",
+    "sourcePages": [
+      11
+    ]
+  },
+  {
+    "company": "ReDX",
+    "reference": "5",
+    "title": "Workload-Aware HPC Storage Architecture Recommendation",
+    "description": "Workload-Aware\n \nHPC\n \nStorage\n \nArchitecture\n \nRecommendation\n \nBrief\n \nDescription:\n \nA\n \nnew\n \nhigh-performance\n \ncomputing\n \n(HPC)\n \nstorage\n \ninfrastructure\n \nmust\n \nbe\n \ndesigned\n \nbefore\n \nits\n \napplications\n \nare\n \ndeployed.\n \nUsers\n \ncan\n \nestimate\n \ncapacity,\n \nbudget\n \nand\n \nreliability,\n \nbut\n \noften\n \ncannot\n \ndescribe\n \nfuture\n \ninput/output\n \n(I/O)\n \nbehavior.\n \nSimilar-capacity\n \nclusters\n \nmay\n \nneed\n \nvery\n \ndifferent\n \nstorage\n \nperformance.\n \nThis\n \ninternship\n \nextends\n \nan\n \nexisting\n \nLustre\n \narchitecture\n \nrecommender\n \nwith\n \npatterns\n \nlearned\n \nfrom\n \nhistorical\n \nHPC\n \nI/O\n \nlogs.\n \nIt\n \nwill\n \ndiscover\n \nrepresentative\n \nworkload\n \nprofiles,\n \nmatch\n \nthem\n \nto\n \nsimple\n \nuser\n \ndescriptions\n \nand\n \nuse\n \nthem\n \nto\n \nrefine\n \nfeasible\n \nstorage\n \nrecommendations.\n \nUsers\n \nwill\n \nnot\n \nneed\n \napplication\n \ncode\n \nor\n \nlogs.\n \nCurrent\n \nStatus:\n \nReDX\n \nhas\n \ndeveloped\n \na\n \nLustre\n \nstorage\n \nrecommender\n \nthat\n \ncollects\n \nnumeric\n \nrequirements,\n \npreferences\n \nand\n \nconstraints\n \nthrough\n \na\n \nconversation.\n \nIt\n \nperforms\n \nsizing,\n \nhardware\n \nselection\n \nand\n \nphysical\n \narchitecture\n \nvalidation.\n \nThe\n \ncurrent\n \nsystem\n \ndoes\n \nnot\n \nyet\n \nuse\n \npatterns\n \nlearned\n \nfrom\n \nreal\n \napplication\n \nI/O\n \nbehavior.\n \nPublic\n \nDarshan\n \nlogs\n \noffer\n \nhistorical\n \nI/O\n \nstatistics.\n \nIf\n \nprofiling\n \naccess\n \nis\n \napproved\n \non\n \nToubkal,\n \nthe\n \nstudent\n \ncan\n \npair\n \npre-written\n \nworkload\n \ndescriptions\n \nwith\n \nmeasured\n \nI/O\n \nbehavior.\n \nProject\n \nGoals\n \nHistorical\n \nI/O\n \nAnalysis\n \nand\n \nWorkload\n \nProfiling\n \n●\n \nCollect\n \nand\n \nanalyze\n \npublic\n \nlogs\n \nto\n \nstudy\n \nread/write\n \nactivity,\n \naccess\n \nsizes\n \nand\n \nother\n \nrecorded\n \nI/O\n \ncharacteristics.\n \n●\n \nUse\n \ndata\n \nanalysis\n \nand\n \nsimple\n \nclustering\n \nmethods\n \nto\n \nidentify\n \nrepresentative\n \nworkload\n \nprofiles\n \nand\n \ndocument\n \ntheir\n \nvariability.\n \nLearning\n \nfrom\n \nApplication\n \nDescriptions\n \n●\n \nWhere\n \npermissions\n \nand\n \ntools\n \nallow,\n \ncreate\n \npaired\n \nexamples\n \non\n \nToubkal:\n \nwrite\n \na\n \nshort\n \ndescription\n \nbefore\n \nexecuting\n \na\n \nworkload,\n \nthen\n \nassociate\n \nit\n \nwith\n \nits\n \nmeasured\n \nI/O\n \nprofile.\n \n●\n \nStart\n \nwith\n \nexpert-reviewed\n \nrules\n \nand\n \na\n \nsimple\n \nmodel\n \nsuch\n \nas\n \nlogistic\n \nregression.\n \nEvaluate\n \non\n \nunseen\n \napplications;\n \nconsider\n \nmore\n \nadvanced\n \nlanguage\n \nmodels\n \nonly\n \nif\n \nthey\n \nprovide\n \na\n \ndemonstrated\n \nimprovement.\n \n●\n \nIf\n \nreliable\n \npaired\n \nexamples\n \nare\n \nunavailable,\n \nuse\n \ntransparent\n \nscenario\n \nmatching\n \nand\n \nreport\n \nuncertainty\n \nrather\n \nthan\n \nclaiming\n \nsupervised\n \nprediction.\n \n \nIntegration\n \nwith\n \nthe\n \nExisting\n \nRecommendation\n \nSystem\n \n●\n \nReuse\n \nthe\n \ncurrent\n \nrequirement\n \nand\n \npreference\n \nextractors;\n \nadd\n \na\n \nfew\n \noptional\n \nquestions\n \nabout\n \nexpected\n \napplication\n \nusage.\n \n●\n \nUse\n \nplausible\n \nworkload\n \nprofiles\n \nto\n \ncompare\n \nfeasible\n \nLustre\n \narchitectures\n \nwithout\n \nchanging\n \nmandatory\n \ncapacity,\n \nbudget,\n \ncompatibility\n \nor\n \nreliability\n \nconstraints.\n \nEvaluation\n \nand\n \nResearch\n \nValidation\n \n●\n \nEvaluate\n \nprofile\n \nquality,\n \nclassification\n \nperformance\n \nand\n \ngeneralization\n \nto\n \napplications\n \nnot\n \nseen\n \nduring\n \ntraining.\n \n●\n \nCompare\n \nrecommendations\n \nwith\n \nand\n \nwithout\n \nworkload\n \ninformation;\n \ncheck\n \nfeasibility\n \nand\n \nuncertainty.\n \nSupport\n \nany\n \nperformance\n \nclaims\n \nwith\n \nappropriate\n \nmeasurements.\n \nRequired\n \nSkills:\n \n●\n \nGood\n \nPython\n \nprogramming,\n \nbasic\n \nLinux\n \nskills\n \nand\n \nfamiliarity\n \nwith\n \nGit.\n \n●\n \nBasic\n \nknowledge\n \nof\n \ndata\n \nanalysis\n \nor\n \nmachine\n \nlearning;\n \nwillingness\n \nto\n \nlearn\n \nHPC\n \nstorage\n \nconcepts.\n \n●\n \nGood\n \nanalytical\n \nskills,\n \ntechnical\n \nEnglish\n \nand\n \ninterest\n \nin\n \nexperimental\n \nresearch.\n \nPlanned\n \nTraining:\n \n●\n \nIntroduction\n \nto\n \nHPC\n \nstorage,\n \nLustre\n \nand\n \nDarshan\n \nI/O\n \nprofiling.\n \n●\n \nGuided\n \ntraining\n \nin\n \ndata\n \npreparation,\n \nbasic\n \nmachine\n \nlearning\n \nand\n \nresearch\n \nevaluation.\n \n●\n \nRegular\n \nmentoring\n \nand\n \ntechnical\n \nreviews\n \nwith\n \nReDX\n \nengineers\n \nand\n \nresearch\n \nsupervisors.\n \nDeliverables:\n \n●\n \nReproducible\n \nI/O\n \ndataset\n \npreparation\n \nscripts\n \nand\n \na\n \ndocumented\n \nworkload-profile\n \nlibrary.\n \n●\n \nA\n \ntested\n \ndescription-to-profile\n \nmatcher\n \nand\n \nintegration\n \ninto\n \nthe\n \nexisting\n \nLustre\n \nrecommender.\n \n●\n \nComparative\n \nexperiments,\n \nsource\n \ncode,\n \ndocumentation\n \nand\n \na\n \nfinal\n \nPFE\n \nreport.\n \nDuration\n \nand\n \nOther\n \nDetails:\n \n●\n \nRecommended\n \nperiod:\n \n4\n \nto\n \n6\n \nmonths\n.\n \n●\n \nCollaborative\n \nresearch\n \ntoward\n \na\n \njoint\n \njournal\n \npaper\n \nwith\n \nReDX\n \nand\n \nacademic\n \nsupervisors.\n \nThe\n \nstudent\n \nmay\n \ncontribute\n \nto\n \nexperiments\n \nand\n \nmanuscript\n \npreparation;\n \npublication\n \nand\n \nauthorship\n \ndepend\n \non\n \nresults\n \nand\n \ncontributions.\n \n●\n \nOpportunity\n \nto\n \nwork\n \nwith\n \nreal\n \nHPC\n \nI/O\n \ndata\n \nand,\n \nsubject\n \nto\n \nauthorization,\n \nconduct\n \nprofiling\n \nexperiments\n \non\n \nToubkal.",
+    "skills": [
+      "Python",
+      "Linux",
+      "Git"
+    ],
+    "sourceFile": "1793706682156.pdf",
+    "sourcePages": [
+      13
+    ]
+  },
+  {
+    "company": "ReDX",
+    "reference": "6",
+    "title": "Long-Range and Night-Time Drone Surveillance",
+    "description": "Long-Range\n \nand\n \nNight-Time\n \nDrone\n \nSurveillance\n \nDescription\n \nThis\n \nis\n \na\n \n6-month\n \nproject\n \nthat\n \nbuilds\n \na\n \ndrone-based\n \nvehicle\n \nsurveillance\n \npipeline\n \n(detection,\n \ntracking,\n \nrestoration\n \nand\n \ninformation\n \nextraction:\n \nlicense\n \nplate,\n \nbrand,\n \ncolor,\n \netc.)\n \ndesigned\n \nfor\n \ntwo\n \nof\n \nthe\n \nhardest\n \noperating\n \nconditions:\n \nlong\n \nrange\n \n/\n \nhigh\n \naltitude\n \nand\n \nnight\n \nor\n \nlow\n \nvisibility.\n \nDistance\n \n:\n \nFlying\n \nhigher\n \nimproves\n \ncoverage\n \nand\n \nsafety,\n \nbut\n \nat\n \nlong\n \nrange\n \nvehicles\n \nshrink\n \nto\n \na\n \nfew\n \ndozen\n \npixels\n \nand\n \nplates\n \nto\n \na\n \nfew\n \npixels,\n \nwhile\n \nturbulence,\n \nhaze\n \nand\n \njitter\n \ndegrade\n \nthe\n \nimage.\n \nNight\n \nvision\n \n:\n \nAt\n \nnight\n \nor\n \nin\n \nfog,\n \nthe\n \nRGB\n \ncamera\n \nalone\n \nbecomes\n \nunreliable,\n \nso\n \nthe\n \nsystem\n \nadds\n \na\n \nthermal\n \ninfrared\n \n(IR)\n \ncamera\n \nthat\n \nsees\n \nvehicles\n \nby\n \ntheir\n \nheat.\n \nThermal\n \nimagery\n \nhas\n \nits\n \nown\n \nlimits:\n \nlow\n \nresolution,\n \nno\n \ncolor,\n \nunreadable\n \nplates\n \nand\n \nmisalignment\n \nwith\n \nthe\n \nRGB\n \ncamera.\n \nIn\n \nshort,\n \nthe\n \nproject\n \nhas\n \nthree\n \nparts:\n \n1.\n \nSuper-resolution\n \nto\n \nrecover\n \ndetail\n \non\n \ndistant\n \nvehicles,\n \n2.\n \nRGB-thermal\n \nfusion\n \nto\n \nfollow\n \nvehicles\n \nday\n \nand\n \nnight,\n \nand\n \n3.\n \nAn\n \noperational\n \nenvelope\n \nthat\n \ntells\n \nthe\n \noperator\n \nin\n \nwhich\n \nrange\n \nand\n \nlighting\n \nidentification\n \nstill\n \nworks.\n \nPFE\n \nproject\n \ngoals\n \n1.\n \nLong-range\n \nperception:\n \ndetect,\n \ntrack\n \nand\n \nidentify\n \nvehicles\n \nat\n \nhigh\n \naltitude\n \nwith\n \nmodels\n \nthat\n \nstay\n \nrobust\n \nto\n \nmotion\n \nblur\n \nand\n \natmospheric\n \nturbulence,\n \nusing\n \nmulti-frame\n \nsuper-resolution\n \noptimized\n \nfor\n \nrecognition,\n \nwith\n \nabstention\n \nwhen\n \nthe\n \nevidence\n \nis\n \ntoo\n \nweak.\n \n2.\n \nNight\n \nvision\n \nthrough\n \nRGB-thermal\n \nfusion:\n \nfuse\n \nthe\n \nRGB\n \nand\n \nthermal\n \ncameras\n \nto\n \ntrack\n \nvehicles\n \nday\n \nand\n \nnight,\n \nreading\n \nplates\n \nfrom\n \nthe\n \nRGB\n \ncamera\n \nwhenever\n \npossible.\n \n3.\n \nOperational\n \nenvelope:\n \nmeasure\n \nperformance\n \nby\n \ndistance\n \nand\n \nlighting,\n \nand\n \nrecommend\n \nactions\n \n(descend,\n \nzoom,\n \nswitch\n \nsensor)\n \nwhen\n \nidentification\n \nis\n \nunreliable.\n \nWhat\n \nyou\n \nwill\n \ndo\n \n●\n       \nAssemble\n \npaired\n \nRGB-thermal\n \ndata\n \nfrom\n \npublic\n \ndrone\n \ndatasets,\n \nlabeled\n \nby\n \naltitude,\n \nangle\n \nand\n \nlighting.\n \n●\n       \nTrain\n \nand\n \ncompare\n \ndetectors,\n \ntrackers\n \nand\n \nsuper-resolution\n \nmodels\n \nacross\n \ndistance\n \nbands,\n \nand\n \ntest\n \ntheir\n \nrobustness\n \nto\n \nblur\n \nand\n \nturbulence.\n \n \n●\n       \nBuild\n \nthe\n \nRGB-thermal\n \nfusion\n \nmodule\n \nand\n \ncompare\n \nRGB-only,\n \nthermal-only\n \nand\n \nfused\n \nresults.\n \n●\n       \nBuild\n \nthe\n \nenvelope\n \nmodel\n \nand\n \nintegrate\n \neverything\n \ninto\n \na\n \ndemo\n \nwith\n \na\n \nlive\n \noverlay.\n \nRequired\n \nskills\n \nMust-have\n \n●\n       \nStrong\n \nPyTorch\n \nskills\n \nand\n \nclean\n \nML\n \nengineering\n \npractices.\n \n●\n       \nComputer\n \nvision\n \nexperience\n \nin\n \ndetection,\n \ntracking\n \nand\n \nimage\n \nrestoration.\n \n●\n       \nUnderstanding\n \nof\n \ncamera\n \ngeometry\n \nand\n \nmulti-camera\n \ncalibration.\n \nNice-to-have\n \n●\n       \nThermal\n \ninfrared\n \nimaging\n \nand\n \nRGB-thermal\n \nfusion.\n \n●\n       \nSuper-resolution\n \nand\n \nsmall-object\n \ndetection.\n \n●\n       \nEdge\n \ndeployment\n \n(TensorRT,\n \nquantization).\n \nDeliverables\n \n1.\n \nLong-range\n \nperception\n \nmodule\n \n(Goal\n \n1)\n \n○\n       \nDetector,\n \ntracker\n \nand\n \nsuper-resolution\n \nmodel,\n \nevaluated\n \nper\n \ndistance\n \nband\n \n2.\n \nRGB-thermal\n \nfusion\n \nmodule\n \n(Goal\n \n2)\n \n○\n       \nFusion\n \npipeline\n \nwith\n \nday/night\n \nresults\n \n(RGB-only,\n \nthermal-only,\n \nfused)\n \n3.\n \nBenchmark\n \nand\n \noperational\n \nenvelope\n \n(Goal\n \n3)\n \n○\n       \nBenchmark\n \nby\n \ndistance\n \nand\n \nlighting,\n \nwith\n \nan\n \nenvelope\n \nmodel\n \nand\n \nrecommendations\n \n4.\n \nIntegrated\n \ndemo\n \nand\n \nfinal\n \nreport\n \n○\n       \nEnd-to-end\n \ndemo\n \nwith\n \nlive\n \noverlay,\n \ntechnical\n \nreport\n \nand\n \nreproducible\n \nrepository\n \nDuration\n \nand\n \nother\n \ndetails\n \n●\n       \nRecommended\n \nperiod:\n \n6\n \nmonths\n \n(full-time\n \nPFE)\n \nSuggested\n \nphased\n \nplan\n \n(high-level):\n \n●\n       \nMonths\n \n1–2:\n \nData\n \nassembly,\n \nlong-range\n \ndetection,\n \ntracking\n \nand\n \ndistance\n \nestimation\n \n●\n       \nMonths\n \n3–4:\n \nMulti-frame\n \nsuper-resolution\n \nand\n \nRGB-thermal\n \nfusion\n \n●\n       \nMonths\n \n5–6:\n \nOperational\n \nenvelope,\n \nintegration,\n \nfinal\n \nreport\n \nand\n \nhandover\n \n●\n       \nCompensation:\n \nMonthly\n \nstipend\n \nwith\n \npotential\n \nend-of-internship\n \nperformance\n \nbonus\n \nand\n \npotential\n \npaper\n \npublication\n \nco-authorship",
+    "skills": [
+      "PyTorch"
+    ],
+    "sourceFile": "1793706682156.pdf",
+    "sourcePages": [
+      15
+    ]
+  },
+  {
+    "company": "ReDX",
+    "reference": "7",
+    "title": "ML Surrogate for Automotive Aeroacoustics & Noise-Aware Design Optimization",
+    "description": "ML\n \nSurrogate\n \nfor\n \nAutomotive\n \nAeroacoustics\n \n&\n \nNoise-Aware\n \nDesign\n \nOptimization\n \nDescription\n \nThis\n \nis\n \na\n \n6-month\n \nproject\n \nthat\n \ndevelops\n \na\n \nmachine-learning\n \nsurrogate\n \nmodel\n \nfor\n \nautomotive\n \naeroacoustics\n \nusing\n \na\n \nprovided\n \ndataset.\n \nThe\n \ngoal\n \nis\n \nto\n \ncreate\n \na\n \nfast\n \npredictor\n \nof\n \nwind-noise\n \nquantities\n \ngenerated\n \nby\n \nexterior\n \nparts,\n \nstarting\n \nwith\n \nthe\n \nside\n \nmirror\n \nand\n \nA-pillar\n \nregion,\n \nsuch\n \nas\n \noverall\n \nsound\n \npressure\n \nlevel\n \n(OASPL),\n \nnoise\n \nspectra\n \nand\n \nside-glass\n \npressure\n \nfluctuation\n \nlevels,\n \nenabling\n \nnear-instant\n \nevaluation\n \ncompared\n \nto\n \nfull\n \ntransient\n \nCFD\n \nand\n \nacoustic\n \nsimulations.\n \nWind\n \nnoise\n \nis\n \nbecoming\n \na\n \nkey\n \ncomfort\n \ncriterion\n \nas\n \nelectric\n \nvehicles\n \nremove\n \nthe\n \nmasking\n \neffect\n \nof\n \nengine\n \nnoise.\n \nAfter\n \nbuilding\n \na\n \nreliable\n \nbaseline\n \nsurrogate,\n \nthe\n \nproject\n \nextends\n \nto\n \npredicting\n \nthe\n \nacoustic\n \nimpact\n \nof\n \npart\n \nmodifications\n \n(Δ\ndB)\n \nand\n \ncouples\n \nthe\n \nacoustic\n \nsurrogate\n \nwith\n \nan\n \nexisting\n \ndrag\n \n(Cd)\n \nsurrogate\n \nto\n \nrun\n \nnoise-aware\n \nmulti-objective\n \ndesign\n \noptimization.\n \nThe\n \noutcome\n \nis\n \na\n \nreproducible\n \npipeline\n \nthat\n \nsupports\n \nrapid\n \nwhat-if\n \nanalysis\n \nand\n \nearly-stage\n \nexterior\n \ndesign\n \nexploration\n \nthat\n \nbalances\n \ndrag\n \nand\n \nnoise.\n \nPFE\n \nproject\n \nGoals:\n \n1.\n \nAcoustic\n \nsurrogate\n \nmodel:\n \npreprocess\n \nthe\n \nprovided\n \ndataset,\n \nchoose\n \na\n \ngeometry\n \nrepresentation,\n \nand\n \ntrain\n \na\n \nmodel\n \nthat\n \npredicts\n \nOASPL\n \nand\n \nnoise\n \nspectra\n \non\n \nheld-out\n \ngeometries,\n \nevaluated\n \nwith\n \na\n \nleakage-free\n \nprotocol\n \nand\n \nstandard\n \nmetrics\n \n(MAE\n \nin\n \ndB,\n \nRMSE,\n \ncorrelation).\n \n2.\n \nReliability\n \nand\n \npart-level\n \nanalysis:\n \nadd\n \nuncertainty\n \nestimation\n \nand\n \nfailure-mode\n \nanalysis,\n \nevaluate\n \nwhether\n \nthe\n \nsurrogate\n \npredicts\n \nnoise\n \ndifferences\n \nbetween\n \nbaseline\n \nand\n \nmodified\n \nparts\n \n(Δ\ndB,\n \ne.g.,\n \nside-mirror\n \nvariants),\n \nand\n \nattribute\n \nwhich\n \nregions\n \ndrive\n \nthe\n \npredicted\n \nnoise.\n \n3.\n \nNoise-aware\n \ndesign\n \noptimization:\n \ncouple\n \nthe\n \nacoustic\n \nsurrogate\n \nwith\n \nthe\n \nexisting\n \nCd\n \nsurrogate,\n \nrun\n \nmulti-objective\n \noptimization\n \nto\n \nobtain\n \na\n \ndrag\n \nvs.\n \nnoise\n \nPareto\n \nfront,\n \nand\n \npresent\n \nthe\n \nresults\n \nin\n \na\n \n“quiet\n \ndesign\n \ngallery”.\n \nRequired\n \nskills:\n \nMust-have\n \n●\n       \nPython\n \nand\n \nML\n \nfundamentals\n \n(PyTorch\n \nor\n \nTensorFlow)\n \n●\n       \nBasic\n \nunderstanding\n \nof\n \nexternal\n \naerodynamics\n \n(turbulence,\n \nflow\n \nseparation,\n \nwakes)\n \n \n●\n       \nAcoustics\n \nbasics\n \n(sound\n \npressure\n \nlevel,\n \ndB,\n \nspectra/PSD,\n \nfrequency\n \nbands)\n \n●\n       \nData\n \npreprocessing\n \nand\n \nexperiment\n \ntracking\n \n(train/val/test,\n \nmetrics,\n \nreproducibility)\n \n●\n       \nComfort\n \nworking\n \nwith\n \nlarge\n \ndatasets\n \n(I/O,\n \nstorage,\n \nbatching)\n \nNice-to-have\n \n●\n       \nExperience\n \nwith\n \n3D\n \nlearning\n \n(PointNet/GCNs/mesh\n \nnetworks/Transolver-style\n \nmodels)\n \n●\n       \nSignal\n \nprocessing\n \n(FFT,\n \nWelch\n \nPSD)\n \nand\n \naeroacoustic\n \nconcepts\n \n(tonal\n \nvs.\n \nbroadband\n \nnoise)\n \n●\n       \nMulti-objective\n \nand\n \nBayesian\n \noptimization\n \n(pymoo,\n \nBoTorch)\n \n●\n       \nFamiliarity\n \nwith\n \nmodel\n \nuncertainty\n \n/\n \ncalibration\n \n●\n       \nGeometry\n \nprocessing\n \ntools\n \n(Open3D,\n \ntrimesh,\n \nPyVista,\n \nmeshio)\n \n●\n       \nHPC/GPU\n \ntraining\n \nworkflows\n \nDeliverables:\n \n1.\n \nAcoustic\n \nsurrogate\n \npackage\n \n(Goal\n \n1)\n \n○\n       \nPreprocessing\n \nscripts,\n \nmodel\n \ncheckpoints\n \nand\n \ninference\n \ncode\n \npredicting\n \nOASPL\n \nand\n \nspectra,\n \nwith\n \nbenchmark\n \nresults\n \n2.\n \nPart-level\n \nanalysis\n \nmodule\n \n(Goal\n \n2)\n \n○\n       \nUncertainty\n \nestimates,\n \nΔ\ndB\n \nprediction\n \nresults\n \nfor\n \npart\n \nswaps,\n \nand\n \nattribution\n \nmaps\n \n3.\n \nOptimization\n \nmodule\n \nand\n \ndesign\n \ngallery\n \n(Goal\n \n3)\n \n○\n       \nCoupled\n \nCd\n \n+\n \nnoise\n \noptimization\n \nloop,\n \ndrag\n \nvs.\n \nnoise\n \nPareto\n \nfront,\n \nand\n \nthe\n \n“quiet\n \ndesign\n \ngallery”\n \n4.\n \nRepo\n \n+\n \nfinal\n \nreport\n \n○\n       \nClean,\n \nreproducible\n \nrepo\n \nwith\n \nREADME\n \nand\n \nhandover\n \ninstructions;\n \nreport\n \ncovering\n \nmethods,\n \nevaluation,\n \nlimitations\n \nand\n \napplicability\n \nto\n \nearly-stage\n \ndesign\n \nDuration\n \nand\n \nother\n \ndetails:\n \n●\n       \nRecommended\n \nperiod:\n \n6\n \nmonths\n \n(full-time\n \nPFE)\n \n●\n       \nSuggested\n \nphased\n \nplan:\n \n○\n       \nMonth\n \n1:\n \nLiterature\n \nreview\n \non\n \nwind\n \nnoise\n \n+\n \ntarget\n \ndefinition\n \n+\n \npreprocessing\n \n+\n \nrepresentation\n \nchoice\n \n+\n \nbaseline\n \ntraining\n \nskeleton\n \n○\n       \nMonth\n \n2:\n \nBaseline\n \nacoustic\n \nsurrogate\n \n(OASPL)\n \n+\n \nevaluation\n \nprotocol\n \n+\n \ninitial\n \nmetrics\n \n○\n       \nMonth\n \n3:\n \nImprove\n \nmodel\n \nquality\n \n(architecture\n \niteration,\n \nregularization,\n \naugmentation)\n \n+\n \nspectral\n \nprediction\n \n+\n \nrobustness\n \nchecks\n \n○\n       \nMonth\n \n4:\n \nPart\n \nswap\n \nframework\n \n+\n \nΔ\ndB\n \nprediction\n \n+\n \nuncertainty/confidence\n \nheuristics\n \n \n○\n       \nMonth\n \n5:\n \nNoise-aware\n \noptimization\n \nwith\n \nthe\n \nCd\n \nsurrogate\n \n(Pareto\n \nfront)\n \n+\n \nsensitivity/attribution\n \n○\n       \nMonth\n \n6:\n \nPackaging\n \n+\n \nfinal\n \nbenchmarking\n \n+\n \nquiet\n \ndesign\n \ngallery\n \n+\n \nreport\n \n+\n \nrepo\n \nhandover\n \n●\n       \nCompensation:\n \nMonthly\n \nstipend\n \nwith\n \npotential\n \nend-of-internship\n \nperformance\n \nbonus\n \nand\n \npotential\n \npaper\n \npublication\n \nco-authorship",
+    "skills": [
+      "Python",
+      "PyTorch",
+      "TensorFlow"
+    ],
+    "sourceFile": "1793706682156.pdf",
+    "sourcePages": [
+      17
+    ]
+  },
+  {
+    "company": "ReDX",
+    "reference": "8",
+    "title": "Laser Casing Cutting for Well Plug & Abandonment, Thermal FE Modeling and Fast Parameter Prediction",
+    "description": "Laser\n \nCasing\n \nCutting\n \nfor\n \nWell\n \nPlug\n \n&\n \nAbandonment,\n \nThermal\n \nFE\n \nModeling\n \nand\n \nFast\n \nParameter\n \nPrediction\n \nDescription\n \nThis\n \nis\n \na\n \n6-month\n \nproject\n \nthat\n \nbuilds\n \na\n \nsimulation\n \nand\n \nprediction\n \npipeline\n \nfor\n \nlaser\n \ncutting\n \nof\n \na\n \nsteel\n \ncasing\n \nbacked\n \nby\n \ncement\n \nduring\n \nwell\n \nplug\n \nand\n \nabandonment\n \n(P&A).\n \nLasers\n \noffer\n \na\n \ncontactless\n \nalternative\n \nto\n \nslow\n \nmechanical\n \nmilling,\n \nbut\n \nengineers\n \nneed\n \na\n \nquick\n \nway\n \nto\n \nestimate\n \nhow\n \nlong\n \na\n \ncut\n \ntakes\n \nand\n \nhow\n \nmuch\n \nheat\n \nreaches\n \nthe\n \ncement\n \nbehind\n \nthe\n \ncasing.\n \nThe\n \nproject\n \ndevelops\n \na\n \n2D\n \naxisymmetric\n \nfinite\n \nelement\n \n(FE)\n \nthermal\n \nmodel\n \nof\n \na\n \nlaser\n \nheating\n \na\n \ncasing-cement\n \nsection,\n \nwith\n \nmaterial\n \nremoved\n \nonce\n \nit\n \nreaches\n \nmelting\n \ntemperature,\n \nand\n \nadds\n \na\n \nbasic\n \nthermal\n \nstress\n \ncheck\n.\n \nA\n \nsmall\n \nset\n \nof\n \nsimulations\n \nis\n \nthen\n \nused\n \nto\n \ntrain\n \na\n \nregression\n \nmodel\n \nthat\n \npredicts\n \ncutting\n \ntime\n \nand\n \ncement\n \nheating\n \nin\n \nseconds\n \ninstead\n \nof\n \nrunning\n \nnew\n \nsimulations.\n \nPFE\n \nproject\n \ngoals\n \n1.\n \nThermal\n \nFE\n \nmodel:\n \nbuild\n \na\n \n2D\n \naxisymmetric\n \ntransient\n \nthermal\n \nmodel\n \n(Ansys)\n \nof\n \na\n \nGaussian\n \nlaser\n \nheat\n \nsource\n \non\n \na\n \nsteel\n \ncasing\n \nwith\n \na\n \ncement\n \nlayer\n \nbehind\n \nit,\n \nwith\n \nconstant\n \nmaterial\n \nproperties\n \nand\n \nelement\n \nremoval\n \nat\n \nmelting\n \ntemperature.\n \n2.\n \nValidation\n \nand\n \nparameter\n \nstudy:\n \ncheck\n \nthe\n \nmodel\n \nagainst\n \npublished\n \nlaser\n \ncutting\n \ndata,\n \nthen\n \nstudy\n \nthe\n \neffect\n \nof\n \nlaser\n \npower,\n \nbeam\n \nradius\n \nand\n \ncasing\n \nthickness\n \non\n \ncutting\n \ntime\n \nand\n \nthe\n \ntemperature\n \nreached\n \nin\n \nthe\n \ncement.\n \nAdd\n \na\n \none-way\n \nthermal\n \nstress\n \ncheck\n \non\n \nthe\n \ncasing\n \nand\n \ncement.\n \n3.\n \nFast\n \nprediction\n \nmodel:\n \nrun\n \na\n \nsweep\n \nof\n \nabout\n \n150-200\n \nsimulations\n \nand\n \ngenerate\n \na\n \ndatabase\n \nto\n \ndevelop\n \na\n \nregression\n \nmodel\n \nto\n \npredict\n \ncutting\n \ntime\n \nand\n \npeak\n \ncement\n \ntemperature\n \nfrom\n \nthe\n \nlaser\n \nsettings.\n \nRequired\n \nskills\n \nMust-have\n \n●\n       \nFinite\n \nelement\n \nanalysis\n \nand\n \nheat\n \ntransfer\n \nbasics\n \n●\n       \nHands-on\n \nexperience\n \nwith\n \nAnsys\n \n●\n       \nPython\n \nfor\n \nscripting\n \nand\n \ndata\n \nanalysis\n \n \n \nNice-to-have\n \n●\n       \nLaser\n \nprocessing\n \nor\n \nwell\n \nconstruction\n \n/\n \nP&A\n \nknowledge\n \n●\n       \nBasic\n \nmachine\n \nlearning\n \n(scikit-learn)\n \nDeliverables\n \n1.\n \nFE\n \nthermal\n \nmodel\n \nof\n \nthe\n \ncasing–cement\n \nsection,\n \nwith\n \ndocumented\n \nmaterial\n \nproperties\n \nand\n \nassumptions\n \n2.\n \nParameter\n \nstudy\n \nreport\n \nshowing\n \nhow\n \nlaser\n \nsettings\n \naffect\n \ncutting\n \ntime\n \nand\n \ncement\n \nheating\n \n3.\n \nTrained\n \nprediction\n \nmodel\n \nwith\n \naccuracy\n \nchecked\n \nagainst\n \nheld-out\n \nsimulations\n \n4.\n \nFinal\n \nreport\n \nand\n \nrepository\n \nwith\n \ninstructions\n \nto\n \nrerun\n \nand\n \nextend\n \nthe\n \nmodel\n \nDuration\n \nand\n \nother\n \ndetails\n \n●\n       \nRecommended\n \nperiod:\n \n6\n \nmonths\n \n(full-time\n \nPFE)\n \n●\n       \nMonth\n \n1:\n \nLiterature\n \nreview,\n \nmaterial\n \nproperties,\n \nmodel\n \ngeometry\n \nand\n \nmesh\n \n●\n       \nMonth\n \n2:\n \nTransient\n \nthermal\n \nmodel\n \nwith\n \nlaser\n \nheat\n \nsource\n \nand\n \nelement\n \nremoval\n \n●\n       \nMonth\n \n3:\n \nValidation\n \nagainst\n \npublished\n \ndata\n \nand\n \nthermal\n \nstress\n \ncheck\n \n●\n       \nMonth\n \n4:\n \nParameter\n \nstudy\n \nand\n \nsimulation\n \nsweep\n \n●\n       \nMonth\n \n5:\n \nPrediction\n \nmodel\n \ntraining\n \nand\n \ntesting\n \n●\n       \nMonth\n \n6:\n \nFinal\n \nreport\n \nand\n \nhandover\n \n●\n       \nCompensation:\n \nMonthly\n \nstipend\n \nwith\n \npotential\n \nend-of-internship\n \nperformance\n \nbonus\n \nand\n \npotential\n \npaper\n \npublication\n \nco-authorship",
+    "skills": [
+      "Python"
+    ],
+    "sourceFile": "1793706682156.pdf",
+    "sourcePages": [
+      20
+    ]
+  },
+  {
+    "company": "Value",
+    "reference": "01",
+    "title": "Plateforme intelligente pour explorer le patrimoine culturel mondial",
+    "description": "Plateforme intelligente pour explorer le patrimoine culturel mondial",
+    "skills": [],
+    "sourceFile": "1792159017830.pdf",
+    "sourcePages": [
+      6
+    ]
+  },
+  {
+    "company": "Value",
+    "reference": "02",
+    "title": "IA et fonctionnalités pour une application Employee Empowerment",
+    "description": "IA et fonctionnalités pour une application Employee Empowerment",
+    "skills": [],
+    "sourceFile": "1792159017830.pdf",
+    "sourcePages": [
+      6
+    ]
+  },
+  {
+    "company": "Value",
+    "reference": "03",
+    "title": "Plateforme digitale clients et partenaires dans les services financiers spécialisés (Leasing)",
+    "description": "Plateforme digitale clients et partenaires dans les services financiers spécialisés (Leasing)",
+    "skills": [
+      "Git"
+    ],
+    "sourceFile": "1792159017830.pdf",
+    "sourcePages": [
+      6
+    ]
+  },
+  {
+    "company": "Value",
+    "reference": "04",
+    "title": "Tests automatisés de fiabilité des agents IA : Python, FastAPI, LLM, PostgreSQL et React",
+    "description": "Tests automatisés de fiabilité des agents IA : Python, FastAPI, LLM, PostgreSQL et React",
+    "skills": [
+      "Python",
+      "React",
+      "FastAPI",
+      "PostgreSQL",
+      "LLM",
+      "SQL"
+    ],
+    "sourceFile": "1792159017830.pdf",
+    "sourcePages": [
+      6
+    ]
+  },
+  {
+    "company": "Value",
+    "reference": "05",
+    "title": "Extraction, structuration et vérification de données web : Python, Playwright et SLM/LLM",
+    "description": "Extraction, structuration et vérification de données web : Python, Playwright et SLM/LLM",
+    "skills": [
+      "Python",
+      "LLM"
+    ],
+    "sourceFile": "1792159017830.pdf",
+    "sourcePages": [
+      7
+    ]
+  },
+  {
+    "company": "Value",
+    "reference": "06",
+    "title": "Agents AI génériques et spécialisés dans le secteur financier",
+    "description": "Agents AI génériques et spécialisés dans le secteur financier",
+    "skills": [],
+    "sourceFile": "1792159017830.pdf",
+    "sourcePages": [
+      7
+    ]
+  },
+  {
+    "company": "Value",
+    "reference": "07",
+    "title": "Plateforme de services intelligents financiers et extrafinanciers pour entreprises",
+    "description": "Plateforme de services intelligents financiers et extrafinanciers pour entreprises",
+    "skills": [],
+    "sourceFile": "1792159017830.pdf",
+    "sourcePages": [
+      7
+    ]
+  },
+  {
+    "company": "Value",
+    "reference": "08",
+    "title": "Simulation des systèmes externes intégrés à la banque digitale : Java 17, Angular, GitLab",
+    "description": "Simulation des systèmes externes intégrés à la banque digitale : Java 17, Angular, GitLab",
+    "skills": [
+      "Angular",
+      "Java",
+      "Git"
+    ],
+    "sourceFile": "1792159017830.pdf",
+    "sourcePages": [
+      7
+    ]
+  },
+  {
+    "company": "Value",
+    "reference": "09",
+    "title": "Assistant intelligent pour demandes bancaires : Angular, Java, Spring Boot, LLM, Spring AI/LangChain et API REST",
+    "description": "Assistant intelligent pour demandes bancaires : Angular, Java, Spring Boot, LLM, Spring AI/LangChain et API REST",
+    "skills": [
+      "Angular",
+      "Java",
+      "Spring Boot",
+      "LLM"
+    ],
+    "sourceFile": "1792159017830.pdf",
+    "sourcePages": [
+      8
+    ]
+  },
+  {
+    "company": "Value",
+    "reference": "10",
+    "title": "Automatisation Cloud et DevOps avec assistant IA : Java 17, Spring Boot, Python, Angular, Terraform, Helm, ArgoCD, GitLab et Azure",
+    "description": "Automatisation Cloud et DevOps avec assistant IA : Java 17, Spring Boot, Python, Angular, Terraform, Helm, ArgoCD, GitLab et Azure",
+    "skills": [
+      "Python",
+      "Angular",
+      "Java",
+      "Spring Boot",
+      "Terraform",
+      "Git",
+      "Azure"
+    ],
+    "sourceFile": "1792159017830.pdf",
+    "sourcePages": [
+      8
+    ]
+  },
+  {
+    "company": "Value",
+    "reference": "11",
+    "title": "Plateforme de suivi des projets, releases et roadmaps de la Digital Factory",
+    "description": "Plateforme de suivi des projets, releases et roadmaps de la Digital Factory",
+    "skills": [
+      "Git"
+    ],
+    "sourceFile": "1792159017830.pdf",
+    "sourcePages": [
+      8
+    ]
+  },
+  {
+    "company": "Value",
+    "reference": "12",
+    "title": "Dashboard de pilotage des ressources Value : affectations aux projets et congés",
+    "description": "Dashboard de pilotage des ressources Value : affectations aux projets et congés",
+    "skills": [],
+    "sourceFile": "1792159017830.pdf",
+    "sourcePages": [
+      8
+    ]
+  },
+  {
+    "company": "Value",
+    "reference": "13",
+    "title": "Détection et analyse des anomalies et incohérences de données par IA",
+    "description": "Détection et analyse des anomalies et incohérences de données par IA",
+    "skills": [],
+    "sourceFile": "1792159017830.pdf",
+    "sourcePages": [
+      9
+    ]
+  },
+  {
+    "company": "Value",
+    "reference": "14",
+    "title": "Plateforme digitale d’optimisation du recouvrement financier",
+    "description": "Plateforme digitale d’optimisation du recouvrement financier",
+    "skills": [
+      "Git"
+    ],
+    "sourceFile": "1792159017830.pdf",
+    "sourcePages": [
+      9
+    ]
+  },
+  {
+    "company": "Value",
+    "reference": "15",
+    "title": "Socle Data pour les métiers Commercial et Risques du secteur bancaire",
+    "description": "Socle Data pour les métiers Commercial et Risques du secteur bancaire",
+    "skills": [],
+    "sourceFile": "1792159017830.pdf",
+    "sourcePages": [
+      9
+    ]
+  },
+  {
+    "company": "Value",
+    "reference": "16",
+    "title": "Cartographie d’un écosystème de données et documentation intelligente",
+    "description": "Cartographie d’un écosystème de données et documentation intelligente",
+    "skills": [],
+    "sourceFile": "1792159017830.pdf",
+    "sourcePages": [
+      10
+    ]
+  },
+  {
+    "company": "Value",
+    "reference": "17",
+    "title": "Intégration de l’IA de bout en bout dans le cycle de développement logiciel",
+    "description": "Intégration de l’IA de bout en bout dans le cycle de développement logiciel",
+    "skills": [],
+    "sourceFile": "1792159017830.pdf",
+    "sourcePages": [
+      10
+    ]
+  },
+  {
+    "company": "EY",
+    "reference": "EY-1",
+    "title": "Mise en place d’un dispositif d’analyse et de gestion des risques sur la plateforme ServiceNow\n(module Integrated Risk Management)",
+    "description": "Mise en place d’un dispositif d’analyse et de gestion des risques sur la plateforme ServiceNow\n(module Integrated Risk Management)\nID interne : #TechnoRisk 04 · Réf. candidature : #TechnoRisk 04\nDomaine : 01 · Statut : sujet_catalogue_campagne_ouverte\nCompétences : ServiceNow\nÉligibilité : Master ou Ingénieur en informatique / GRC\nLieu / durée : Tunisie (EY Tunisie) / De 05 à 06 mois\nDeadline : 30/11/2026 · Rémunération : Non précisée\nDétail : Campagne EY Stages & PFE Book 2026-2027 avec dépôt de candidatures possible ; deadline 30/11/2026 (site pfebook.com + PDF). 1\nréférence max. Places non garanties.\nCandidature : Choisir 1 référence dans le Book puis formulaire en ligne EY\nhttps://globaleysurvey.ey.com/jfe/form/SV_3jU1br82sTkd4DI\n",
+    "skills": [],
+    "sourceFile": "1794069508920.pdf",
+    "sourcePages": [
+      2
+    ],
+    "application_deadline": "2026-11-30"
+  },
+  {
+    "company": "EY",
+    "reference": "EY-2",
+    "title": "Conception d’une boîte à outils d’audit IA multi-régions (Cross- Region AI Audit Toolkit)",
+    "description": "Conception d’une boîte à outils d’audit IA multi-régions (Cross- Region AI Audit Toolkit)\nID interne : #TechnoRisk 06 · Réf. candidature : #TechnoRisk 06\nDomaine : 01 · Statut : sujet_catalogue_campagne_ouverte\nCompétences : IA\nÉligibilité : Master en IA / Audit ou Ingénieur IA\nLieu / durée : Tunisie (EY Tunisie) / 06 mois\nDeadline : 30/11/2026 · Rémunération : Non précisée\nDétail : Campagne EY Stages & PFE Book 2026-2027 avec dépôt de candidatures possible ; deadline 30/11/2026 (site pfebook.com + PDF). 1\nréférence max. Places non garanties.\nCandidature : Choisir 1 référence dans le Book puis formulaire en ligne EY\nhttps://globaleysurvey.ey.com/jfe/form/SV_3jU1br82sTkd4DI\n",
+    "skills": [],
+    "sourceFile": "1794069508920.pdf",
+    "sourcePages": [
+      2
+    ],
+    "application_deadline": "2026-11-30"
+  },
+  {
+    "company": "EY",
+    "reference": "EY-3",
+    "title": "Utilisation de l’IA pour l'automatisation de la détection des conflits de Ségrégation des Tâches\n(SoD) dans SAP GRC",
+    "description": "Utilisation de l’IA pour l'automatisation de la détection des conflits de Ségrégation des Tâches\n(SoD) dans SAP GRC\nID interne : #TechnoRisk 08 · Réf. candidature : #TechnoRisk 08\nDomaine : 01 · Statut : sujet_catalogue_campagne_ouverte\nCompétences : IA, SAP\nÉligibilité : Ingénieur en Cloud SecOps / IA/ Master en Sécurité\nLieu / durée : Tunisie (EY Tunisie) / 06 mois\nDeadline : 30/11/2026 · Rémunération : Non précisée\nDétail : Campagne EY Stages & PFE Book 2026-2027 avec dépôt de candidatures possible ; deadline 30/11/2026 (site pfebook.com + PDF). 1\nréférence max. Places non garanties.\nCandidature : Choisir 1 référence dans le Book puis formulaire en ligne EY\nhttps://globaleysurvey.ey.com/jfe/form/SV_3jU1br82sTkd4DI\n",
+    "skills": [],
+    "sourceFile": "1794069508920.pdf",
+    "sourcePages": [
+      2
+    ],
+    "application_deadline": "2026-11-30"
+  }
+]
