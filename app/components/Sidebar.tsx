@@ -35,6 +35,7 @@ const navConfig: Record<string, NavItem[]> = {
     { href: "/dashboard/posts?view=mine", label: "Mes publications", icon: <ClipboardIcon />, exact: true },
     { href: "/dashboard/candidate/saved", label: "Sauvegardés", icon: <BookmarkIcon /> },
     { href: "/dashboard/candidate/settings", label: "Mon Profil & Paramètres", icon: <SettingsIcon /> },
+    { href: "/dashboard/support", label: "Aide & Support", icon: <LifebuoyIcon /> },
   ],
   entreprise: [
     { href: "/dashboard/company", label: "Mon espace", icon: <HomeIcon />, exact: true },
@@ -47,6 +48,8 @@ const navConfig: Record<string, NavItem[]> = {
     { href: "/dashboard/company/posts", label: "Mes publications", icon: <ClipboardIcon /> },
     { href: "/dashboard/messages", label: "Messagerie", icon: <UsersIcon /> },
     { href: "/dashboard/notifications", label: "Notifications", icon: <BellIcon /> },
+    { href: "/dashboard/company/abonnement", label: "Abonnement", icon: <CreditCardIcon /> },
+    { href: "/dashboard/support", label: "Aide & Support", icon: <LifebuoyIcon /> },
   ],
   admin: [
     { href: "/dashboard/admin", label: "Tableau de bord", icon: <ChartIcon />, exact: true },
@@ -56,6 +59,7 @@ const navConfig: Record<string, NavItem[]> = {
     { href: "/dashboard/admin/reports", label: "Rapports", icon: <ChartBarIcon /> },
     { href: "/dashboard/posts", label: "Fil des publications", icon: <UsersIcon />, exact: true },
     { href: "/dashboard/admin/posts", label: "Modération des publications", icon: <ShieldIcon /> },
+    { href: "/dashboard/admin/support", label: "Support & Tickets", icon: <LifebuoyIcon /> },
     { href: "/dashboard/sessions", label: "Sécurité & Sessions", icon: <ShieldIcon /> },
   ],
 };
@@ -362,6 +366,28 @@ function ShieldIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
       <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    </svg>
+  );
+}
+
+function LifebuoyIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" />
+      <circle cx="12" cy="12" r="4" />
+      <line x1="4.93" y1="4.93" x2="9.17" y2="9.17" />
+      <line x1="14.83" y1="14.83" x2="19.07" y2="19.07" />
+      <line x1="14.83" y1="9.17" x2="19.07" y2="4.93" />
+      <line x1="4.93" y1="19.07" x2="9.17" y2="14.83" />
+    </svg>
+  );
+}
+
+function CreditCardIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4" aria-hidden="true">
+      <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+      <line x1="1" y1="10" x2="23" y2="10" />
     </svg>
   );
 }

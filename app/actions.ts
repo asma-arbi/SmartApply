@@ -655,6 +655,22 @@ export async function changeJobStatus(jobId: string, newStatus: "draft" | "publi
     redirect(`/dashboard/company/jobs?error=validation&msg=${errorMsg}`);
   }
 
+  // ── Contrainte plan gratuit : vérifier quota avant publication ────────────────────
+  if (newStatus === "published" && job.status !== "published") {
+    const { canPublishJob } = await import("@/lib/billing/plans");
+    const currentPublished = await db
+      .collection("jobs")
+      .countDocuments({ company_id: sessionData.user.id, status: "published" });
+
+    const check = await canPublishJob(sessionData.user.id, currentPublished);
+    if (!check.allowed) {
+      const billingMsg = encodeURIComponent(
+        check.reason || "Limite du plan gratuit atteinte. Passez au plan Pro pour publier des offres illimitées."
+      );
+      redirect(`/dashboard/company/jobs?error=validation&msg=${billingMsg}`);
+    }
+  }
+
   const now = new Date().toISOString();
   const updateData: any = {
     status: newStatus,
